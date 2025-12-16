@@ -1,43 +1,56 @@
 import { createClient } from "@/lib/supabase/server";
-import { FolderOpen, Briefcase, Award, Eye, TrendingUp, Clock } from "lucide-react";
+import { FolderOpen, Briefcase, Award, Eye, TrendingUp, Clock, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
-    const supabase = await createClient();
-
-    // Fetch counts for each section
-    const [projectsResult, experiencesResult, certificatesResult] = await Promise.all([
-        supabase.from("projects").select("id", { count: "exact", head: true }),
-        supabase.from("experiences").select("id", { count: "exact", head: true }),
-        supabase.from("certificates").select("id", { count: "exact", head: true }),
-    ]);
-
-    const stats = [
-        {
-            name: "Projects",
-            count: projectsResult.count || 0,
-            icon: FolderOpen,
-            href: "/admin/projects",
-            color: "text-neon-cyan",
-            bgColor: "bg-neon-cyan/10",
-        },
-        {
-            name: "Experiences",
-            count: experiencesResult.count || 0,
-            icon: Briefcase,
-            href: "/admin/experiences",
-            color: "text-neon-purple",
-            bgColor: "bg-neon-purple/10",
-        },
-        {
-            name: "Certificates",
-            count: certificatesResult.count || 0,
-            icon: Award,
-            href: "/admin/certificates",
-            color: "text-neon-magenta",
-            bgColor: "bg-neon-magenta/10",
-        },
+    let stats = [
+        { name: "Projects", count: 0, icon: FolderOpen, href: "/admin/projects", color: "text-neon-cyan", bgColor: "bg-neon-cyan/10" },
+        { name: "Experiences", count: 0, icon: Briefcase, href: "/admin/experiences", color: "text-neon-purple", bgColor: "bg-neon-purple/10" },
+        { name: "Certificates", count: 0, icon: Award, href: "/admin/certificates", color: "text-neon-magenta", bgColor: "bg-neon-magenta/10" },
     ];
+
+    let error = null;
+
+    try {
+        const supabase = await createClient();
+
+        // Fetch counts for each section
+        const [projectsResult, experiencesResult, certificatesResult] = await Promise.all([
+            supabase.from("projects").select("id", { count: "exact", head: true }),
+            supabase.from("experiences").select("id", { count: "exact", head: true }),
+            supabase.from("certificates").select("id", { count: "exact", head: true }),
+        ]);
+
+        stats = [
+            {
+                name: "Projects",
+                count: projectsResult.count || 0,
+                icon: FolderOpen,
+                href: "/admin/projects",
+                color: "text-neon-cyan",
+                bgColor: "bg-neon-cyan/10",
+            },
+            {
+                name: "Experiences",
+                count: experiencesResult.count || 0,
+                icon: Briefcase,
+                href: "/admin/experiences",
+                color: "text-neon-purple",
+                bgColor: "bg-neon-purple/10",
+            },
+            {
+                name: "Certificates",
+                count: certificatesResult.count || 0,
+                icon: Award,
+                href: "/admin/certificates",
+                color: "text-neon-magenta",
+                bgColor: "bg-neon-magenta/10",
+            },
+        ];
+    } catch (e) {
+        console.error("Error fetching dashboard data:", e);
+        error = "Failed to connect to database. Please check your Supabase configuration.";
+    }
 
     const quickActions = [
         { name: "Add New Project", href: "/admin/projects?action=new", icon: FolderOpen },
@@ -58,6 +71,19 @@ export default async function AdminDashboard() {
                     experiences, and certificates from the sidebar.
                 </p>
             </div>
+
+            {/* Error Display */}
+            {error && (
+                <div className="glass rounded-2xl p-6 border border-red-500/30 bg-red-500/10">
+                    <div className="flex items-center gap-3">
+                        <AlertCircle className="w-6 h-6 text-red-400" />
+                        <div>
+                            <h3 className="font-semibold text-red-400">Database Connection Error</h3>
+                            <p className="text-white/60 text-sm">{error}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

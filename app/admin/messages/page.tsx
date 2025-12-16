@@ -38,15 +38,24 @@ export default function MessagesPage() {
 
     const fetchMessages = async () => {
         setLoading(true);
-        const { data, error } = await supabase
-            .from("messages")
-            .select("*")
-            .order("created_at", { ascending: false });
+        try {
+            const { data, error } = await supabase
+                .from("messages")
+                .select("*")
+                .order("created_at", { ascending: false });
 
-        if (!error && data) {
-            setMessages(data);
+            if (error) {
+                console.error("Error fetching messages:", error.message);
+            }
+
+            if (data) {
+                setMessages(data);
+            }
+        } catch (err) {
+            console.error("Error fetching messages:", err);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const markAsRead = async (id: string, read: boolean) => {
@@ -132,8 +141,8 @@ export default function MessagesPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className={`glass rounded-xl p-4 cursor-pointer transition-all ${selectedMessage?.id === msg.id
-                                        ? "ring-2 ring-neon-cyan/50 bg-white/10"
-                                        : "hover:bg-white/5"
+                                    ? "ring-2 ring-neon-cyan/50 bg-white/10"
+                                    : "hover:bg-white/5"
                                     } ${!msg.read ? "border-l-4 border-neon-cyan" : ""}`}
                                 onClick={() => {
                                     setSelectedMessage(msg);

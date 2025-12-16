@@ -22,8 +22,6 @@ export async function updateSession(request: NextRequest) {
                         request,
                     });
                     cookiesToSet.forEach(({ name, value, options }) => {
-                        // Remove maxAge and expires to make it a session cookie
-                        // Session cookies are deleted when the browser closes
                         const { maxAge, expires, ...sessionOptions } = options || {};
                         supabaseResponse.cookies.set(name, value, {
                             ...sessionOptions,
@@ -38,25 +36,19 @@ export async function updateSession(request: NextRequest) {
         }
     );
 
-    // Get user - this validates the session
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
-    // Protect ALL admin routes except login
     if (request.nextUrl.pathname.startsWith('/admin')) {
-        // Allow access to login page only when NOT authenticated
         if (request.nextUrl.pathname === '/admin/login') {
             if (user) {
-                // Already logged in, redirect to dashboard
                 return NextResponse.redirect(new URL('/admin', request.url));
             }
             return supabaseResponse;
         }
 
-        // ALL other /admin/* routes require authentication
         if (!user) {
-            // Not authenticated - redirect to login
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }
     }

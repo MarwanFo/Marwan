@@ -1,0 +1,119 @@
+/* 3D Transform Support */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+}
+
+/* Card 3D Effect */
+.card-3d {
+    perspective: 1000px;
+}
+
+.card-3d>* {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.card-3d:hover>* {
+    transform: rotateX(5deg) rotateY(5deg) scale(1.02);
+}
+
+/* Enhanced 3D Card with Shine */
+.card-3d-shine {
+    perspective: 1000px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-3d-shine>* {
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card-3d-shine:hover>* {
+    transform: rotateX(2deg) rotateY(2deg) scale(1.02);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Shine Effect */
+.shine-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.shine-effect::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.shine-effect:hover::before {
+    transform: translateX(100%);
+}
+
+/* Glow Effects */
+.glow-cyan:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), 0 0 60px rgba(0, 255, 255, 0.1);
+}
+
+.glow-purple:hover {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1);
+}
+
+.glow-magenta:hover {
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.3), 0 0 60px rgba(255, 0, 255, 0.1);
+}
+
+/* Float animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Tilt on hover - pure CSS fallback */
+.tilt-hover {
+    transition: transform 0.3s ease;
+}
+
+.tilt-hover:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.02);
+}
+
+/* Depth shadow for 3D effect */
+.depth-shadow {
+    transition: all 0.3s ease;
+}
+
+.depth-shadow:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 10px 15px -3px rgba(0, 0, 0, 0.2),
+        0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}

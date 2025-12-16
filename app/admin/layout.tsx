@@ -12,7 +12,6 @@ import {
     User,
     LogOut,
     Menu,
-    X,
     ChevronRight,
     Settings,
     MessageSquare,
@@ -53,31 +52,21 @@ export default function AdminLayout({
 
     const handleLogout = async () => {
         try {
-            // Sign out on client
             await supabase.auth.signOut();
-
-            // Call server-side signout to clear cookies
             await fetch('/api/auth/signout', { method: 'POST' });
-
-            // Clear all local storage
             if (typeof window !== 'undefined') {
                 window.sessionStorage.clear();
                 window.localStorage.clear();
             }
-
-            // Hard redirect to login
             window.location.href = '/admin/login';
         } catch (error) {
             console.error('Logout error:', error);
-            // Force redirect anyway
             window.location.href = '/admin/login';
         }
     };
 
-    // Get current page title
     const currentPage = navItems.find((item) => item.href === pathname)?.name || "Dashboard";
 
-    // Don't show admin layout on login page
     if (pathname === '/admin/login') {
         return <>{children}</>;
     }
@@ -85,7 +74,6 @@ export default function AdminLayout({
     return (
         <SessionGuard inactivityTimeout={30} warningBeforeSeconds={60}>
             <div className="min-h-screen bg-background flex">
-                {/* Sidebar Backdrop (Mobile) */}
                 {sidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
@@ -93,12 +81,10 @@ export default function AdminLayout({
                     />
                 )}
 
-                {/* Sidebar */}
                 <motion.aside
                     className={`fixed lg:static inset-y-0 left-0 z-50 w-72 glass border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
                         }`}
                 >
-                    {/* Logo */}
                     <div className="p-6 border-b border-white/10">
                         <Link href="/admin" className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-neon-gradient flex items-center justify-center text-background font-bold">
@@ -111,7 +97,6 @@ export default function AdminLayout({
                         </Link>
                     </div>
 
-                    {/* Navigation */}
                     <nav className="flex-1 p-4 space-y-1">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href;
@@ -135,7 +120,6 @@ export default function AdminLayout({
                         })}
                     </nav>
 
-                    {/* User Section */}
                     <div className="p-4 border-t border-white/10">
                         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 mb-3">
                             <div className="w-8 h-8 rounded-full bg-neon-purple/20 flex items-center justify-center">
@@ -158,9 +142,7 @@ export default function AdminLayout({
                     </div>
                 </motion.aside>
 
-                {/* Main Content */}
                 <div className="flex-1 flex flex-col min-h-screen">
-                    {/* Top Bar */}
                     <header className="glass border-b border-white/10 px-6 py-4 flex items-center gap-4">
                         <button
                             onClick={() => setSidebarOpen(true)}
@@ -183,7 +165,6 @@ export default function AdminLayout({
                         </div>
                     </header>
 
-                    {/* Page Content */}
                     <main className="flex-1 p-6 overflow-auto">
                         {children}
                     </main>

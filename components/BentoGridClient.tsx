@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
-import { ExternalLink, Github, ArrowUpRight } from "lucide-react";
+import { ExternalLink, Github, ArrowUpRight, Sparkles, Star, Code2, Rocket } from "lucide-react";
 import { Project } from "@/lib/types";
 
 // Fallback projects for when database is empty
@@ -59,157 +59,188 @@ const fallbackProjects: Project[] = [
         display_order: 3,
         created_at: new Date().toISOString(),
     },
-    {
-        id: "5",
-        title: "DevOps Pipeline",
-        description: "Automated CI/CD pipeline with container orchestration and monitoring.",
-        tags: ["Docker", "Kubernetes", "AWS"],
-        image_url: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=600&fit=crop",
-        live_url: "#",
-        github_url: "#",
-        size: "medium",
-        featured: false,
-        display_order: 4,
-        created_at: new Date().toISOString(),
-    },
 ];
 
-function BentoCard({ project, index }: { project: Project; index: number }) {
-    const cardRef = useRef<HTMLDivElement>(null);
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+    const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
 
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+    // 3D tilt effect
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
 
-    const springConfig = { stiffness: 150, damping: 20 };
-    const bgX = useSpring(useTransform(mouseX, [-0.5, 0.5], [15, -15]), springConfig);
-    const bgY = useSpring(useTransform(mouseY, [-0.5, 0.5], [15, -15]), springConfig);
+    const mouseXSpring = useSpring(x);
+    const mouseYSpring = useSpring(y);
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!cardRef.current) return;
-        const rect = cardRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        mouseX.set(x);
-        mouseY.set(y);
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!ref.current) return;
+        const rect = ref.current.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+        x.set(xPct);
+        y.set(yPct);
     };
 
     const handleMouseLeave = () => {
-        mouseX.set(0);
-        mouseY.set(0);
+        x.set(0);
+        y.set(0);
         setIsHovered(false);
-    };
-
-    const sizeClasses = {
-        large: "md:col-span-2 md:row-span-2",
-        medium: "md:col-span-1 md:row-span-2",
-        small: "md:col-span-1 md:row-span-1",
-    };
-
-    const heightClasses = {
-        large: "min-h-[400px] md:min-h-[500px]",
-        medium: "min-h-[300px] md:min-h-[500px]",
-        small: "min-h-[250px] md:min-h-[240px]",
     };
 
     return (
         <motion.div
-            ref={cardRef}
-            className={`relative group rounded-2xl overflow-hidden cursor-pointer ${sizeClasses[project.size]} ${heightClasses[project.size]}`}
-            initial={{ opacity: 0, y: 50 }}
+            ref={ref}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: index * 0.1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="group relative"
+            style={{
+                perspective: "1000px",
+            }}
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={handleMouseLeave}
-            whileHover={{ scale: 1.02 }}
         >
-            <div className="absolute inset-0 glass rounded-2xl" />
-
             <motion.div
-                className="absolute inset-0 overflow-hidden rounded-2xl"
-                style={{ x: bgX, y: bgY }}
+                className="relative h-full glass rounded-2xl overflow-hidden border border-white/10 group-hover:border-neon-cyan/30 transition-colors duration-500"
+                style={{
+                    rotateX: isHovered ? rotateX : 0,
+                    rotateY: isHovered ? rotateY : 0,
+                    transformStyle: "preserve-3d",
+                }}
             >
-                <div
-                    className="absolute inset-[-20px] bg-cover bg-center transition-transform duration-500"
-                    style={{
-                        backgroundImage: `url(${project.image_url})`,
-                        transform: isHovered ? "scale(1.1)" : "scale(1.05)",
-                    }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-            </motion.div>
+                {/* Image with Overlay */}
+                <div className="relative overflow-hidden h-48">
+                    {project.image_url ? (
+                        <motion.img
+                            src={project.image_url}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                            animate={{ scale: isHovered ? 1.1 : 1 }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30 flex items-center justify-center">
+                            <Code2 className="w-20 h-20 text-white/20" />
+                        </div>
+                    )}
 
-            <motion.div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                    background: "linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(255, 0, 255, 0.1) 100%)",
-                }}
-            />
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
 
-            <motion.div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                    background: "linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(139, 92, 246, 0.3), rgba(255, 0, 255, 0.3))",
-                    mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                    maskComposite: "xor",
-                    WebkitMaskComposite: "xor",
-                    padding: "1px",
-                }}
-            />
+                    {/* Shine effect on hover */}
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full"
+                        animate={{ x: isHovered ? "200%" : "-100%" }}
+                        transition={{ duration: 0.7, ease: "easeInOut" }}
+                    />
 
-            <div className="relative z-10 h-full flex flex-col justify-end p-6">
-                <div className="flex flex-wrap gap-2 mb-3">
-                    {project.tags.slice(0, 4).map((tag) => (
-                        <span
-                            key={tag}
-                            className="px-3 py-1 text-xs font-medium rounded-full bg-white/10 text-white/70 backdrop-blur-sm"
+                    {/* Featured Badge */}
+                    {project.featured && (
+                        <motion.div
+                            className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-gradient text-background text-xs font-semibold z-10"
+                            initial={{ scale: 0, rotate: -10 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
                         >
-                            {tag}
-                        </span>
-                    ))}
+                            <Star className="w-3 h-3" />
+                            Featured
+                        </motion.div>
+                    )}
+
+                    {/* Quick Actions - Floating */}
+                    <motion.div
+                        className="absolute top-4 right-4 flex gap-2 z-10"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : -10 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {project.live_url && (
+                            <motion.a
+                                href={project.live_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                            </motion.a>
+                        )}
+                        {project.github_url && (
+                            <motion.a
+                                href={project.github_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                            >
+                                <Github className="w-4 h-4" />
+                            </motion.a>
+                        )}
+                    </motion.div>
                 </div>
 
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300">
-                    {project.title}
-                </h3>
+                {/* Content */}
+                <div className="p-6 relative">
+                    {/* Floating glow */}
+                    <motion.div
+                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30 blur-3xl"
+                        animate={{ opacity: isHovered ? 0.8 : 0 }}
+                        transition={{ duration: 0.5 }}
+                    />
 
-                <p className="text-white/60 text-sm md:text-base mb-4 line-clamp-2">
-                    {project.description}
-                </p>
-
-                <motion.div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    {project.live_url && (
-                        <a
-                            href={project.live_url}
-                            className="flex items-center gap-2 text-sm text-neon-cyan hover:text-white transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                    <div className="relative z-10">
+                        <motion.h3
+                            className="font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 text-xl"
+                            style={{ transform: "translateZ(30px)" }}
                         >
-                            <ExternalLink className="w-4 h-4" />
-                            <span>Live Demo</span>
-                        </a>
-                    )}
-                    {project.github_url && (
-                        <a
-                            href={project.github_url}
-                            className="flex items-center gap-2 text-sm text-neon-purple hover:text-white transition-colors"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <Github className="w-4 h-4" />
-                            <span>Code</span>
-                        </a>
-                    )}
-                </motion.div>
-            </div>
+                            {project.title}
+                        </motion.h3>
 
-            <motion.div
-                className="absolute top-4 right-4 p-2 rounded-full glass opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                whileHover={{ scale: 1.1, rotate: 45 }}
-            >
-                <ArrowUpRight className="w-5 h-5 text-white" />
+                        <p className="text-white/60 mb-4 group-hover:text-white/70 transition-colors line-clamp-2 text-sm">
+                            {project.description}
+                        </p>
+
+                        {/* Tech Stack */}
+                        <div className="flex flex-wrap gap-2">
+                            {project.tags.slice(0, 3).map((tag, tagIndex) => (
+                                <motion.span
+                                    key={tag}
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: index * 0.1 + tagIndex * 0.05 + 0.3 }}
+                                    className="px-3 py-1 text-xs font-medium rounded-full bg-white/5 text-white/60 border border-white/10 group-hover:border-neon-cyan/30 group-hover:text-neon-cyan/80 transition-all duration-300"
+                                >
+                                    {tag}
+                                </motion.span>
+                            ))}
+                            {project.tags.length > 3 && (
+                                <span className="px-3 py-1 text-xs font-medium rounded-full bg-white/5 text-white/40">
+                                    +{project.tags.length - 3}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom accent line */}
+                <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-neon-gradient"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: isHovered ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{ originX: 0 }}
+                />
             </motion.div>
         </motion.div>
     );
@@ -221,8 +252,46 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
     const hasMore = allProjects.length > 4;
 
     return (
-        <section id="projects" className="relative py-24 px-6">
-            <div className="max-w-7xl mx-auto">
+        <section id="projects" className="relative py-24 px-6 overflow-hidden">
+            {/* Animated Background */}
+            <div className="absolute inset-0 pointer-events-none">
+                <motion.div
+                    className="absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full"
+                    style={{
+                        background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%)",
+                        filter: "blur(100px)",
+                    }}
+                    animate={{
+                        x: [0, -30, 0],
+                        y: [0, 20, 0],
+                    }}
+                    transition={{
+                        duration: 15,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+                <motion.div
+                    className="absolute bottom-1/4 left-0 w-[500px] h-[500px] rounded-full"
+                    style={{
+                        background: "radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 60%)",
+                        filter: "blur(100px)",
+                    }}
+                    animate={{
+                        x: [0, 20, 0],
+                        y: [0, -30, 0],
+                    }}
+                    transition={{
+                        duration: 12,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 2,
+                    }}
+                />
+            </div>
+
+            <div className="max-w-7xl mx-auto relative z-10">
+                {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -230,6 +299,15 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16"
                 >
+                    <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        whileInView={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 mb-4"
+                    >
+                        <Sparkles className="w-4 h-4 text-neon-cyan" />
+                        <span className="text-sm text-white/60">My Work</span>
+                    </motion.div>
                     <h2 className="text-heading font-bold mb-4">
                         Featured <span className="neon-text">Projects</span>
                     </h2>
@@ -239,12 +317,14 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-auto">
+                {/* Projects Grid - Same style as /projects page */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projects.map((project, index) => (
-                        <BentoCard key={project.id} project={project} index={index} />
+                        <ProjectCard key={project.id} project={project} index={index} />
                     ))}
                 </div>
 
+                {/* View All Button */}
                 {hasMore && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -252,17 +332,18 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                         viewport={{ once: true }}
                         className="text-center mt-12"
                     >
-                        <a
+                        <motion.a
                             href="/projects"
                             className="inline-flex items-center gap-2 px-8 py-4 rounded-full glass border border-white/20 text-white hover:border-neon-cyan/50 hover:text-neon-cyan transition-all group"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
                             <span>View All Projects</span>
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </a>
+                        </motion.a>
                     </motion.div>
                 )}
             </div>
         </section>
     );
 }
-

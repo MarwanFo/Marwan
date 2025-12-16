@@ -46,15 +46,24 @@ export default function ExperiencesPage() {
 
     const fetchExperiences = async () => {
         setLoading(true);
-        const { data, error } = await supabase
-            .from("experiences")
-            .select("*")
-            .order("display_order", { ascending: true });
+        try {
+            const { data, error } = await supabase
+                .from("experiences")
+                .select("*")
+                .order("display_order", { ascending: true });
 
-        if (!error && data) {
-            setExperiences(data);
+            if (error) {
+                console.error("Error fetching experiences:", error.message);
+            }
+
+            if (data) {
+                setExperiences(data);
+            }
+        } catch (err) {
+            console.error("Error fetching experiences:", err);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const openModal = (experience?: Experience) => {

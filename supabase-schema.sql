@@ -81,6 +81,33 @@ CREATE TABLE IF NOT EXISTS site_settings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Messages (from contact form)
+CREATE TABLE IF NOT EXISTS messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  message TEXT NOT NULL,
+  read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Skills (for tech marquee)
+CREATE TABLE IF NOT EXISTS skills (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  icon TEXT,
+  category TEXT DEFAULT 'frontend',
+  display_order INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Add type column to experiences (if not exists)
+ALTER TABLE experiences ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'work';
+ALTER TABLE experiences ADD COLUMN IF NOT EXISTS image_url TEXT;
+
+-- Add image_url column to certificates (if not exists)
+ALTER TABLE certificates ADD COLUMN IF NOT EXISTS image_url TEXT;
+
 -- If tables already exist, add the new columns
 ALTER TABLE profile ADD COLUMN IF NOT EXISTS years_experience INT DEFAULT 0;
 ALTER TABLE profile ADD COLUMN IF NOT EXISTS projects_completed INT DEFAULT 0;
@@ -96,6 +123,8 @@ ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE experiences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE skills ENABLE ROW LEVEL SECURITY;
 
 -- Public read policies (if they don't exist, these will fail silently)
 DO $$
@@ -131,5 +160,21 @@ BEGIN
   -- Site settings policies
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage site_settings') THEN
     CREATE POLICY "Allow authenticated users to manage site_settings" ON site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
+  END IF;
+  
+  -- Skills policies (public can read, authenticated can manage)
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow public read access on skills') THEN
+    CREATE POLICY "Allow public read access on skills" ON skills FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage skills') THEN
+    CREATE POLICY "Allow authenticated users to manage skills" ON skills FOR ALL TO authenticated USING (true) WITH CHECK (true);
+  END IF;
+  
+  -- Messages policies (public can insert via contact form, authenticated can read/manage)
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow public to insert messages') THEN
+    CREATE POLICY "Allow public to insert messages" ON messages FOR INSERT WITH CHECK (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage messages') THEN
+    CREATE POLICY "Allow authenticated users to manage messages" ON messages FOR ALL TO authenticated USING (true) WITH CHECK (true);
   END IF;
 END $$;

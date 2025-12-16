@@ -1,0 +1,256 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+.dark {
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+  --neon-cyan: #00ffff;
+  --neon-magenta: #ff00ff;
+  --neon-purple: #8b5cf6;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+}
+
+/* Light Theme */
+.light {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --neon-cyan: #0891b2;
+  --neon-magenta: #c026d3;
+  --neon-purple: #7c3aed;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #0f172a;
+  --text-secondary: rgba(15, 23, 42, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.5) transparent;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for Webkit Browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple), var(--neon-magenta));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--neon-magenta), var(--neon-purple), var(--neon-cyan));
+}
+
+/* Selection Styling */
+::selection {
+  background: rgba(139, 92, 246, 0.4);
+  color: #fff;
+}
+
+/* Glassmorphism Base Classes */
+@layer components {
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .neon-text {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-magenta));
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .neon-border {
+    border-image: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-magenta)) 1;
+  }
+
+  .glow-effect {
+    position: relative;
+  }
+
+  .glow-effect::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-magenta));
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+    filter: blur(15px);
+  }
+
+  .glow-effect:hover::before {
+    opacity: 0.6;
+  }
+}
+
+/* Grid Background Pattern */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS ENHANCEMENTS
+   ========================================== */
+
+/* Safe area support for notched devices (iPhone X+) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Bottom navigation safe area */
+  footer,
+  [class*="fixed bottom"] {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Touch-friendly tap targets (minimum 44x44px) */
+@layer components {
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Improved touch behavior */
+@media (hover: none) and (pointer: coarse) {
+
+  /* Remove hover effects on touch devices for better performance */
+  .glow-effect::before {
+    display: none;
+  }
+
+  /* Faster transitions for touch */
+  * {
+    transition-duration: 0.15s !important;
+  }
+
+  /* Ensure links are easily tappable */
+  a,
+  button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile text size adjustments */
+@media (max-width: 640px) {
+
+  /* Prevent iOS zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Better readability on small screens */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Smaller padding on mobile */
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Reduce section padding on mobile */
+  .py-24 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+  /* Tablet-specific tweaks */
+  .py-24 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+}
+
+/* Prevent horizontal scroll */
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Better focus states for accessibility */
+:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .glass {
+    background: white !important;
+    border: 1px solid #ccc !important;
+  }
+
+  .neon-text {
+    background: none !important;
+    -webkit-text-fill-color: #333 !important;
+    color: #333 !important;
+  }
+}

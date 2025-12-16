@@ -1,0 +1,147 @@
+/* ==========================================
+   LIGHT MODE OVERRIDES
+   ========================================== */
+
+.light {
+
+    /* Glass effect for light mode */
+    .glass {
+        background: rgba(255, 255, 255, 0.8) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .glass-strong {
+        background: rgba(255, 255, 255, 0.9) !important;
+    }
+
+    /* Text colors for light mode - force dark text */
+    .text-white {
+        color: #1e293b !important;
+    }
+
+    .text-white\/80 {
+        color: rgba(30, 41, 59, 0.9) !important;
+    }
+
+    .text-white\/90 {
+        color: #0f172a !important;
+    }
+
+    .text-white\/70 {
+        color: rgba(30, 41, 59, 0.85) !important;
+    }
+
+    .text-white\/60 {
+        color: rgba(30, 41, 59, 0.75) !important;
+    }
+
+    .text-white\/50 {
+        color: rgba(30, 41, 59, 0.65) !important;
+    }
+
+    .text-white\/40 {
+        color: rgba(30, 41, 59, 0.55) !important;
+    }
+
+    .text-white\/20 {
+        color: rgba(30, 41, 59, 0.35) !important;
+    }
+
+    /* Background overrides */
+    .bg-background {
+        background-color: #f8fafc !important;
+    }
+
+    .bg-background\/80 {
+        background-color: rgba(248, 250, 252, 0.95) !important;
+    }
+
+    /* Gradient from backgrounds - light mode needs proper fades */
+    .from-background {
+        --tw-gradient-from: #f8fafc !important;
+        --tw-gradient-to: transparent;
+    }
+
+    .via-background\/60 {
+        --tw-gradient-via: rgba(248, 250, 252, 0.8);
+    }
+
+    .to-transparent {
+        --tw-gradient-to: transparent;
+    }
+
+    /* Gradient overlays on project cards */
+    .bg-gradient-to-t {
+        background: linear-gradient(to top, #f8fafc, rgba(248, 250, 252, 0.7), transparent) !important;
+    }
+
+    /* Neon gradient button text stays white */
+    .bg-neon-gradient {
+        color: white !important;
+    }
+
+    .text-background {
+        color: white !important;
+    }
+
+    /* Form inputs for light mode */
+    input,
+    textarea,
+    select {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-color: rgba(0, 0, 0, 0.2) !important;
+        color: #1e293b !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: rgba(30, 41, 59, 0.5) !important;
+    }
+
+    /* Borders - make them visible */
+    .border-white\/10 {
+        border-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .border-white\/20 {
+        border-color: rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Hover states */
+    .hover\:bg-white\/5:hover {
+        background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .hover\:bg-white\/10:hover {
+        background-color: rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Grid pattern visibility */
+    .grid-pattern {
+        background-image:
+            linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+    }
+
+    /* Selection styling */
+    ::selection {
+        background: rgba(124, 58, 237, 0.25);
+        color: #1e293b;
+    }
+
+    /* Scrollbar - light mode */
+    ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+    /* Code elements */
+    code {
+        color: var(--neon-cyan) !important;
+    }
+
+    /* Admin menu mobile backdrop */
+    .bg-background\/80.backdrop-blur-md {
+        background-color: rgba(248, 250, 252, 0.9) !important;
+    }
+}

@@ -75,7 +75,7 @@ export default function HeroSection() {
     const title = "FULL STACK DEVELOPER";
 
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
             {/* Animated Background Gradient Blobs */}
             <div className="absolute inset-0 overflow-hidden">
                 {/* Mouse-following gradient blob */}

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { Experience } from "@/lib/types";
+import { validateFile, FILE_SIZE_LIMITS, ALLOWED_IMAGE_TYPES } from "@/lib/file-validation";
 import {
     Plus,
     Pencil,
@@ -132,10 +133,21 @@ export default function ExperiencesPage() {
 
         setUploading(true);
         try {
-            // Create unique filename
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `experience-logos/${fileName}`;
+            // Validate file (type, size, magic bytes)
+            const validation = await validateFile(file, {
+                allowedTypes: ALLOWED_IMAGE_TYPES,
+                maxSizeBytes: FILE_SIZE_LIMITS.logo, // 1MB limit for logos
+                checkMagicBytes: true,
+            });
+
+            if (!validation.valid) {
+                alert(validation.error);
+                setUploading(false);
+                return;
+            }
+
+            // Use secure filename
+            const filePath = `experience-logos/${validation.sanitizedName}`;
 
             // Upload to Supabase Storage
             const { error: uploadError } = await supabase.storage

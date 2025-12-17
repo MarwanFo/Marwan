@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin } from "lucide-react";
+import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin, User, Briefcase, FolderKanban, Award, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -12,11 +12,11 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     const navLinks = [
-        { name: "About", href: "#about" },
-        { name: "Experience", href: "#experience" },
-        { name: "Projects", href: "/projects" },
-        { name: "Certificates", href: "/certificates" },
-        { name: "Contact", href: "#contact" },
+        { name: "About", href: "#about", icon: User },
+        { name: "Experience", href: "#experience", icon: Briefcase },
+        { name: "Projects", href: "/projects", icon: FolderKanban },
+        { name: "Certificates", href: "/certificates", icon: Award },
+        { name: "Contact", href: "#contact", icon: MessageCircle },
     ];
 
     const socialLinks = [
@@ -73,8 +73,9 @@ export default function Footer() {
                                 <li key={link.name}>
                                     <a
                                         href={link.href}
-                                        className="text-white/60 hover:text-neon-cyan transition-colors text-sm"
+                                        className="flex items-center gap-2 text-white/60 hover:text-neon-cyan transition-colors text-sm group"
                                     >
+                                        <link.icon className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                         {link.name}
                                     </a>
                                 </li>

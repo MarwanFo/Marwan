@@ -62,6 +62,21 @@
     .md\:left-1\/2 {
         display: none !important;
     }
+
+    /* Project card fixes */
+    [class*="col-span"],
+    [class*="row-span"] {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+
+    /* Consistent card heights */
+    .h-48,
+    .h-64,
+    .h-80,
+    .md\:h-80 {
+        height: 180px !important;
+    }
 }
 
 /* Small devices (phones, 481px - 640px) */
@@ -72,6 +87,20 @@
 
     .text-heading {
         font-size: 1.75rem !important;
+    }
+
+    /* 2 column on larger phones */
+    .grid.md\:grid-cols-2,
+    .grid.lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.75rem !important;
+    }
+
+    /* Force equal sized cards */
+    [class*="col-span-2"],
+    [class*="row-span-2"] {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
     }
 }
 
@@ -90,6 +119,21 @@
     .lg\:grid-cols-4 {
         grid-template-columns: repeat(2, 1fr) !important;
     }
+
+    /* Equal sized cards on tablets */
+    [class*="col-span-2"],
+    [class*="row-span-2"],
+    .md\:col-span-2,
+    .md\:row-span-2 {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+
+    .h-48,
+    .h-64,
+    .h-80 {
+        height: 200px !important;
+    }
 }
 
 /* Large tablets and small laptops (769px - 1024px) */
@@ -100,6 +144,16 @@
 
     .text-heading {
         font-size: 2.5rem !important;
+    }
+
+    /* 2 column grid */
+    .lg\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Allow spanning on larger tablets */
+    .md\:col-span-2 {
+        grid-column: span 2 !important;
     }
 }
 
@@ -149,6 +203,27 @@ main {
     /* Navigation mobile improvements */
     nav .hidden.md\:flex {
         display: none !important;
+    }
+
+    /* Reduce padding in cards */
+    .p-5,
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    /* Smaller tech tag spacing */
+    .gap-2 {
+        gap: 0.375rem !important;
+    }
+
+    /* Better text sizing */
+    .text-lg {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+    }
+
+    .text-xl {
+        font-size: 1.125rem !important;
     }
 }
 

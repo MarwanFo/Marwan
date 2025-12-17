@@ -2,6 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import { FolderOpen, Briefcase, Award, Eye, TrendingUp, Clock, AlertCircle } from "lucide-react";
 import Link from "next/link";
 
+// Force dynamic rendering for cookie-based auth
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
     let stats = [
         { name: "Projects", count: 0, icon: FolderOpen, href: "/admin/projects", color: "text-neon-cyan", bgColor: "bg-neon-cyan/10" },

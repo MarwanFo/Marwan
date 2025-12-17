@@ -1,3 +1,4 @@
+
 import { createClient } from "@/lib/supabase/server";
 import AboutSectionClient from "./AboutSectionClient";
 
@@ -11,3 +12,6 @@ export default async function AboutSection() {
 
     return <AboutSectionClient profile={profile} />;
 }
+
+
+/*kkdkj*/

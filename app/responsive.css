@@ -1,23 +1,26 @@
 /* ==========================================
-   ENHANCED RESPONSIVE DESIGN STYLES
+   COMPREHENSIVE RESPONSIVE DESIGN STYLES
+   ALL screen sizes from mobile to 4K
    ========================================== */
 
-/* Extra small devices (phones, less than 480px) */
+/* ========== MOBILE FIRST (< 480px) ========== */
 @media (max-width: 480px) {
 
-    /* Force single column on mobile */
-    .grid {
+    /* Force single column on all grids */
+    .grid,
+    .grid[class*="grid-cols"] {
         grid-template-columns: 1fr !important;
+        gap: 1rem !important;
     }
 
-    /* Project card fixes */
+    /* Prevent any spanning */
     [class*="col-span"],
     [class*="row-span"] {
         grid-column: span 1 !important;
         grid-row: span 1 !important;
     }
 
-    /* Consistent card heights */
+    /* Card image heights */
     .h-48,
     .h-64,
     .h-80,
@@ -25,28 +28,74 @@
         height: 180px !important;
     }
 
-    /* Typography adjustments */
+    /* Typography */
     h1 {
-        font-size: 1.875rem !important;
-        line-height: 1.1 !important;
+        font-size: 1.75rem !important;
+        line-height: 1.2 !important;
     }
 
+    h2,
     .text-heading {
         font-size: 1.5rem !important;
     }
+
+    h3 {
+        font-size: 1.125rem !important;
+    }
+
+    /* Reduce padding */
+    .p-6,
+    .p-8 {
+        padding: 1rem !important;
+    }
+
+    .px-6,
+    .px-8 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    /* Section spacing */
+    .py-24 {
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
+    }
+
+    /* Text sizes */
+    .text-lg {
+        font-size: 1rem !important;
+    }
+
+    .text-xl {
+        font-size: 1.125rem !important;
+    }
+
+    /* Gap adjustments */
+    .gap-6 {
+        gap: 1rem !important;
+    }
+
+    /* Flex wrapping */
+    .flex {
+        flex-wrap: wrap;
+    }
+
+    .flex-wrap {
+        gap: 0.5rem !important;
+    }
 }
 
-/* Small devices (phones, 481px - 640px) */
+/* ========== LARGE PHONES (481px - 640px) ========== */
 @media (min-width: 481px) and (max-width: 640px) {
 
-    /* 2 column on larger phones */
+    /* 2 columns on larger phones */
     .grid.md\:grid-cols-2,
     .grid.lg\:grid-cols-3 {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.75rem !important;
     }
 
-    /* Force equal sized cards */
+    /* Prevent spanning */
     [class*="col-span-2"],
     [class*="row-span-2"] {
         grid-column: span 1 !important;
@@ -54,26 +103,48 @@
     }
 
     h1 {
-        font-size: 2.25rem !important;
+        font-size: 2rem !important;
+    }
+
+    h2,
+    .text-heading {
+        font-size: 1.75rem !important;
+    }
+
+    .h-48,
+    .h-64,
+    .h-80 {
+        height: 190px !important;
     }
 }
 
-/* Medium devices (tablets, 641px - 768px) */
+/* ========== TABLETS (641px - 768px) ========== */
 @media (min-width: 641px) and (max-width: 768px) {
 
-    /* 2 column grids on tablet */
+    /* 2 columns on tablets */
     .lg\:grid-cols-3,
     .lg\:grid-cols-4 {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 
-    /* Equal sized cards on tablets to prevent gaps */
+    /* Prevent spanning on tablets */
     [class*="col-span-2"],
     [class*="row-span-2"],
     .md\:col-span-2,
-    .md\:row-span-2 {
+    .md\:row-span-2,
+    .lg\:col-span-2,
+    .lg\:row-span-2 {
         grid-column: span 1 !important;
         grid-row: span 1 !important;
+    }
+
+    h1 {
+        font-size: 2.5rem !important;
+    }
+
+    h2,
+    .text-heading {
+        font-size: 2rem !important;
     }
 
     .h-48,
@@ -81,31 +152,84 @@
     .h-80 {
         height: 200px !important;
     }
-
-    h1 {
-        font-size: 2.75rem !important;
-    }
 }
 
-/* Large tablets and small laptops (769px - 1024px) */
+/* ========== SMALL LAPTOPS (769px - 1024px) ========== */
 @media (min-width: 769px) and (max-width: 1024px) {
 
-    /* 2 column grid */
+    /* 2 columns on small laptops */
     .lg\:grid-cols-3 {
         grid-template-columns: repeat(2, 1fr) !important;
     }
 
-    /* Allow spanning on larger tablets */
-    .md\:col-span-2 {
-        grid-column: span 2 !important;
+    /* Still prevent spanning for cleaner layout */
+    .lg\:col-span-2,
+    .lg\:row-span-2 {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
     }
 
     h1 {
-        font-size: 3.5rem !important;
+        font-size: 3rem !important;
+    }
+
+    h2,
+    .text-heading {
+        font-size: 2.25rem !important;
     }
 }
 
-/* Global fixes */
+/* ========== DESKTOP (1025px - 1440px) ========== */
+@media (min-width: 1025px) and (max-width: 1440px) {
+
+    /* Full 3 columns on desktop - allow spanning */
+    .lg\:grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    h1 {
+        font-size: 3.5rem;
+    }
+}
+
+/* ========== LARGE DESKTOP (1441px - 2560px) ========== */
+@media (min-width: 1441px) and (max-width: 2560px) {
+    .max-w-7xl {
+        max-width: 1400px;
+    }
+
+    h1 {
+        font-size: 4rem;
+    }
+}
+
+/* ========== 4K+ SCREENS (> 2560px) ========== */
+@media (min-width: 2560px) {
+
+    .max-w-6xl,
+    .max-w-7xl {
+        max-width: 1800px;
+    }
+
+    h1 {
+        font-size: 5rem !important;
+    }
+
+    h2,
+    .text-heading {
+        font-size: 3.5rem !important;
+    }
+
+    .text-lg {
+        font-size: 1.25rem;
+    }
+
+    .grid {
+        gap: 2rem !important;
+    }
+}
+
+/* ========== GLOBAL FIXES ========== */
 img {
     max-width: 100%;
     height: auto;
@@ -117,13 +241,53 @@ body {
     max-width: 100vw;
 }
 
-/* Mobile menu fixes */
+section,
+div,
+main {
+    max-width: 100%;
+}
+
+/* ========== LANDSCAPE PHONES ========== */
+@media (max-height: 500px) and (orientation: landscape) {
+    section.min-h-screen {
+        min-height: auto;
+        padding: 2rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem !important;
+    }
+}
+
+/* ========== MOBILE NAVIGATION ========== */
 @media (max-width: 768px) {
+
+    /* Certificates grid on mobile */
     .grid-cols-2 {
         grid-template-columns: 1fr !important;
     }
 
-    .p-6 {
-        padding: 1rem !important;
+    /* Footer stacking */
+    footer .grid {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+
+    footer .flex {
+        justify-content: center;
+    }
+
+    /* Navigation */
+    nav .hidden.md\:flex {
+        display: none !important;
+    }
+}
+
+/* ========== MARQUEE FIXES ========== */
+@media (max-width: 640px) {
+
+    .animate-marquee,
+    .animate-marquee-reverse {
+        animation-duration: 15s !important;
     }
 }

@@ -47,8 +47,8 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
 
     const sizeClasses = {
         small: "col-span-1 row-span-1",
-        medium: "col-span-1 md:col-span-1 row-span-1",
-        large: "col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2",
+        medium: "col-span-1 row-span-1",
+        large: "col-span-1 row-span-1 lg:col-span-2 lg:row-span-2",
     };
 
     return (

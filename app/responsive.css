@@ -75,14 +75,23 @@
         gap: 1rem !important;
     }
 
-    /* Flex wrapping */
-    .flex {
-        flex-wrap: wrap;
-    }
-
     .flex-wrap {
         gap: 0.5rem !important;
     }
+}
+
+/* ========== MARQUEE FIX - NEVER WRAP ========== */
+.animate-marquee,
+.animate-marquee-reverse {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: max-content !important;
+    flex-shrink: 0 !important;
+}
+
+.animate-marquee>*,
+.animate-marquee-reverse>* {
+    flex-shrink: 0 !important;
 }
 
 /* ========== LARGE PHONES (481px - 640px) ========== */
@@ -194,6 +203,7 @@
 
 /* ========== LARGE DESKTOP (1441px - 2560px) ========== */
 @media (min-width: 1441px) and (max-width: 2560px) {
+
     .max-w-7xl {
         max-width: 1400px;
     }
@@ -249,6 +259,7 @@ main {
 
 /* ========== LANDSCAPE PHONES ========== */
 @media (max-height: 500px) and (orientation: landscape) {
+
     section.min-h-screen {
         min-height: auto;
         padding: 2rem 1rem;
@@ -283,11 +294,11 @@ main {
     }
 }
 
-/* ========== MARQUEE FIXES ========== */
+/* ========== MARQUEE MOBILE SPEED ========== */
 @media (max-width: 640px) {
 
     .animate-marquee,
     .animate-marquee-reverse {
-        animation-duration: 15s !important;
+        animation-duration: 20s !important;
     }
 }

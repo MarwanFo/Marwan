@@ -48,7 +48,7 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
     const sizeClasses = {
         small: "col-span-1 row-span-1",
         medium: "col-span-1 md:col-span-1 row-span-1",
-        large: "col-span-1 md:col-span-2 row-span-1 md:row-span-2",
+        large: "col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2",
     };
 
     return (
@@ -400,7 +400,7 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                     </motion.div>
                 ) : (
                     <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr grid-flow-dense"
                         layout
                     >
                         {filteredProjects.map((project, index) => (

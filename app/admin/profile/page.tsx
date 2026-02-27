@@ -87,11 +87,8 @@ export default function ProfilePage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("profile")
-            .select("*")
+            .select("id, name, role, bio, location, email, avatar_url, resume_url, github_url, linkedin_url, twitter_url, years_experience, projects_completed, happy_clients, cups_of_coffee, interests, status_badge, philosophy")
             .single();
-
-        console.log("Fetched profile data:", data);
-        console.log("Fetch error:", error);
 
         if (!error && data) {
             setFormData({
@@ -157,16 +154,14 @@ export default function ProfilePage() {
         if (formData.id) {
             const result = await supabase.from("profile").update(profileData).eq("id", formData.id);
             error = result.error;
-            console.log("Update result:", result);
         } else {
             const result = await supabase.from("profile").insert(profileData);
             error = result.error;
-            console.log("Insert result:", result);
         }
 
         if (error) {
-            console.error("Save error:", error);
-            alert(`Failed to save profile: ${error.message}`);
+            console.error("[Profile] Save error — check RLS or schema");
+            alert("Failed to save profile. Please check your connection and try again.");
             setSaving(false);
             return;
         }

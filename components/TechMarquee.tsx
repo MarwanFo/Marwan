@@ -5,6 +5,26 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
+/** Returns true when the .light class is active on <html> */
+function useLightMode() {
+    const [isLight, setIsLight] = useState(false);
+    useEffect(() => {
+        const check = () => setIsLight(document.documentElement.classList.contains("light"));
+        check();
+        const observer = new MutationObserver(check);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+        return () => observer.disconnect();
+    }, []);
+    return isLight;
+}
+
+/** Returns true if an icon URL is intentionally white/monochrome */
+function isWhiteIcon(url: string): boolean {
+    const lower = url.toLowerCase();
+    // SimpleIcons white variant: /icon/white or /white at end
+    return lower.includes("/white") || lower.endsWith("/fff") || lower.includes("/ffffff");
+}
+
 interface Skill {
     id: string;
     name: string;
@@ -12,7 +32,7 @@ interface Skill {
     website_url?: string;
 }
 
-function MarqueeRow({ items, reverse = false }: { items: Skill[]; reverse?: boolean }) {
+function MarqueeRow({ items, reverse = false, lightMode }: { items: Skill[]; reverse?: boolean; lightMode: boolean }) {
     // Duplicate items multiple times for seamless loop
     const duplicatedItems = [...items, ...items, ...items];
 
@@ -31,35 +51,37 @@ function MarqueeRow({ items, reverse = false }: { items: Skill[]; reverse?: bool
                     width: "max-content",
                 }}
             >
-                {duplicatedItems.map((tech, index) => (
-                    <motion.a
-                        key={`${tech.id}-${index}`}
-                        href={tech.website_url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full glass cursor-pointer hover:bg-white/10 transition-colors duration-300"
-                        style={{
-                            flexShrink: 0,
-                            whiteSpace: "nowrap",
-                        }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        <div className="w-5 h-5 md:w-6 md:h-6 relative flex-shrink-0">
-                            <Image
-                                src={tech.icon_url}
-                                alt={tech.name}
-                                width={24}
-                                height={24}
-                                className="object-contain w-full h-full"
-                                unoptimized
-                            />
-                        </div>
-                        <span className="text-white/80 font-medium text-sm md:text-base">
-                            {tech.name}
-                        </span>
-                    </motion.a>
-                ))}
+                {duplicatedItems.map((tech, index) => {
+                    // In light mode, make white SVG icons dark so they stay visible
+                    const needsInvert = lightMode && isWhiteIcon(tech.icon_url);
+                    return (
+                        <motion.a
+                            key={`${tech.id}-${index}`}
+                            href={tech.website_url || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full glass cursor-pointer hover:bg-white/10 transition-colors duration-300"
+                            style={{ flexShrink: 0, whiteSpace: "nowrap" }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <div className="w-5 h-5 md:w-6 md:h-6 relative flex-shrink-0">
+                                <Image
+                                    src={tech.icon_url}
+                                    alt={tech.name}
+                                    width={24}
+                                    height={24}
+                                    className="object-contain w-full h-full"
+                                    style={needsInvert ? { filter: "brightness(0) saturate(100%)" } : undefined}
+                                    unoptimized
+                                />
+                            </div>
+                            <span className="text-white/80 font-medium text-sm md:text-base">
+                                {tech.name}
+                            </span>
+                        </motion.a>
+                    );
+                })}
             </motion.div>
         </div>
     );
@@ -68,6 +90,7 @@ function MarqueeRow({ items, reverse = false }: { items: Skill[]; reverse?: bool
 export default function TechMarquee() {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [loading, setLoading] = useState(true);
+    const lightMode = useLightMode();
 
     useEffect(() => {
         const fetchSkills = async () => {
@@ -139,8 +162,8 @@ export default function TechMarquee() {
 
                 {/* Marquee Rows */}
                 <div className="space-y-2 md:space-y-4">
-                    <MarqueeRow items={row1} />
-                    {row2.length > 0 && <MarqueeRow items={row2} reverse />}
+                    <MarqueeRow items={row1} lightMode={lightMode} />
+                    {row2.length > 0 && <MarqueeRow items={row2} reverse lightMode={lightMode} />}
                 </div>
             </div>
         </section>

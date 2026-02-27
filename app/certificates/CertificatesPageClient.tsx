@@ -99,7 +99,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         href={certificate.credential_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                        className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-white/90 text-gray-900 backdrop-blur-sm shadow-lg"
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
                         whileHover={{ scale: 1.1 }}

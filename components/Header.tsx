@@ -4,10 +4,14 @@ import HeaderClient from "./HeaderClient";
 export default async function Header() {
     const supabase = await createClient();
 
-    const { data: profile } = await supabase
-        .from("profile")
-        .select("resume_url")
-        .single();
+    const [{ data: profile }, { data: settings }] = await Promise.all([
+        supabase.from("profile").select("resume_url").single(),
+        supabase.from("site_settings").select("nav_resume_url").single(),
+    ]);
 
-    return <HeaderClient resumeUrl={profile?.resume_url || null} />;
+    // Prefer nav_resume_url from site_settings (set via Appearance admin),
+    // fall back to the profile resume URL
+    const resumeUrl = settings?.nav_resume_url || profile?.resume_url || null;
+
+    return <HeaderClient resumeUrl={resumeUrl} />;
 }

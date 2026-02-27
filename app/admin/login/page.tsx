@@ -1,38 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { Mail, Lock, LogIn, AlertCircle } from "lucide-react";
+import { Mail, Lock, LogIn, AlertCircle, ShieldAlert } from "lucide-react";
+
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_SECONDS = 60;
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [attempts, setAttempts] = useState(0);
+    const [lockoutSeconds, setLockoutSeconds] = useState(0);
     const router = useRouter();
-    const supabase = createClient();
+
+    // Countdown timer for client-side lockout display
+    useEffect(() => {
+        if (lockoutSeconds <= 0) return;
+        const timer = setTimeout(() => setLockoutSeconds((s) => s - 1), 1000);
+        return () => clearTimeout(timer);
+    }, [lockoutSeconds]);
+
+    const isLockedOut = lockoutSeconds > 0;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isLockedOut) return;
+
         setError(null);
         setLoading(true);
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
             });
 
-            if (error) {
-                setError(error.message);
-            } else {
-                router.push("/admin");
-                router.refresh();
+            if (res.status === 429) {
+                setError("Too many login attempts. Please wait before trying again.");
+                setLockoutSeconds(LOCKOUT_SECONDS);
+                return;
             }
+
+            if (!res.ok) {
+                // Always the SAME generic message — no user enumeration
+                const newAttempts = attempts + 1;
+                setAttempts(newAttempts);
+
+                if (newAttempts >= MAX_ATTEMPTS) {
+                    setLockoutSeconds(LOCKOUT_SECONDS);
+                    setError(
+                        `Too many failed attempts. Please wait ${LOCKOUT_SECONDS}s before trying again.`
+                    );
+                } else {
+                    setError(
+                        `Invalid credentials. ${MAX_ATTEMPTS - newAttempts} attempt${MAX_ATTEMPTS - newAttempts === 1 ? "" : "s"} remaining.`
+                    );
+                }
+                return;
+            }
+
+            // Success — middleware will validate the session on redirect
+            setAttempts(0);
+            router.push("/admin");
+            router.refresh();
         } catch {
-            setError("An unexpected error occurred");
+            setError("Connection error. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -70,8 +107,23 @@ export default function AdminLogin() {
                         <p className="text-white/60">Sign in to manage your portfolio</p>
                     </div>
 
+                    {/* Lockout Banner */}
+                    {isLockedOut && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="flex items-center gap-2 p-4 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 mb-6"
+                        >
+                            <ShieldAlert className="w-5 h-5 shrink-0" />
+                            <span className="text-sm">
+                                Account temporarily locked. Try again in{" "}
+                                <strong>{lockoutSeconds}s</strong>.
+                            </span>
+                        </motion.div>
+                    )}
+
                     {/* Error Message */}
-                    {error && (
+                    {error && !isLockedOut && (
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -97,7 +149,8 @@ export default function AdminLogin() {
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="admin@example.com"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 rounded-xl glass bg-white/5 border border-white/10 focus:border-neon-cyan/50 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300"
+                                    disabled={isLockedOut}
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl glass bg-white/5 border border-white/10 focus:border-neon-cyan/50 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300 disabled:opacity-50"
                                 />
                             </div>
                         </div>
@@ -115,17 +168,18 @@ export default function AdminLogin() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 rounded-xl glass bg-white/5 border border-white/10 focus:border-neon-cyan/50 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300"
+                                    disabled={isLockedOut}
+                                    className="w-full pl-12 pr-4 py-3 rounded-xl glass bg-white/5 border border-white/10 focus:border-neon-cyan/50 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/20 transition-all duration-300 disabled:opacity-50"
                                 />
                             </div>
                         </div>
 
                         <motion.button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || isLockedOut}
                             className="w-full py-4 rounded-xl bg-neon-gradient text-background font-semibold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileHover={{ scale: isLockedOut ? 1 : 1.02 }}
+                            whileTap={{ scale: isLockedOut ? 1 : 0.98 }}
                         >
                             {loading ? (
                                 <motion.div
@@ -133,6 +187,11 @@ export default function AdminLogin() {
                                     animate={{ rotate: 360 }}
                                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                 />
+                            ) : isLockedOut ? (
+                                <>
+                                    <ShieldAlert className="w-5 h-5" />
+                                    <span>Locked ({lockoutSeconds}s)</span>
+                                </>
                             ) : (
                                 <>
                                     <LogIn className="w-5 h-5" />

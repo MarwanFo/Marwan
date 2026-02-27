@@ -3,145 +3,219 @@
    ========================================== */
 
 .light {
+  /* Glass effect for light mode */
+  .glass {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+  }
 
-    /* Glass effect for light mode */
-    .glass {
-        background: rgba(255, 255, 255, 0.8) !important;
-        border: 1px solid rgba(0, 0, 0, 0.1) !important;
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
-    }
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.9) !important;
+  }
 
-    .glass-strong {
-        background: rgba(255, 255, 255, 0.9) !important;
-    }
+  /* Text colors for light mode - force dark text */
+  .text-white {
+    color: #1e293b !important;
+  }
 
-    /* Text colors for light mode - force dark text */
-    .text-white {
-        color: #1e293b !important;
-    }
+  .text-white\/90 {
+    color: #0f172a !important;
+  }
 
-    .text-white\/80 {
-        color: rgba(30, 41, 59, 0.9) !important;
-    }
+  .text-white\/80 {
+    color: rgba(30, 41, 59, 0.9) !important;
+  }
 
-    .text-white\/90 {
-        color: #0f172a !important;
-    }
+  .text-white\/70 {
+    color: rgba(30, 41, 59, 0.85) !important;
+  }
 
-    .text-white\/70 {
-        color: rgba(30, 41, 59, 0.85) !important;
-    }
+  .text-white\/60 {
+    color: rgba(30, 41, 59, 0.75) !important;
+  }
 
-    .text-white\/60 {
-        color: rgba(30, 41, 59, 0.75) !important;
-    }
+  .text-white\/50 {
+    color: rgba(30, 41, 59, 0.65) !important;
+  }
 
-    .text-white\/50 {
-        color: rgba(30, 41, 59, 0.65) !important;
-    }
+  .text-white\/40 {
+    color: rgba(30, 41, 59, 0.55) !important;
+  }
 
-    .text-white\/40 {
-        color: rgba(30, 41, 59, 0.55) !important;
-    }
+  .text-white\/30 {
+    color: rgba(30, 41, 59, 0.45) !important;
+  }
 
-    .text-white\/20 {
-        color: rgba(30, 41, 59, 0.35) !important;
-    }
+  .text-white\/20 {
+    color: rgba(30, 41, 59, 0.35) !important;
+  }
 
-    /* Background overrides */
-    .bg-background {
-        background-color: #f8fafc !important;
-    }
+  /* ── Icon container backgrounds ─────────────────────────────────────────── */
+  /* In dark mode these are subtle white overlays.
+       In light mode they become nearly invisible — fix with soft grey tints. */
 
-    .bg-background\/80 {
-        background-color: rgba(248, 250, 252, 0.95) !important;
-    }
+  .bg-white\/5 {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
 
-    /* Gradient from backgrounds - light mode needs proper fades */
-    .from-background {
-        --tw-gradient-from: #f8fafc !important;
-        --tw-gradient-to: transparent;
-    }
+  .bg-white\/10 {
+    background-color: rgba(0, 0, 0, 0.07) !important;
+  }
 
-    .via-background\/60 {
-        --tw-gradient-via: rgba(248, 250, 252, 0.8);
-    }
+  .bg-white\/15 {
+    background-color: rgba(0, 0, 0, 0.09) !important;
+  }
 
-    .to-transparent {
-        --tw-gradient-to: transparent;
-    }
+  .bg-white\/2 {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+  }
 
-    /* Gradient overlays on project cards */
-    .bg-gradient-to-t {
-        background: linear-gradient(to top, #f8fafc, rgba(248, 250, 252, 0.7), transparent) !important;
-    }
+  /* Hover states */
+  .hover\:bg-white\/5:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
 
-    /* Neon gradient button text stays white */
-    .bg-neon-gradient {
-        color: white !important;
-    }
+  .hover\:bg-white\/10:hover {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+  }
 
-    .text-background {
-        color: white !important;
-    }
+  /* ── Background overrides ────────────────────────────────────────────────── */
+  .bg-background {
+    background-color: #f8fafc !important;
+  }
 
-    /* Form inputs for light mode */
-    input,
-    textarea,
-    select {
-        background: rgba(255, 255, 255, 0.95) !important;
-        border-color: rgba(0, 0, 0, 0.2) !important;
-        color: #1e293b !important;
-    }
+  .bg-background\/80 {
+    background-color: rgba(248, 250, 252, 0.95) !important;
+  }
 
-    input::placeholder,
-    textarea::placeholder {
-        color: rgba(30, 41, 59, 0.5) !important;
-    }
+  /* Gradient from backgrounds - light mode needs proper fades */
+  .from-background {
+    --tw-gradient-from: #f8fafc !important;
+    --tw-gradient-to: transparent;
+  }
 
-    /* Borders - make them visible */
-    .border-white\/10 {
-        border-color: rgba(0, 0, 0, 0.1) !important;
-    }
+  .via-background\/60 {
+    --tw-gradient-via: rgba(248, 250, 252, 0.8);
+  }
 
-    .border-white\/20 {
-        border-color: rgba(0, 0, 0, 0.15) !important;
-    }
+  .to-transparent {
+    --tw-gradient-to: transparent;
+  }
 
-    /* Hover states */
-    .hover\:bg-white\/5:hover {
-        background-color: rgba(0, 0, 0, 0.03) !important;
-    }
+  /* Gradient overlays on project cards */
+  .bg-gradient-to-t {
+    background: linear-gradient(
+      to top,
+      #f8fafc,
+      rgba(248, 250, 252, 0.7),
+      transparent
+    ) !important;
+  }
 
-    .hover\:bg-white\/10:hover {
-        background-color: rgba(0, 0, 0, 0.06) !important;
-    }
+  /* Neon gradient button text stays white */
+  .bg-neon-gradient {
+    color: white !important;
+  }
 
-    /* Grid pattern visibility */
-    .grid-pattern {
-        background-image:
-            linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
-    }
+  .text-background {
+    color: white !important;
+  }
 
-    /* Selection styling */
-    ::selection {
-        background: rgba(124, 58, 237, 0.25);
-        color: #1e293b;
-    }
+  /* ── Borders ─────────────────────────────────────────────────────────────── */
+  .border-white\/10 {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+  }
 
-    /* Scrollbar - light mode */
-    ::-webkit-scrollbar-track {
-        background: #f1f5f9;
-    }
+  .border-white\/20 {
+    border-color: rgba(0, 0, 0, 0.15) !important;
+  }
 
-    /* Code elements */
-    code {
-        color: var(--neon-cyan) !important;
-    }
+  .border-white\/30 {
+    border-color: rgba(0, 0, 0, 0.2) !important;
+  }
 
-    /* Admin menu mobile backdrop */
-    .bg-background\/80.backdrop-blur-md {
-        background-color: rgba(248, 250, 252, 0.9) !important;
-    }
+  /* ── Form inputs ─────────────────────────────────────────────────────────── */
+  input,
+  textarea,
+  select {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(0, 0, 0, 0.2) !important;
+    color: #1e293b !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(30, 41, 59, 0.5) !important;
+  }
+
+  /* ── Tech Marquee SVG logos (skill icons from SimpleIcons / CDN) ──────────
+       Many SVG icons are white on transparent (designed for dark backgrounds).
+       In light mode they become invisible. We invert them to make them dark.
+       Exception: neon-colored icons (text-neon-*) are already adapted via CSS vars. */
+
+  .tech-icon-img {
+    /* Default: try to adapt to light mode */
+    filter: brightness(0) saturate(100%) !important;
+  }
+
+  /* ── Marquee pill badges ─────────────────────────────────────────────────── */
+  /* The marquee skill pills use glass + hover:bg-white/10 — already handled above */
+
+  /* ── Grid pattern visibility ─────────────────────────────────────────────── */
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px);
+  }
+
+  /* ── Selection styling ───────────────────────────────────────────────────── */
+  ::selection {
+    background: rgba(124, 58, 237, 0.25);
+    color: #1e293b;
+  }
+
+  /* ── Scrollbar - light mode ──────────────────────────────────────────────── */
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  /* ── Code elements ───────────────────────────────────────────────────────── */
+  code {
+    color: var(--neon-cyan) !important;
+  }
+
+  /* ── Admin menu mobile backdrop ──────────────────────────────────────────── */
+  .bg-background\/80.backdrop-blur-md {
+    background-color: rgba(248, 250, 252, 0.9) !important;
+  }
+
+  /* ── Particle dots — hide them in light mode (would be invisible anyway) ─── */
+  .particle-dot {
+    display: none;
+  }
+
+  /* ── About section stat cards / social link buttons ─────────────────────── */
+  /* Already covered by bg-white/5 override above */
+
+  /* ── CertificateCard icon containers ─────────────────────────────────────── */
+  .bg-neon-cyan\/10 {
+    background-color: rgba(8, 145, 178, 0.12) !important;
+  }
+
+  .bg-neon-purple\/10 {
+    background-color: rgba(124, 58, 237, 0.1) !important;
+  }
+
+  .bg-neon-magenta\/10 {
+    background-color: rgba(192, 38, 211, 0.1) !important;
+  }
+
+  .bg-neon-purple\/20 {
+    background-color: rgba(124, 58, 237, 0.15) !important;
+  }
+
+  .bg-neon-cyan\/20 {
+    background-color: rgba(8, 145, 178, 0.15) !important;
+  }
 }

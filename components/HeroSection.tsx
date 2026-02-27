@@ -1,135 +1,112 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ArrowDown, Sparkles } from "lucide-react";
 
-export default function HeroSection() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [isLoaded, setIsLoaded] = useState(false);
+interface HeroData {
+    hero_name?: string | null;
+    hero_tagline?: string | null;
+    hero_title?: string | null;
+    hero_description?: string | null;
+    cta_primary_text?: string | null;
+    cta_primary_href?: string | null;
+    cta_secondary_text?: string | null;
+    cta_secondary_href?: string | null;
+}
 
-    // Mouse position tracking for gradient blob
+export default function HeroSection() {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [heroData, setHeroData] = useState<HeroData>({});
+
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
-
-    // Smooth spring animation for mouse follower
     const smoothX = useSpring(mouseX, { stiffness: 50, damping: 20 });
     const smoothY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
     useEffect(() => {
         setIsLoaded(true);
 
+        // Fetch hero settings from our public API
+        fetch("/api/public/settings")
+            .then((r) => r.json())
+            .then((d) => setHeroData(d || {}))
+            .catch(() => {/* silently fallback to defaults */});
+
         const handleMouseMove = (e: MouseEvent) => {
             mouseX.set(e.clientX);
             mouseY.set(e.clientY);
-            setMousePosition({ x: e.clientX, y: e.clientY });
         };
-
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [mouseX, mouseY]);
 
-    // Text animation variants
+    // Resolve values — DB overrides hardcoded defaults
+    const name = heroData.hero_name || "MARWAN";
+    const title = heroData.hero_title || "FULL STACK DEVELOPER";
+    const tagline = heroData.hero_tagline || "Welcome to my portfolio";
+    const description = heroData.hero_description ||
+        "Crafting beautiful, high-performance web experiences with modern technologies and creative design.";
+    const ctaPrimaryText = heroData.cta_primary_text || "View Projects";
+    const ctaPrimaryHref = heroData.cta_primary_href || "#projects";
+    const ctaSecondaryText = heroData.cta_secondary_text || "Get in Touch";
+    const ctaSecondaryHref = heroData.cta_secondary_href || "#contact";
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.3,
-            },
+            transition: { staggerChildren: 0.1, delayChildren: 0.3 },
         },
     };
 
     const letterVariants = {
-        hidden: {
-            opacity: 0,
-            y: 100,
-            rotateX: -90,
-        },
+        hidden: { opacity: 0, y: 100, rotateX: -90 },
         visible: {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            transition: {
-                type: "spring",
-                stiffness: 100,
-                damping: 12,
-            },
+            opacity: 1, y: 0, rotateX: 0,
+            transition: { type: "spring", stiffness: 100, damping: 12 },
         },
     };
 
     const fadeUpVariants = {
         hidden: { opacity: 0, y: 30 },
         visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.8,
-                ease: [0.25, 0.4, 0.25, 1],
-            },
+            opacity: 1, y: 0,
+            transition: { duration: 0.8, ease: [0.25, 0.4, 0.25, 1] as const },
         },
     };
-
-    const name = "MARWAN";
-    const title = "FULL STACK DEVELOPER";
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
             {/* Animated Background Gradient Blobs */}
             <div className="absolute inset-0 overflow-hidden">
-                {/* Mouse-following gradient blob */}
                 <motion.div
                     className="absolute w-[600px] h-[600px] rounded-full"
                     style={{
-                        x: smoothX,
-                        y: smoothY,
-                        translateX: "-50%",
-                        translateY: "-50%",
+                        x: smoothX, y: smoothY,
+                        translateX: "-50%", translateY: "-50%",
                         background: "radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(139, 92, 246, 0.1) 50%, transparent 70%)",
                         filter: "blur(60px)",
                     }}
                 />
-
-                {/* Static ambient blobs */}
                 <motion.div
                     className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(255, 0, 255, 0.1) 0%, transparent 70%)",
                         filter: "blur(80px)",
                     }}
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        x: [0, 50, 0],
-                        y: [0, -30, 0],
-                    }}
-                    transition={{
-                        duration: 8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
+                    animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -30, 0] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                 />
-
                 <motion.div
                     className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
                         filter: "blur(70px)",
                     }}
-                    animate={{
-                        scale: [1, 1.3, 1],
-                        x: [0, -40, 0],
-                        y: [0, 40, 0],
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: 1,
-                    }}
+                    animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, 40, 0] }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 />
-
-                {/* Particle effect */}
                 {isLoaded && (
                     <div className="absolute inset-0">
                         {[...Array(30)].map((_, i) => (
@@ -140,10 +117,7 @@ export default function HeroSection() {
                                     left: `${Math.random() * 100}%`,
                                     top: `${Math.random() * 100}%`,
                                 }}
-                                animate={{
-                                    y: [0, -100, 0],
-                                    opacity: [0, 1, 0],
-                                }}
+                                animate={{ y: [0, -100, 0], opacity: [0, 1, 0] }}
                                 transition={{
                                     duration: 3 + Math.random() * 2,
                                     repeat: Infinity,
@@ -158,7 +132,7 @@ export default function HeroSection() {
 
             {/* Main Content */}
             <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
-                {/* Small tagline */}
+                {/* Tagline */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -167,12 +141,12 @@ export default function HeroSection() {
                 >
                     <Sparkles className="w-4 h-4 text-neon-cyan" />
                     <span className="text-sm md:text-base uppercase tracking-[0.3em] text-white/60">
-                        Welcome to my portfolio
+                        {tagline}
                     </span>
                     <Sparkles className="w-4 h-4 text-neon-magenta" />
                 </motion.div>
 
-                {/* Name - Large staggered animation */}
+                {/* Name */}
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -202,11 +176,7 @@ export default function HeroSection() {
                 >
                     <div className="text-display font-bold flex justify-center flex-wrap gap-x-4 text-white/90" style={{ perspective: "1000px" }}>
                         {title.split(" ").map((word, wordIndex) => (
-                            <motion.span
-                                key={wordIndex}
-                                variants={letterVariants}
-                                className="inline-block"
-                            >
+                            <motion.span key={wordIndex} variants={letterVariants} className="inline-block">
                                 {word}
                             </motion.span>
                         ))}
@@ -220,10 +190,7 @@ export default function HeroSection() {
                     animate="visible"
                     className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
                 >
-                    Crafting{" "}
-                    <span className="text-neon-cyan">beautiful</span>,{" "}
-                    <span className="text-neon-purple">high-performance</span> web experiences
-                    with modern technologies and creative design.
+                    {description}
                 </motion.p>
 
                 {/* CTA Buttons */}
@@ -234,25 +201,23 @@ export default function HeroSection() {
                     className="flex flex-col sm:flex-row gap-4 justify-center items-center"
                 >
                     <motion.a
-                        href="#projects"
+                        href={ctaPrimaryHref}
                         className="group relative px-8 py-4 rounded-full glass glow-effect overflow-hidden"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <span className="relative z-10 font-semibold tracking-wide">View Projects</span>
-                        <motion.div
-                            className="absolute inset-0 bg-neon-gradient opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-                        />
+                        <span className="relative z-10 font-semibold tracking-wide">{ctaPrimaryText}</span>
+                        <motion.div className="absolute inset-0 bg-neon-gradient opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                     </motion.a>
 
                     <motion.a
-                        href="#contact"
+                        href={ctaSecondaryHref}
                         className="group px-8 py-4 rounded-full border border-white/20 hover:border-neon-cyan/50 transition-colors duration-300"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         <span className="font-semibold tracking-wide text-white/80 group-hover:text-neon-cyan transition-colors duration-300">
-                            Get in Touch
+                            {ctaSecondaryText}
                         </span>
                     </motion.a>
                 </motion.div>

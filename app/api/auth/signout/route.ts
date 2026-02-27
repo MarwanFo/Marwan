@@ -8,7 +8,8 @@ export async function POST() {
     await supabase.auth.signOut();
 
     // Create response that redirects to login
-    const response = NextResponse.redirect(new URL('/admin/login', process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:3000'));
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const response = NextResponse.redirect(new URL('/admin/login', appUrl));
 
     // Clear all Supabase auth cookies
     const cookieNames = [

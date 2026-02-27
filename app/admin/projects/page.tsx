@@ -45,7 +45,7 @@ export default function ProjectsPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("projects")
-            .select("*")
+            .select("id, title, description, tags, github_url, live_url, image_url, size, featured, display_order, created_at")
             .order("display_order", { ascending: true });
 
         if (!error && data) {

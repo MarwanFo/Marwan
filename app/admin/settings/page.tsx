@@ -66,7 +66,7 @@ export default function SettingsPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("site_settings")
-            .select("*")
+            .select("id, hero_title, hero_subtitle, hero_description, total_certifications, learning_hours, skills_acquired, years_learning, contact_email, contact_phone, contact_message, footer_text")
             .single();
 
         if (!error && data) {

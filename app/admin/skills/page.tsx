@@ -51,7 +51,7 @@ export default function SkillsPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("skills")
-            .select("*")
+            .select("id, name, icon_url, website_url, created_at")
             .order("created_at", { ascending: true });
 
         if (error) {
@@ -81,8 +81,8 @@ export default function SkillsPage() {
             .single();
 
         if (error) {
-            console.error("Error adding skill:", error);
-            alert(`Error adding skill: ${error.message}`);
+            console.error("[Skills] Add skill error");
+            alert("Failed to add skill. Please try again.");
         } else {
             setSkills([...skills, data]);
             setNewSkill({ name: "", icon_url: "", website_url: "" });
@@ -97,8 +97,8 @@ export default function SkillsPage() {
         const { error } = await supabase.from("skills").delete().eq("id", id);
 
         if (error) {
-            console.error("Error deleting skill:", error);
-            alert(`Error deleting skill: ${error.message}`);
+            console.error("[Skills] Delete skill error");
+            alert("Failed to delete skill. Please try again.");
         } else {
             setSkills(skills.filter((s) => s.id !== id));
         }

@@ -168,7 +168,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                                 href={project.live_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                className="p-2.5 rounded-xl bg-white/90 text-gray-900 backdrop-blur-sm shadow-lg"
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                             >
@@ -180,7 +180,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                                 href={project.github_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                className="p-2.5 rounded-xl bg-white/90 text-gray-900 backdrop-blur-sm shadow-lg"
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                             >

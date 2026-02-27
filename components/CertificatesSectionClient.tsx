@@ -13,6 +13,7 @@ const fallbackCertificates: Certificate[] = [
         issuer: "Amazon Web Services",
         date: "2024",
         credential_url: "#",
+        image_url: null,
         skills: ["Cloud Architecture", "AWS Services", "Security"],
         featured: true,
         display_order: 0,
@@ -24,6 +25,7 @@ const fallbackCertificates: Certificate[] = [
         issuer: "Meta",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["React", "JavaScript", "Web Performance"],
         featured: true,
         display_order: 1,
@@ -35,6 +37,7 @@ const fallbackCertificates: Certificate[] = [
         issuer: "freeCodeCamp",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["Node.js", "MongoDB", "REST APIs"],
         featured: false,
         display_order: 2,
@@ -46,6 +49,7 @@ const fallbackCertificates: Certificate[] = [
         issuer: "Udemy",
         date: "2022",
         credential_url: "#",
+        image_url: null,
         skills: ["TypeScript", "Type Safety", "OOP"],
         featured: false,
         display_order: 3,
@@ -140,7 +144,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         href={certificate.credential_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                        className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-white/90 text-gray-900 backdrop-blur-sm shadow-lg"
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
                         whileHover={{ scale: 1.1 }}

@@ -49,11 +49,11 @@ export default function ExperiencesPage() {
         try {
             const { data, error } = await supabase
                 .from("experiences")
-                .select("*")
+                .select("id, title, role, company, company_url, location, type, period, start_date, end_date, current, description, achievements, technologies, image_url, display_order, created_at")
                 .order("display_order", { ascending: true });
 
             if (error) {
-                console.error("Error fetching experiences:", error.message);
+                console.error("[Experiences] Fetch error");
             }
 
             if (data) {

@@ -43,7 +43,7 @@ export default function CertificatesPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("certificates")
-            .select("*")
+            .select("id, title, issuer, date, credential_url, image_url, skills, featured, display_order, created_at")
             .order("display_order", { ascending: true });
 
         if (!error && data) {

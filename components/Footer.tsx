@@ -3,8 +3,27 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin, User, Briefcase, FolderKanban, Award, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
+import { useEffect, useState } from "react";
+
+interface SiteSettings {
+    github_url?: string | null;
+    linkedin_url?: string | null;
+    social_email?: string | null;
+    location?: string | null;
+    footer_tagline?: string | null;
+    footer_text?: string | null;
+}
 
 export default function Footer() {
+    const [settings, setSettings] = useState<SiteSettings>({});
+
+    useEffect(() => {
+        fetch("/api/public/settings")
+            .then((r) => r.json())
+            .then((d) => setSettings(d || {}))
+            .catch(() => {});
+    }, []);
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -19,11 +38,20 @@ export default function Footer() {
         { name: "Contact", href: "#contact", icon: MessageCircle },
     ];
 
+    // Use DB values with hardcoded fallbacks
+    const githubUrl = settings.github_url || "https://github.com";
+    const linkedinUrl = settings.linkedin_url || "https://linkedin.com";
+    const emailAddress = settings.social_email || "marwanefaridi22@gmail.com";
+    const location = settings.location || "Morocco · Available Worldwide";
+    const footerTagline = settings.footer_tagline || "Full-stack developer passionate about building modern web experiences with clean code and stunning design.";
+    const footerText = settings.footer_text || `© ${currentYear} FARIDI Marwan · Built with`;
+
     const socialLinks = [
-        { name: "GitHub", icon: Github, href: "https://github.com" },
-        { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-        { name: "Email", icon: Mail, href: "mailto:marwanefaridi22@gmail.com" },
+        { name: "GitHub", icon: Github, href: githubUrl },
+        { name: "LinkedIn", icon: Linkedin, href: linkedinUrl },
+        { name: "Email", icon: Mail, href: `mailto:${emailAddress}` },
     ];
+
 
     return (
         <footer className="relative pt-20 pb-8 px-6 border-t border-white/10">
@@ -50,12 +78,11 @@ export default function Footer() {
                     >
                         <Logo size="sm" showText />
                         <p className="text-white/60 text-sm leading-relaxed max-w-xs">
-                            Full-stack developer passionate about building modern web experiences
-                            with clean code and stunning design.
+                            {footerTagline}
                         </p>
                         <div className="flex items-center gap-2 text-white/50 text-sm">
                             <MapPin className="w-4 h-4" />
-                            <span>Morocco · Available Worldwide</span>
+                            <span>{location}</span>
                         </div>
                     </motion.div>
 
@@ -125,7 +152,7 @@ export default function Footer() {
                         viewport={{ once: true }}
                         className="flex items-center gap-2 text-white/50 text-sm"
                     >
-                        <span>© {currentYear} FARIDI Marwan · Built with</span>
+                        <span>{footerText}</span>
                         <Heart className="w-4 h-4 text-neon-magenta fill-neon-magenta animate-pulse" />
                     </motion.p>
 

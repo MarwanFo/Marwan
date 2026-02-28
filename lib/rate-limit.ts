@@ -26,7 +26,7 @@ const rateLimitStore = new Map<string, RateLimitEntry>();
 
 /** Evict the oldest entries when store exceeds MAX_STORE_SIZE */
 function evictOldest(count: number): void {
-    const entries = [...rateLimitStore.entries()]
+    const entries = Array.from(rateLimitStore.entries())
         .sort(([, a], [, b]) => a.lastAccessed - b.lastAccessed);
 
     for (let i = 0; i < count && i < entries.length; i++) {
@@ -37,11 +37,11 @@ function evictOldest(count: number): void {
 /** Remove expired entries from the store */
 function cleanupExpired(): void {
     const now = Date.now();
-    for (const [key, entry] of rateLimitStore) {
+    rateLimitStore.forEach((entry, key) => {
         if (now > entry.resetTime) {
             rateLimitStore.delete(key);
         }
-    }
+    });
 }
 
 // Cleanup expired entries every 60 seconds (more frequent than before)

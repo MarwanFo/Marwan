@@ -9,7 +9,7 @@ interface Use3DTiltOptions {
 }
 
 interface Use3DTiltReturn<T extends HTMLElement> {
-    ref: React.RefObject<T | null>;
+    ref: React.RefObject<T>;
     isHovered: boolean;
     rotateX: MotionValue<string>;
     rotateY: MotionValue<string>;
@@ -26,7 +26,7 @@ export function use3DTilt<T extends HTMLElement = HTMLDivElement>(
     options: Use3DTiltOptions = {}
 ): Use3DTiltReturn<T> {
     const { maxRotation = 8 } = options;
-    const ref = useRef<T>(null);
+    const ref = useRef<T>(null) as React.RefObject<T>;
     const [isHovered, setIsHovered] = useState(false);
 
     const x = useMotionValue(0);

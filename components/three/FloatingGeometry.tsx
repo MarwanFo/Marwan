@@ -10,18 +10,21 @@ interface FloatingShape {
     scale: number;
     speed: number;
     rotSpeed: [number, number, number];
-    color: string;
+    colorDark: string;
+    colorLight: string;
     geometry: "octahedron" | "tetrahedron" | "icosahedron";
     phaseOffset: number;
 }
 
-const NEON_COLORS = ["#00ffff", "#8b5cf6", "#ff00ff", "#06b6d4", "#a855f7"];
+const NEON_COLORS_DARK = ["#00ffff", "#8b5cf6", "#ff00ff", "#06b6d4", "#a855f7"];
+const NEON_COLORS_LIGHT = ["#0891b2", "#7c3aed", "#c026d3", "#0e7490", "#6d28d9"];
 
 function generateShapes(count: number): FloatingShape[] {
     const shapes: FloatingShape[] = [];
     const geoTypes: FloatingShape["geometry"][] = ["octahedron", "tetrahedron", "icosahedron"];
 
     for (let i = 0; i < count; i++) {
+        const colorIdx = Math.floor(Math.random() * NEON_COLORS_DARK.length);
         shapes.push({
             position: [
                 (Math.random() - 0.5) * 80,
@@ -40,7 +43,8 @@ function generateShapes(count: number): FloatingShape[] {
                 (Math.random() - 0.5) * 0.02,
                 (Math.random() - 0.5) * 0.02,
             ],
-            color: NEON_COLORS[Math.floor(Math.random() * NEON_COLORS.length)],
+            colorDark: NEON_COLORS_DARK[colorIdx],
+            colorLight: NEON_COLORS_LIGHT[colorIdx],
             geometry: geoTypes[Math.floor(Math.random() * geoTypes.length)],
             phaseOffset: Math.random() * Math.PI * 2,
         });
@@ -48,7 +52,12 @@ function generateShapes(count: number): FloatingShape[] {
     return shapes;
 }
 
-function FloatingShape({ shape }: { shape: FloatingShape }) {
+interface FloatingShapeProps {
+    shape: FloatingShape;
+    isDark: boolean;
+}
+
+function FloatingShapeComponent({ shape, isDark }: FloatingShapeProps) {
     const meshRef = useRef<THREE.Mesh>(null);
     const initialY = shape.position[1];
 
@@ -87,23 +96,28 @@ function FloatingShape({ shape }: { shape: FloatingShape }) {
         >
             {GeometryComponent}
             <meshBasicMaterial
-                color={shape.color}
+                color={isDark ? shape.colorDark : shape.colorLight}
                 wireframe
                 transparent
-                opacity={0.25}
-                blending={THREE.AdditiveBlending}
+                opacity={isDark ? 0.25 : 0.35}
+                blending={isDark ? THREE.AdditiveBlending : THREE.NormalBlending}
             />
         </mesh>
     );
 }
 
-export default function FloatingGeometry() {
+interface FloatingGeometryProps {
+    theme: "dark" | "light";
+}
+
+export default function FloatingGeometry({ theme }: FloatingGeometryProps) {
     const shapes = useMemo(() => generateShapes(12), []);
+    const isDark = theme === "dark";
 
     return (
         <group>
             {shapes.map((shape, i) => (
-                <FloatingShape key={i} shape={shape} />
+                <FloatingShapeComponent key={i} shape={shape} isDark={isDark} />
             ))}
         </group>
     );

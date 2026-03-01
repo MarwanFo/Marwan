@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useTheme } from "@/components/ThemeProvider";
 
 /**
  * Dynamically import the 3D SceneCanvas with SSR disabled.
@@ -9,9 +10,11 @@ import dynamic from "next/dynamic";
  */
 const SceneCanvas = dynamic(() => import("./SceneCanvas"), {
     ssr: false,
-    loading: () => null, // No fallback — the 3D layer appears seamlessly
+    loading: () => null,
 });
 
 export default function Scene3DProvider() {
-    return <SceneCanvas />;
+    const { theme } = useTheme();
+
+    return <SceneCanvas theme={theme} />;
 }

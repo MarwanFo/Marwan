@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useCallback } from "react";
+import { useRef, useMemo, useCallback, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -53,6 +53,7 @@ const fragmentShader = `
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform float uTime;
+  uniform float uOpacity;
 
   varying float vDistance;
   varying float vAlpha;
@@ -73,13 +74,34 @@ const fragmentShader = `
     // Pulse effect
     float pulse = 0.7 + 0.3 * sin(uTime * 1.5);
 
-    gl_FragColor = vec4(color, glow * vAlpha * pulse * 0.7);
+    gl_FragColor = vec4(color, glow * vAlpha * pulse * uOpacity);
   }
 `;
 
-export default function KineticGrid() {
+// Theme-specific color palettes
+const THEME_COLORS = {
+    dark: {
+        colorA: "#00ffff", // Neon Cyan
+        colorB: "#8b5cf6", // Purple
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending,
+    },
+    light: {
+        colorA: "#0891b2", // Deep Teal (visible on white)
+        colorB: "#7c3aed", // Deep Purple
+        opacity: 0.45,
+        blending: THREE.NormalBlending,
+    },
+};
+
+interface KineticGridProps {
+    theme: "dark" | "light";
+}
+
+export default function KineticGrid({ theme }: KineticGridProps) {
     const meshRef = useRef<THREE.Points>(null);
     const { viewport } = useThree();
+    const colors = THEME_COLORS[theme];
 
     // Mouse position in world space
     const mouse = useRef(new THREE.Vector2(9999, 9999));
@@ -108,11 +130,24 @@ export default function KineticGrid() {
             uTime: { value: 0 },
             uMouse: { value: new THREE.Vector2(9999, 9999) },
             uMouseRadius: { value: 15.0 },
-            uColorA: { value: new THREE.Color("#00ffff") }, // Neon Cyan
-            uColorB: { value: new THREE.Color("#8b5cf6") }, // Purple
+            uColorA: { value: new THREE.Color(colors.colorA) },
+            uColorB: { value: new THREE.Color(colors.colorB) },
+            uOpacity: { value: colors.opacity },
         }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     );
+
+    // Update colors when theme changes
+    useEffect(() => {
+        if (!meshRef.current) return;
+        const mat = meshRef.current.material as THREE.ShaderMaterial;
+        mat.uniforms.uColorA.value.set(colors.colorA);
+        mat.uniforms.uColorB.value.set(colors.colorB);
+        mat.uniforms.uOpacity.value = colors.opacity;
+        mat.blending = colors.blending;
+        mat.needsUpdate = true;
+    }, [colors]);
 
     // Track mouse in normalized device coordinates
     const handlePointerMove = useCallback(
@@ -125,7 +160,7 @@ export default function KineticGrid() {
     );
 
     // Attach global pointer listener
-    useMemo(() => {
+    useEffect(() => {
         if (typeof window !== "undefined") {
             window.addEventListener("pointermove", handlePointerMove, { passive: true });
         }
@@ -170,7 +205,7 @@ export default function KineticGrid() {
                 defines={defines}
                 transparent
                 depthWrite={false}
-                blending={THREE.AdditiveBlending}
+                blending={colors.blending}
             />
         </points>
     );

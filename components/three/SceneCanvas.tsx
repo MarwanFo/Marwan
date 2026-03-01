@@ -7,12 +7,18 @@ import KineticGrid from "./KineticGrid";
 import FloatingGeometry from "./FloatingGeometry";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 
+interface SceneCanvasProps {
+    theme: "dark" | "light";
+}
+
 /**
  * The global 3D background canvas.
  * Renders behind all DOM content at z-index: 0.
- * Uses AdaptiveDpr + AdaptiveEvents for mobile performance.
+ * Adapts colors and intensity based on the current theme.
  */
-function SceneCanvas() {
+function SceneCanvas({ theme }: SceneCanvasProps) {
+    const isDark = theme === "dark";
+
     return (
         <div
             id="three-canvas"
@@ -24,6 +30,8 @@ function SceneCanvas() {
                 height: "100vh",
                 zIndex: 0,
                 pointerEvents: "none",
+                opacity: isDark ? 1 : 0.5,
+                transition: "opacity 0.5s ease",
             }}
         >
             <Canvas
@@ -42,21 +50,16 @@ function SceneCanvas() {
                 <AdaptiveEvents />
 
                 <Suspense fallback={null}>
-                    {/* Ambient light for subtle base illumination */}
-                    <ambientLight intensity={0.15} />
+                    <ambientLight intensity={isDark ? 0.15 : 0.3} />
 
-                    {/* The kinetic particle grid */}
-                    <KineticGrid />
+                    <KineticGrid theme={theme} />
+                    <FloatingGeometry theme={theme} />
 
-                    {/* Floating neon geometry */}
-                    <FloatingGeometry />
-
-                    {/* Post-processing: Selective Bloom for neon glow */}
                     <EffectComposer multisampling={0}>
                         <Bloom
-                            luminanceThreshold={0.2}
+                            luminanceThreshold={isDark ? 0.2 : 0.6}
                             luminanceSmoothing={0.9}
-                            intensity={1.5}
+                            intensity={isDark ? 1.5 : 0.6}
                             mipmapBlur
                         />
                     </EffectComposer>

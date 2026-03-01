@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import LoadingScreen from "@/components/LoadingScreen";
+import Scene3DProvider from "@/components/three/Scene3DProvider";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -37,7 +38,8 @@ export default function RootLayout({
             <body className={`${inter.variable} font-sans antialiased`}>
                 <ThemeProvider>
                     <LoadingScreen />
-                    <div className="fixed inset-0 grid-pattern pointer-events-none" />
+                    <Scene3DProvider />
+                    <div className="fixed inset-0 grid-pattern pointer-events-none opacity-30" />
                     <HeaderWrapper>
                         <Header />
                     </HeaderWrapper>

@@ -70,8 +70,8 @@ const nextConfig = {
                                 "https://avatars.githubusercontent.com",
                                 "https://lh3.googleusercontent.com",
                             ].join(" "),
-                            // Only connect to known Supabase endpoints
-                            "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+                            // Allow connections to Supabase + Google Analytics
+                            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
                             // Block all framing
                             "frame-ancestors 'none'",
                             // Block object/embed (Flash, plugins)

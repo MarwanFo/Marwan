@@ -53,12 +53,14 @@ const nextConfig = {
                         key: 'Content-Security-Policy',
                         value: [
                             "default-src 'self'",
-                            // unsafe-eval removed in production — only needed for Next.js HMR in dev
+                            // blob: needed for Three.js Web Workers
                             isProd
-                                ? "script-src 'self' 'unsafe-inline'"
-                                : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+                                ? "script-src 'self' 'unsafe-inline' blob:"
+                                : "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com",
+                            // Three.js workers
+                            "worker-src 'self' blob:",
                             // HARDENED: no wildcard https: — explicit trusted origins only
                             [
                                 "img-src 'self' data: blob:",

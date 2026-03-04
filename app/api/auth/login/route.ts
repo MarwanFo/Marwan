@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
@@ -15,7 +15,9 @@ export async function POST(request: NextRequest) {
         });
 
         if (!rateLimit.success) {
-            const retryAfterSec = Math.ceil((rateLimit.resetTime - Date.now()) / 1000);
+            const retryAfterSec = Math.ceil(
+                (rateLimit.resetTime - Date.now()) / 1000
+            );
             return NextResponse.json(
                 { error: "Too many login attempts. Please try again later." },
                 {
@@ -43,44 +45,44 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 });
         }
 
-        // ── Attempt sign-in via Supabase (server-side, no client token leaked) ─
-        const supabase = createClient(
+        // ── Sign in via Supabase SSR — cookies are set automatically ─────────
+        // Using @supabase/ssr so cookies match what the middleware expects.
+        let response = NextResponse.json({ success: true });
+
+        const supabase = createServerClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    getAll() {
+                        return request.cookies.getAll();
+                    },
+                    setAll(cookiesToSet) {
+                        cookiesToSet.forEach(({ name, value, options }) => {
+                            response.cookies.set(name, value, {
+                                ...options,
+                                sameSite: "lax",
+                                httpOnly: true,
+                                secure:
+                                    process.env.NODE_ENV === "production",
+                                path: "/",
+                            });
+                        });
+                    },
+                },
+            }
         );
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
 
-        if (error || !data.session) {
+        if (error) {
             // Always return the same generic message regardless of the Supabase error
             // This prevents user enumeration (e.g. "Email not found" vs "Wrong password")
             return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 });
         }
-
-        // ── Success — set HttpOnly session cookies ────────────────────────────
-        const isProd = process.env.NODE_ENV === "production";
-        const cookieOptions = [
-            `Path=/`,
-            `HttpOnly`,
-            `SameSite=Lax`,
-            isProd ? `Secure` : "",
-            `Max-Age=${60 * 60 * 8}`, // 8 hours
-        ]
-            .filter(Boolean)
-            .join("; ");
-
-        const response = NextResponse.json({ success: true });
-        response.headers.append(
-            "Set-Cookie",
-            `sb-access-token=${data.session.access_token}; ${cookieOptions}`
-        );
-        response.headers.append(
-            "Set-Cookie",
-            `sb-refresh-token=${data.session.refresh_token}; ${cookieOptions}`
-        );
 
         return response;
     } catch (err) {

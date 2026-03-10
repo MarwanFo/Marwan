@@ -26,11 +26,12 @@ interface AppearanceSettings {
     nav_resume_url: string;
 }
 
+const supabase = createClient();
+
 export default function AppearancePage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
-    const supabase = createClient();
 
     const [form, setForm] = useState<AppearanceSettings>({
         github_url: "",
@@ -65,7 +66,6 @@ export default function AppearancePage() {
             setLoading(false);
         };
         fetchSettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {

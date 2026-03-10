@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -58,9 +58,7 @@ export default function AdminLayout({
     const [unreadCount, setUnreadCount] = useState(0);
     const router = useRouter();
     const pathname = usePathname();
-    // Stable client ref — never re-created on re-render
-    const supabaseRef = useRef(createClient());
-    const supabase = supabaseRef.current;
+    const supabase = createClient();
 
     useEffect(() => {
         const getUser = async () => {
@@ -104,7 +102,7 @@ export default function AdminLayout({
 
     return (
         <SessionGuard inactivityTimeout={30} warningBeforeSeconds={60}>
-            <div className="min-h-screen bg-background flex">
+            <div className="min-h-screen bg-background flex relative z-10">
                 {sidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
@@ -113,8 +111,9 @@ export default function AdminLayout({
                 )}
 
                 <motion.aside
-                    className={`fixed lg:static inset-y-0 left-0 z-50 w-72 glass border-r border-white/10 flex flex-col transform transition-transform duration-300 lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                        }`}
+                    className={`fixed lg:static inset-y-0 left-0 z-50 w-72 glass border-r border-white/10 flex flex-col transition-transform duration-300 overflow-hidden ${
+                        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+                    }`}
                 >
                     <div className="p-6 border-b border-white/10">
                         <Link href="/admin">

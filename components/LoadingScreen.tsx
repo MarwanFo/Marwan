@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoadingScreen() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -17,16 +17,16 @@ export default function LoadingScreen() {
             /PageSpeed/i.test(navigator.userAgent);
 
         if (isBot) {
-            setIsLoading(false);
             return;
         }
 
         // Check if this is first visit in session
         const hasLoaded = sessionStorage.getItem("hasLoaded");
         if (hasLoaded) {
-            setIsLoading(false);
             return;
         }
+
+        setIsLoading(true);
 
         // Show loading for a bit on first visit
         const timer = setTimeout(() => {

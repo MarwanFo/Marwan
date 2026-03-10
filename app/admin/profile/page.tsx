@@ -47,12 +47,13 @@ interface ProfileData {
     philosophy: { title: string; description: string }[];
 }
 
+const supabase = createClient();
+
 export default function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [newInterest, setNewInterest] = useState("");
-    const supabase = createClient();
 
     const [formData, setFormData] = useState<ProfileData>({
         name: "",
@@ -85,6 +86,7 @@ export default function ProfilePage() {
 
     const fetchProfile = async () => {
         setLoading(true);
+        if (!supabase) return;
         const { data, error } = await supabase
             .from("profile")
             .select("id, name, role, bio, location, email, avatar_url, resume_url, github_url, linkedin_url, twitter_url, years_experience, projects_completed, happy_clients, cups_of_coffee, interests, status_badge, philosophy")

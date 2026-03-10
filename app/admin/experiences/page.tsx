@@ -18,6 +18,8 @@ import {
     Upload,
 } from "lucide-react";
 
+const supabase = createClient();
+
 export default function ExperiencesPage() {
     const [experiences, setExperiences] = useState<Experience[]>([]);
     const [loading, setLoading] = useState(true);
@@ -25,7 +27,6 @@ export default function ExperiencesPage() {
     const [editingExperience, setEditingExperience] = useState<Experience | null>(null);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const supabase = createClient();
 
     const [formData, setFormData] = useState({
         type: "work" as "work" | "education",
@@ -49,7 +50,7 @@ export default function ExperiencesPage() {
         try {
             const { data, error } = await supabase
                 .from("experiences")
-                .select("id, title, role, company, company_url, location, type, period, start_date, end_date, current, description, achievements, technologies, image_url, display_order, created_at")
+                .select("id, role, company, company_url, location, type, period, description, achievements, technologies, image_url, display_order, created_at")
                 .order("display_order", { ascending: true });
 
             if (error) {

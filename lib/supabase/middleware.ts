@@ -22,11 +22,11 @@ export async function updateSession(request: NextRequest) {
                         request,
                     });
                     cookiesToSet.forEach(({ name, value, options }) => {
-                        const { maxAge, expires, ...sessionOptions } = options || {};
+                        // Keep maxAge/expires so session doesn't expire instantly
                         supabaseResponse.cookies.set(name, value, {
-                            ...sessionOptions,
+                            ...options,
                             sameSite: 'lax',
-                            httpOnly: true,
+                            httpOnly: false, // Allow client-side sync
                             secure: process.env.NODE_ENV === 'production',
                             path: '/',
                         });
@@ -35,18 +35,22 @@ export async function updateSession(request: NextRequest) {
             },
         }
     );
+
     const {
         data: { user },
     } = await supabase.auth.getUser();
 
     if (request.nextUrl.pathname.startsWith('/admin')) {
+        // Let the login page through always
         if (request.nextUrl.pathname === '/admin/login') {
+            // If already logged in, redirect to dashboard
             if (user) {
                 return NextResponse.redirect(new URL('/admin', request.url));
             }
             return supabaseResponse;
         }
 
+        // Protect all other /admin/* routes
         if (!user) {
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }

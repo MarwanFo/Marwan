@@ -25,11 +25,12 @@ interface HeroSettings {
     cta_secondary_href: string;
 }
 
+const supabase = createClient();
+
 export default function HeroAdminPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
-    const supabase = createClient();
 
     const [form, setForm] = useState<HeroSettings>({
         hero_name: "",
@@ -68,7 +69,6 @@ export default function HeroAdminPage() {
             setLoading(false);
         };
         fetchSettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {

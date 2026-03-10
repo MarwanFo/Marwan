@@ -38,11 +38,12 @@ interface SiteSettings {
     footer_text: string;
 }
 
+const supabase = createClient();
+
 export default function SettingsPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
-    const supabase = createClient();
 
     const [formData, setFormData] = useState<SiteSettings>({
         hero_title: "",
@@ -64,6 +65,7 @@ export default function SettingsPage() {
 
     const fetchSettings = async () => {
         setLoading(true);
+        if (!supabase) return;
         const { data, error } = await supabase
             .from("site_settings")
             .select("id, hero_title, hero_subtitle, hero_description, total_certifications, learning_hours, skills_acquired, years_learning, contact_email, contact_phone, contact_message, footer_text")

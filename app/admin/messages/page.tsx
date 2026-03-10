@@ -25,12 +25,13 @@ interface Message {
     created_at: string;
 }
 
+const supabase = createClient();
+
 export default function MessagesPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
     const [deleting, setDeleting] = useState<string | null>(null);
-    const supabase = createClient();
 
     useEffect(() => {
         fetchMessages();

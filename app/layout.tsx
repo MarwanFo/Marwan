@@ -9,6 +9,7 @@ import HeaderWrapper from "@/components/HeaderWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import LoadingScreen from "@/components/LoadingScreen";
 import Scene3DProvider from "@/components/three/Scene3DProvider";
+import ChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
                         <Header />
                     </HeaderWrapper>
                     {children}
+                    <ChatWidget />
                 </ThemeProvider>
             </body>
         </html>

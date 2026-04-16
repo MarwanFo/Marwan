@@ -136,7 +136,6 @@ export default function ProjectsPage() {
             await fetchProjects();
         }
     };
-
     const inputClass = "w-full px-4 py-3 rounded-xl glass bg-white/5 border border-white/10 focus:border-neon-cyan/50 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-neon-cyan/20 transition-all";
 
     return (

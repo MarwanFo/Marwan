@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Bot, User, Loader2, MinusCircle, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
     role: "user" | "model";
@@ -154,7 +155,18 @@ export default function ChatWidget() {
                                                 : "bg-[#1e293b]/70 text-white/95 rounded-tl-sm border border-white/10"
                                             }`}
                                         >
-                                            {msg.text}
+                                            <ReactMarkdown
+                                                components={{
+                                                    a: ({node, ...props}) => <a {...props} className="text-neon-cyan hover:text-white underline transition-colors" target="_blank" rel="noopener noreferrer" />,
+                                                    strong: ({node, ...props}) => <strong {...props} className="font-bold text-white" />,
+                                                    ul: ({node, ...props}) => <ul {...props} className="list-disc pl-4 space-y-1 my-2" />,
+                                                    ol: ({node, ...props}) => <ol {...props} className="list-decimal pl-4 space-y-1 my-2" />,
+                                                    li: ({node, ...props}) => <li {...props} className="marker:text-white/50" />,
+                                                    p: ({node, ...props}) => <p {...props} className="mb-2 last:mb-0" />,
+                                                }}
+                                            >
+                                                {msg.text}
+                                            </ReactMarkdown>
                                         </div>
                                     </div>
                                 </motion.div>

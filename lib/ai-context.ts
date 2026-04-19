@@ -1,6 +1,18 @@
 import { createClient } from './supabase/server';
 
+// In-memory cache variables
+let cachedContext: string | null = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION_MS = 1000 * 60 * 60; // 1 hour (3600000 ms)
+
 export async function getMarwanContext() {
+    // 1. Check if we have a valid cached context
+    if (cachedContext && (Date.now() - cacheTimestamp < CACHE_DURATION_MS)) {
+        console.log("[Marwan-AI]: Returning cached database context");
+        return cachedContext;
+    }
+
+    console.log("[Marwan-AI]: Fetching fresh context from Supabase...");
     const supabase = await createClient();
 
     // Fetch essential data for the AI's "Brain"
@@ -31,7 +43,7 @@ export async function getMarwanContext() {
         `- ${e.role} at ${e.company} (${e.period}): ${e.description || 'No description'}`
     ).join('\n') : 'Freelancer / Independent';
 
-    return `
+    const finalContext = `
 You are the AI Assistant for Marwan Faridi, a Moroccan Full Stack Developer and 1st-year Engineering Student.
 Your goal is to answer questions from recruiters and visitors about Marwan's professional work and CV.
 
@@ -76,5 +88,12 @@ INSTRUCTIONS:
 - Keep answers concise but informative.
 - If asked about contact info, provide his email (itsmemarwanefo@gmail.com) and LinkedIn.
 - You can use a mix of English and professional French/Arabic greetings if appropriate.
+- CRITICAL RULE: You are exclusively Marwan's professional assistant. If a user asks you to write code, solve math problems, tell jokes, or discuss topics unrelated to Marwan's professional profile or web development, politely refuse and redirect the conversation back to Marwan's skills and projects.
 `;
+
+    // Update the cache before returning
+    cachedContext = finalContext;
+    cacheTimestamp = Date.now();
+
+    return finalContext;
 }

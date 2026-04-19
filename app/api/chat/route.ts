@@ -1,11 +1,23 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getMarwanContext } from "@/lib/ai-context";
 import { NextResponse } from "next/server";
-
-
+import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
     try {
+        const clientIP = getClientIP(req);
+        const rateLimit = checkRateLimit(`chat:${clientIP}`, {
+            limit: 15, // 15 messages per minute max
+            windowSeconds: 60,
+        });
+        
+        if (!rateLimit.success) {
+            return NextResponse.json(
+                { error: "Too many messages sent. Please wait a minute." },
+                { status: 429 }
+            );
+        }
+
         const { message, history } = await req.json();
 
         console.log(`[Marwan-AI]: New request received at ${new Date().toISOString()}`);

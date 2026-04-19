@@ -187,7 +187,7 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                                         letterSpacing: "0.04em",
                                     }}
                                 >
-                                    Click to explore Ã¢â€ â€™
+                                    Click to explore →
                                 </span>
                             )}
                         </div>
@@ -226,7 +226,7 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                     userSelect: "none",
                 }}
             >
-                Ã°Å¸â€“Â±Ã¯Â¸Â Drag to orbit Ã¢â‚¬Â¢ Hover for details
+                🖱️ Drag to orbit • Hover for details
             </div>
 
             {/* Tooltip animation */}

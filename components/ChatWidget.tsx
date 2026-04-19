@@ -66,7 +66,7 @@ export default function ChatWidget() {
     }, [messages]);
 
     const clearChat = () => {
-        if (window.confirm("ÃŠtes-vous sÃ»r de vouloir effacer l'historique de cette conversation ?")) {
+        if (window.confirm("Êtes-vous sûr de vouloir effacer l'historique de cette conversation ?")) {
             setMessages([{ role: "model", text: "Hi! I'm Marwan's AI assistant. Ask me anything about his work, skills, or projects!" }]);
             localStorage.removeItem("marwan-chat-history");
         }

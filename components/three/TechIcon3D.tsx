@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
@@ -53,7 +53,7 @@ function drawFallback(
 
 /**
  * A single tech icon as a billboarded 3D plane with canvas texture.
- * Uses 256×256 canvas for crisp rendering. Includes hover tooltip via Html.
+ * Uses 256Ã—256 canvas for crisp rendering. Includes hover tooltip via Html.
  */
 export default function TechIcon3D({
     name,
@@ -74,7 +74,7 @@ export default function TechIcon3D({
         [isDark, iconUrl]
     );
 
-    // ── Load icon → canvas → CanvasTexture ──────────────────────────────────
+    
     useEffect(() => {
         let disposed = false;
         let currentTex: THREE.CanvasTexture | null = null;
@@ -93,7 +93,7 @@ export default function TechIcon3D({
             setTexture(currentTex);
         };
 
-        // ── Load the icon image ─────────────────────────────────────────
+        
         const img = new Image();
         img.crossOrigin = "anonymous";
 
@@ -128,7 +128,7 @@ export default function TechIcon3D({
             try {
                 ctx.drawImage(img, offset, offset, iconPx, iconPx);
             } catch {
-                // Canvas tainted — draw fallback
+                // Canvas tainted â€” draw fallback
                 drawFallback(ctx, S, name);
             }
 
@@ -159,7 +159,7 @@ export default function TechIcon3D({
         };
     }, [iconUrl, isDark, name, needsInvert]);
 
-    // ── Smooth spring-scale on hover ────────────────────────────────────────
+    
     useFrame(() => {
         if (!meshRef.current) return;
         const target = isHovered ? ICON_SIZE * 1.4 : ICON_SIZE;

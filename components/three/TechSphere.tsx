@@ -3,9 +3,10 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Preload, AdaptiveDpr } from "@react-three/drei";
 import { Suspense, useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import TechSphereScene from "./TechSphereScene";
 
-// ── Types ───────────────────────────────────────────────────────────────────
+// Ã¢â€â‚¬Ã¢â€â‚¬ Types Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 interface Skill {
     id: string;
     name: string;
@@ -20,7 +21,7 @@ interface TechSphereProps {
 
 /**
  * Canvas wrapper for the atom-style orbital tech display.
- * Includes a DOM-based tooltip that follows the mouse cursor —
+ * Includes a DOM-based tooltip that follows the mouse cursor Ã¢â‚¬â€
  * rendered OUTSIDE the canvas for reliable display.
  */
 export default function TechSphere({ skills, theme }: TechSphereProps) {
@@ -99,7 +100,7 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                 </Suspense>
             </Canvas>
 
-            {/* ── DOM Tooltip — rendered OUTSIDE the canvas ──────────────── */}
+            {/* Ã¢â€â‚¬Ã¢â€â‚¬ DOM Tooltip Ã¢â‚¬â€ rendered OUTSIDE the canvas Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */}
             {hoveredSkill && hoveredData && (
                 <div
                     style={{
@@ -151,14 +152,16 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                                 flexShrink: 0,
                             }}
                         >
-                            <img
-                                src={hoveredData.icon_url}
-                                alt={hoveredData.name}
-                                width={20}
-                                height={20}
-                                style={{ objectFit: "contain" }}
-                                draggable={false}
-                            />
+                            <div style={{ position: 'relative', width: '20px', height: '20px' }}>
+                                <Image
+                                    src={hoveredData.icon_url}
+                                    alt={hoveredData.name}
+                                    fill
+                                    style={{ objectFit: "contain" }}
+                                    draggable={false}
+                                    unoptimized
+                                />
+                            </div>
                         </div>
 
                         {/* Text */}
@@ -184,7 +187,7 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                                         letterSpacing: "0.04em",
                                     }}
                                 >
-                                    Click to explore →
+                                    Click to explore Ã¢â€ â€™
                                 </span>
                             )}
                         </div>
@@ -223,7 +226,7 @@ export default function TechSphere({ skills, theme }: TechSphereProps) {
                     userSelect: "none",
                 }}
             >
-                🖱️ Drag to orbit • Hover for details
+                Ã°Å¸â€“Â±Ã¯Â¸Â Drag to orbit Ã¢â‚¬Â¢ Hover for details
             </div>
 
             {/* Tooltip animation */}

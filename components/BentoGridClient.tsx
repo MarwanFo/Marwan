@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Sparkles, ArrowUpRight } from "lucide-react";
@@ -19,7 +19,7 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                     className="absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%)",
-                        filter: "blur(100px)",
+                        
                     }}
                     animate={{
                         x: [0, -30, 0],
@@ -35,7 +35,7 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                     className="absolute bottom-1/4 left-0 w-[500px] h-[500px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 60%)",
-                        filter: "blur(100px)",
+                        
                     }}
                     animate={{
                         x: [0, 20, 0],

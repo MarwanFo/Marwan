@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin, User, Briefcase, FolderKanban, Award, MessageCircle } from "lucide-react";
@@ -42,9 +42,9 @@ export default function Footer() {
     const githubUrl = settings.github_url || "https://github.com";
     const linkedinUrl = settings.linkedin_url || "https://linkedin.com";
     const emailAddress = settings.social_email || "marwanefaridi22@gmail.com";
-    const location = settings.location || "Morocco · Available Worldwide";
+    const location = settings.location || "Morocco Â· Available Worldwide";
     const footerTagline = settings.footer_tagline || "Full-stack developer passionate about building modern web experiences with clean code and stunning design.";
-    const footerText = settings.footer_text || `© ${currentYear} FARIDI Marwan · Built with`;
+    const footerText = settings.footer_text || `Â© ${currentYear} FARIDI Marwan Â· Built with`;
 
     const socialLinks = [
         { name: "GitHub", icon: Github, href: githubUrl },
@@ -61,7 +61,7 @@ export default function Footer() {
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full"
                     style={{
                         background: "radial-gradient(ellipse, rgba(0, 255, 255, 0.08) 0%, transparent 70%)",
-                        filter: "blur(80px)",
+                        
                     }}
                 />
             </div>

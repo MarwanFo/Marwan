@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, Code2 } from "lucide-react";
@@ -112,7 +112,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 <div className="p-6 relative">
                     {/* Floating glow */}
                     <motion.div
-                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30 blur-3xl"
+                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30"
                         animate={{ opacity: isHovered ? 0.8 : 0 }}
                         transition={{ duration: 0.5 }}
                     />

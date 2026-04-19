@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Briefcase, Calendar, MapPin, ExternalLink, GraduationCap } from "lucide-react";
+import Image from "next/image";
 import { Experience } from "@/lib/types";
 import { use3DTilt } from "@/lib/hooks/use3DTilt";
 
@@ -66,7 +67,7 @@ export default function ExperienceCard({ experience, index, isEducation }: Exper
                     <div className="p-6 relative">
                         {/* Glow effect */}
                         <motion.div
-                            className={`absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-${accentColor}/30 blur-3xl`}
+                            className={`absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 rounded-full bg-${accentColor}/30`}
                             animate={{ opacity: isHovered ? 0.5 : 0 }}
                             transition={{ duration: 0.5 }}
                         />
@@ -81,11 +82,15 @@ export default function ExperienceCard({ experience, index, isEducation }: Exper
                                         animate={{ rotate: isHovered ? 5 : 0 }}
                                         transition={{ duration: 0.3 }}
                                     >
-                                        <img
-                                            src={experience.image_url}
-                                            alt={experience.company}
-                                            className="w-full h-full object-contain p-1"
-                                        />
+                                        <div className="relative w-full h-full p-1">
+                                            <Image
+                                                src={experience.image_url}
+                                                alt={experience.company}
+                                                fill
+                                                className="object-contain"
+                                                sizes="56px"
+                                            />
+                                        </div>
                                     </motion.div>
                                 ) : (
                                     <motion.div

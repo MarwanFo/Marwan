@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Award, ExternalLink, Calendar, CheckCircle, Trophy } from "lucide-react";
@@ -88,7 +88,7 @@ export default function CertificateCard({ certificate, index }: CertificateCardP
                 <div className="p-5 relative">
                     {/* Glow effect */}
                     <motion.div
-                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30 blur-3xl"
+                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30"
                         animate={{ opacity: isHovered ? 0.6 : 0 }}
                         transition={{ duration: 0.5 }}
                     />

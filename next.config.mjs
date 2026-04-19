@@ -3,6 +3,9 @@ const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig = {
     images: {
+        dangerouslyAllowSVG: true,
+        contentDispositionType: 'attachment',
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
         domains: ['images.unsplash.com', 'cdn.simpleicons.org'],
         remotePatterns: [
             {

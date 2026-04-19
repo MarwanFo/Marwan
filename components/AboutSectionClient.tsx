@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, MapPin, Sparkles, Code2, Rocket } from "lucide-react";
+import Image from "next/image";
 
 interface ProfileData {
     name: string;
@@ -49,12 +50,12 @@ export default function AboutSectionClient({ profile }: { profile: ProfileData |
         <section id="about" className="relative py-32 px-6 overflow-hidden">
             {/* Animated Background Orbs */}
             <motion.div
-                className="absolute top-20 left-10 w-72 h-72 rounded-full bg-neon-purple/20 blur-[120px]"
+                className="absolute top-20 left-10 w-72 h-72 rounded-full bg-neon-purple/20"
                 animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             />
             <motion.div
-                className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-neon-cyan/15 blur-[150px]"
+                className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-neon-cyan/15"
                 animate={{ x: [0, -40, 0], y: [0, -50, 0] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -93,11 +94,15 @@ export default function AboutSectionClient({ profile }: { profile: ProfileData |
                                     >
                                         <div className="w-full h-full rounded-xl overflow-hidden bg-background">
                                             {data.avatar_url ? (
-                                                <img
-                                                    src={data.avatar_url}
-                                                    alt={data.name}
-                                                    className="w-full h-full object-cover"
-                                                />
+                                                <div className="relative w-full h-full">
+                                                    <Image
+                                                        src={data.avatar_url}
+                                                        alt={data.name}
+                                                        fill
+                                                        className="object-cover"
+                                                        sizes="(max-width: 768px) 112px, 128px"
+                                                    />
+                                                </div>
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neon-cyan/30 to-neon-purple/30">
                                                     <span className="text-5xl font-bold neon-text">

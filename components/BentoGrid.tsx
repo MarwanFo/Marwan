@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+﻿import { createClient } from "@/lib/supabase/server";
 import BentoGridClient from "./BentoGridClient";
 
 export default async function BentoGrid() {

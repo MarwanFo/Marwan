@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Briefcase, GraduationCap, Building2, BookOpen, ArrowUpRight } from "lucide-react";
@@ -28,7 +28,7 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                         background: activeTab === "education"
                             ? "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 60%)"
                             : "radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 60%)",
-                        filter: "blur(100px)",
+                        
                     }}
                     animate={{
                         x: [0, -30, 0],
@@ -46,7 +46,7 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                         background: activeTab === "education"
                             ? "radial-gradient(circle, rgba(255, 0, 255, 0.08) 0%, transparent 60%)"
                             : "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%)",
-                        filter: "blur(100px)",
+                        
                     }}
                     animate={{
                         x: [0, 20, 0],
@@ -143,37 +143,39 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
 
                 <div className="relative space-y-12 min-h-[200px]">
                     <AnimatePresence mode="wait">
-                        {displayExperiences.length > 0 ? (
-                            displayExperiences.map((experience, index) => (
-                                <ExperienceCard
-                                    key={experience.id}
-                                    experience={experience}
-                                    index={index}
-                                    isEducation={activeTab === "education"}
-                                />
-                            ))
-                        ) : (
-                            <motion.div
-                                key="empty"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                className="text-center py-12"
-                            >
-                                <motion.div
-                                    className={`w-20 h-20 mx-auto rounded-2xl ${activeTab === "education" ? "bg-neon-purple/10" : "bg-neon-cyan/10"} flex items-center justify-center mb-4`}
-                                    animate={{ rotate: [0, 10, -10, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    {activeTab === "education" ? (
-                                        <GraduationCap className="w-10 h-10 text-neon-purple/50" />
-                                    ) : (
-                                        <Briefcase className="w-10 h-10 text-neon-cyan/50" />
-                                    )}
-                                </motion.div>
-                                <p className="text-white/40">No {activeTab === "work" ? "work experience" : "education"} entries yet</p>
-                            </motion.div>
-                        )}
+                        <motion.div
+                            key={activeTab}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                            className="space-y-12"
+                        >
+                            {displayExperiences.length > 0 ? (
+                                displayExperiences.map((experience, index) => (
+                                    <ExperienceCard
+                                        key={experience.id}
+                                        experience={experience}
+                                        index={index}
+                                        isEducation={activeTab === "education"}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-12">
+                                    <motion.div
+                                        className={`w-20 h-20 mx-auto rounded-2xl ${activeTab === "education" ? "bg-neon-purple/10" : "bg-neon-cyan/10"} flex items-center justify-center mb-4`}
+                                        animate={{ rotate: [0, 10, -10, 0] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                    >
+                                        {activeTab === "education" ? (
+                                            <GraduationCap className="w-10 h-10 text-neon-purple/50" />
+                                        ) : (
+                                            <Briefcase className="w-10 h-10 text-neon-cyan/50" />
+                                        )}
+                                    </motion.div>
+                                    <p className="text-white/40">No {activeTab === "work" ? "work experience" : "education"} entries yet</p>
+                                </div>
+                            )}
+                        </motion.div>
                     </AnimatePresence>
                 </div>
 

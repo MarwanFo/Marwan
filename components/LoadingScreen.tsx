@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -55,7 +55,7 @@ export default function LoadingScreen() {
                             className="absolute top-1/2 left-1/2 w-[800px] h-[800px] rounded-full"
                             style={{
                                 background: "radial-gradient(circle, rgba(0, 255, 255, 0.12) 0%, transparent 70%)",
-                                filter: "blur(100px)",
+                                
                             }}
                             initial={{ x: "-50%", y: "-50%", scale: 0, rotate: 0 }}
                             animate={{
@@ -70,7 +70,7 @@ export default function LoadingScreen() {
                             className="absolute top-1/2 left-1/2 w-[600px] h-[600px] rounded-full"
                             style={{
                                 background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
-                                filter: "blur(80px)",
+                                
                             }}
                             initial={{ x: "-50%", y: "-50%", scale: 0 }}
                             animate={{

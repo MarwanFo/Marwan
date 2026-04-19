@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, Image as ImageIcon, Loader2 } from "lucide-react";
+import Image from "next/image";
 
 interface ImageUploadProps {
     value: string;
@@ -82,11 +83,13 @@ export default function ImageUpload({ value, onChange }: ImageUploadProps) {
             />
 
             {value ? (
-                <div className="relative group rounded-xl overflow-hidden">
-                    <img
+                <div className="relative group rounded-xl overflow-hidden h-48">
+                    <Image
                         src={value}
                         alt="Project preview"
-                        className="w-full h-48 object-cover rounded-xl"
+                        fill
+                        className="object-cover rounded-xl"
+                        sizes="(max-width: 768px) 100vw, 500px"
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <motion.button

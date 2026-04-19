@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import TechIcon3D from "./TechIcon3D";
 
-// ── Types ───────────────────────────────────────────────────────────────────
+
 interface Skill {
     id: string;
     name: string;
@@ -22,13 +22,13 @@ interface TechSphereSceneProps {
 interface RingConfig {
     radius: number;
     tilt: [number, number, number]; // Euler angles for the ring's orbital plane
-    speed: number; // Rotation speed (rad/s) — negative = reverse
+    speed: number; // Rotation speed (rad/s) â€” negative = reverse
     colorDark: string;
     colorLight: string;
 }
 
-// ── Ring configurations ─────────────────────────────────────────────────────
-// Three orbital rings at different tilts — like an atom's electron shells
+
+// Three orbital rings at different tilts â€” like an atom's electron shells
 
 const RING_CONFIGS: RingConfig[] = [
     {
@@ -54,7 +54,7 @@ const RING_CONFIGS: RingConfig[] = [
     },
 ];
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+
 
 /** Distributes skills across 3 rings (40%, 35%, 25%) */
 function distributeToRings(skills: Skill[]): Skill[][] {
@@ -85,7 +85,7 @@ function generateRingParticles(
     return positions;
 }
 
-// ── Orbital Ring Component ──────────────────────────────────────────────────
+
 
 function OrbitRing({
     config,
@@ -130,7 +130,7 @@ function OrbitRing({
 
     return (
         <group rotation={config.tilt}>
-            {/* ── Visible ring (thin torus) ───────────────────────────── */}
+            {/* â”€â”€ Visible ring (thin torus) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <mesh>
                 <torusGeometry args={[config.radius, 0.025, 8, 128]} />
                 <meshBasicMaterial
@@ -140,7 +140,7 @@ function OrbitRing({
                 />
             </mesh>
 
-            {/* ── Glowing wider ring (subtle) ─────────────────────────── */}
+            {/* â”€â”€ Glowing wider ring (subtle) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <mesh>
                 <torusGeometry args={[config.radius, 0.12, 8, 128]} />
                 <meshBasicMaterial
@@ -151,7 +151,7 @@ function OrbitRing({
                 />
             </mesh>
 
-            {/* ── Particle trail ──────────────────────────────────────── */}
+            {/* â”€â”€ Particle trail â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <points>
                 <bufferGeometry>
                     <bufferAttribute
@@ -171,7 +171,7 @@ function OrbitRing({
                 />
             </points>
 
-            {/* ── Orbiting icons ──────────────────────────────────────── */}
+            {/* â”€â”€ Orbiting icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             <group ref={orbitRef}>
                 {skills.map((skill, i) => (
                     <TechIcon3D
@@ -190,7 +190,7 @@ function OrbitRing({
     );
 }
 
-// ── Main Scene ──────────────────────────────────────────────────────────────
+
 
 /**
  * Atom-style orbital scene:
@@ -211,7 +211,7 @@ export default function TechSphereScene({ skills, theme, onHover }: TechSphereSc
     // Distribute skills across 3 rings
     const rings = useMemo(() => distributeToRings(skills), [skills]);
 
-    // ── Pulse the central core ──────────────────────────────────────────────
+    
     useFrame((state) => {
         if (coreRef.current) {
             const s = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.12;
@@ -227,8 +227,8 @@ export default function TechSphereScene({ skills, theme, onHover }: TechSphereSc
 
     return (
         <group>
-            {/* ── Central nucleus ─────────────────────────────────────────── */}
-            {/* Wireframe dodecahedron — slowly spinning + pulsing */}
+            {/* â”€â”€ Central nucleus â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* Wireframe dodecahedron â€” slowly spinning + pulsing */}
             <mesh ref={coreRef}>
                 <dodecahedronGeometry args={[0.7, 0]} />
                 <meshBasicMaterial
@@ -260,7 +260,7 @@ export default function TechSphereScene({ skills, theme, onHover }: TechSphereSc
                 />
             </mesh>
 
-            {/* ── Orbital rings ───────────────────────────────────────────── */}
+            {/* â”€â”€ Orbital rings â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {RING_CONFIGS.map((config, i) => (
                 <OrbitRing
                     key={i}

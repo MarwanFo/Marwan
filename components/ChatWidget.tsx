@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, X, Send, Bot, User, Loader2, MinusCircle, Sparkles } from "lucide-react";
+import { MessageSquare, X, Send, Bot, User, Loader2, MinusCircle, Sparkles, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
@@ -20,11 +20,39 @@ export default function ChatWidget() {
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    // Load history from localStorage on initial render
+    useEffect(() => {
+        const savedHistory = localStorage.getItem("marwan-chat-history");
+        if (savedHistory) {
+            try {
+                const parsed = JSON.parse(savedHistory);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    setMessages(parsed);
+                }
+            } catch (e) {
+                console.error("Failed to parse chat history");
+            }
+        }
+    }, []);
+
+    // Save history to localStorage whenever messages change
+    useEffect(() => {
+        localStorage.setItem("marwan-chat-history", JSON.stringify(messages));
+    }, [messages]);
+
+    // Auto-scroll to bottom when new messages arrive
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [messages]);
+
+    const clearChat = () => {
+        if (window.confirm("ÃŠtes-vous sÃ»r de vouloir effacer l'historique de cette conversation ?")) {
+            setMessages([{ role: "model", text: "Hi! I'm Marwan's AI assistant. Ask me anything about his work, skills, or projects!" }]);
+            localStorage.removeItem("marwan-chat-history");
+        }
+    };
 
     const handleSend = async () => {
         if (!input.trim() || isLoading) return;
@@ -111,6 +139,13 @@ export default function ChatWidget() {
                                 </div>
                             </div>
                             <div className="flex items-center gap-1 relative z-10">
+                                <button 
+                                    onClick={clearChat}
+                                    className="p-2 rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white"
+                                    title="Effacer la conversation"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
                                 <button 
                                     onClick={() => setIsMinimized(true)}
                                     className="p-2 rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white"

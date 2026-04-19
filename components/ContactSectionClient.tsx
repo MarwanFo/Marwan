@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -28,7 +28,7 @@ interface SettingsData {
 
 const defaultProfile = {
     email: "hello@marwan.dev",
-    location: "Available Worldwide · Remote",
+    location: "Available Worldwide Â· Remote",
     github_url: "https://github.com",
     linkedin_url: "https://linkedin.com",
     twitter_url: "https://twitter.com",
@@ -116,7 +116,7 @@ export default function ContactSectionClient({
                     style={{
                         background:
                             "radial-gradient(circle, rgba(255, 0, 255, 0.08) 0%, transparent 70%)",
-                        filter: "blur(80px)",
+                        
                     }}
                 />
             </div>

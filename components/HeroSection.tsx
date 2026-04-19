@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -41,7 +41,7 @@ export default function HeroSection() {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [mouseX, mouseY]);
 
-    // Resolve values — DB overrides hardcoded defaults
+    // Resolve values â€” DB overrides hardcoded defaults
     const name = heroData.hero_name || "MARWAN";
     const title = heroData.hero_title || "FULL STACK DEVELOPER";
     const tagline = heroData.hero_tagline || "Welcome to my portfolio";
@@ -86,14 +86,14 @@ export default function HeroSection() {
                         x: smoothX, y: smoothY,
                         translateX: "-50%", translateY: "-50%",
                         background: "radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, rgba(139, 92, 246, 0.1) 50%, transparent 70%)",
-                        filter: "blur(60px)",
+                        
                     }}
                 />
                 <motion.div
                     className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(255, 0, 255, 0.1) 0%, transparent 70%)",
-                        filter: "blur(80px)",
+                        
                     }}
                     animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -30, 0] }}
                     transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
@@ -102,7 +102,7 @@ export default function HeroSection() {
                     className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)",
-                        filter: "blur(70px)",
+                        
                     }}
                     animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, 40, 0] }}
                     transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}

@@ -4,8 +4,8 @@ import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
 // ── Server-side allowlists ────────────────────────────────────────────────────
 // SVG intentionally excluded — can contain <script> tags (Stored XSS)
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp"];
+const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"];
+const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp", "pdf"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 // Magic bytes for each allowed MIME type
@@ -14,6 +14,7 @@ const MAGIC_BYTES: Record<string, number[][]> = {
     "image/png":  [[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]],
     "image/gif":  [[0x47, 0x49, 0x46, 0x38, 0x37, 0x61], [0x47, 0x49, 0x46, 0x38, 0x39, 0x61]],
     "image/webp": [[0x52, 0x49, 0x46, 0x46]], // RIFF header
+    "application/pdf": [[0x25, 0x50, 0x44, 0x46]], // %PDF
 };
 
 async function verifyMagicBytes(buffer: Uint8Array, mimeType: string): Promise<boolean> {
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
         const declaredMime = file.type.toLowerCase().trim();
         if (!ALLOWED_MIME_TYPES.includes(declaredMime)) {
             return NextResponse.json(
-                { error: "File type not allowed. Only JPEG, PNG, GIF, and WebP images are accepted." },
+                { error: "File type not allowed. Only JPEG, PNG, GIF, WebP images, and PDF documents are accepted." },
                 { status: 400 }
             );
         }

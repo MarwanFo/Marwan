@@ -1,9 +1,26 @@
-﻿"use client";
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Bot, User, Loader2, MinusCircle, Sparkles, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+
+/** Returns true when the .light class is active on <html> */
+function useLightMode() {
+    const [isLight, setIsLight] = useState(false);
+    useEffect(() => {
+        const check = () =>
+            setIsLight(document.documentElement.classList.contains("light"));
+        check();
+        const observer = new MutationObserver(check);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+        return () => observer.disconnect();
+    }, []);
+    return isLight;
+}
 
 interface Message {
     role: "user" | "model";
@@ -19,6 +36,7 @@ export default function ChatWidget() {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const isLight = useLightMode();
 
     // Load history from localStorage on initial render
     useEffect(() => {
@@ -109,24 +127,32 @@ export default function ChatWidget() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.9 }}
                         transition={{ duration: 0.4, type: "spring", bounce: 0.4 }}
-                        className="glass w-[360px] sm:w-[420px] h-[650px] rounded-[2rem] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,255,255,0.15)] mb-4 border border-white/20 backdrop-blur-2xl bg-black/40 relative"
+                        className={`glass w-[360px] sm:w-[420px] h-[650px] rounded-[2rem] overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_30px_rgba(0,255,255,0.15)] mb-4 border transition-all duration-300 backdrop-blur-2xl relative ${
+                            isLight ? "bg-white/80 border-black/10" : "bg-black/40 border-white/20"
+                        }`}
                     >
                         {/* Inner glowing edge */}
                         <div className="absolute inset-0 rounded-[2rem] pointer-events-none border border-white/5 z-50"></div>
 
                         {/* Header */}
-                        <div className="relative bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a] p-6 flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.5)] z-20">
+                        <div className={`relative p-6 flex items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.2)] z-20 transition-all duration-300 ${
+                            isLight ? "bg-gradient-to-r from-slate-100 via-white to-slate-100" : "bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#0f172a]"
+                        }`}>
                             {/* Replaced external URL background with a simple CSS dotted pattern to avoid CSP issues */}
-                            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)", backgroundSize: "20px 20px" }}></div>
-                            <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-neon-cyan/50 to-transparent"></div>
+                            <div className={`absolute inset-0 opacity-20`} style={{ backgroundImage: `radial-gradient(circle, ${isLight ? "#000000" : "#ffffff"} 1px, transparent 1px)`, backgroundSize: "20px 20px" }}></div>
+                            <div className={`absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent ${isLight ? "via-neon-cyan/30" : "via-neon-cyan/50"} to-transparent`}></div>
                             
                             <div className="flex items-center gap-4 relative z-10">
-                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-neon-purple/40 to-neon-cyan/40 backdrop-blur-xl flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.2)] border border-white/20 relative group">
-                                    <Sparkles className="w-6 h-6 text-white absolute top-1 right-1 opacity-50" />
-                                    <Bot className="w-6 h-6 text-white relative z-10" />
+                                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr from-neon-purple/40 to-neon-cyan/40 backdrop-blur-xl flex items-center justify-center shadow-[0_0_15px_rgba(0,255,255,0.2)] border relative group ${
+                                    isLight ? "border-black/10" : "border-white/20"
+                                }`}>
+                                    <Sparkles className={`w-6 h-6 absolute top-1 right-1 opacity-50 ${isLight ? "text-neon-purple" : "text-white"}`} />
+                                    <Bot className={`w-6 h-6 relative z-10 ${isLight ? "text-slate-800" : "text-white"}`} />
                                 </div>
                                 <div>
-                                    <h3 className="text-white text-lg font-extrabold tracking-wide leading-tight drop-shadow-md flex items-center gap-2">
+                                    <h3 className={`text-lg font-extrabold tracking-wide leading-tight drop-shadow-sm flex items-center gap-2 ${
+                                        isLight ? "text-slate-900" : "text-white"
+                                    }`}>
                                         Marwan-AI
                                     </h3>
                                     <div className="flex items-center gap-2 mt-1">
@@ -134,21 +160,27 @@ export default function ChatWidget() {
                                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.8)]"></span>
                                         </span>
-                                        <span className="text-[10px] text-white/70 font-semibold uppercase tracking-[0.2em]">Intelligent Agent</span>
+                                        <span className={`text-[10px] font-semibold uppercase tracking-[0.2em] ${
+                                            isLight ? "text-slate-500" : "text-white/70"
+                                        }`}>Intelligent Agent</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1 relative z-10">
                                 <button 
                                     onClick={clearChat}
-                                    className="p-2 rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white"
+                                    className={`p-2 rounded-xl transition-all ${
+                                        isLight ? "hover:bg-black/5 text-slate-400 hover:text-slate-600" : "hover:bg-white/10 text-white/60 hover:text-white"
+                                    }`}
                                     title="Effacer la conversation"
                                 >
                                     <Trash2 className="w-5 h-5" />
                                 </button>
                                 <button 
                                     onClick={() => setIsMinimized(true)}
-                                    className="p-2 rounded-xl hover:bg-white/10 transition-all text-white/60 hover:text-white"
+                                    className={`p-2 rounded-xl transition-all ${
+                                        isLight ? "hover:bg-black/5 text-slate-400 hover:text-slate-600" : "hover:bg-white/10 text-white/60 hover:text-white"
+                                    }`}
                                     title="Minimize"
                                 >
                                     <MinusCircle className="w-5 h-5" />
@@ -158,7 +190,9 @@ export default function ChatWidget() {
                                         setIsOpen(false);
                                         setIsMinimized(false);
                                     }}
-                                    className="p-2 rounded-xl hover:bg-red-500/20 hover:text-red-400 transition-all text-white/60"
+                                    className={`p-2 rounded-xl transition-all ${
+                                        isLight ? "hover:bg-red-500/10 text-red-500/60 hover:text-red-500" : "hover:bg-red-500/20 text-white/60 hover:text-red-400"
+                                    }`}
                                     title="Close"
                                 >
                                     <X className="w-5 h-5" />
@@ -169,7 +203,9 @@ export default function ChatWidget() {
                         {/* Messages */}
                         <div 
                             ref={scrollRef}
-                            className="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar bg-gradient-to-b from-transparent via-black/10 to-black/30 z-10"
+                            className={`flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar z-10 transition-all duration-300 ${
+                                isLight ? "bg-slate-50/50" : "bg-gradient-to-b from-transparent via-black/10 to-black/30"
+                            }`}
                         >
                             {messages.map((msg, i) => (
                                 <motion.div
@@ -180,23 +216,27 @@ export default function ChatWidget() {
                                     className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                                 >
                                     <div className={`max-w-[88%] flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                                        <div className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center border border-white/20 shadow-lg ${msg.role === "user" ? "bg-gradient-to-br from-purple-600 to-indigo-600" : "bg-gradient-to-br from-cyan-500 to-blue-600"}`}>
+                                        <div className={`w-9 h-9 rounded-full shrink-0 flex items-center justify-center border shadow-lg ${
+                                            msg.role === "user" ? "bg-gradient-to-br from-purple-600 to-indigo-600 border-white/20" : "bg-gradient-to-br from-cyan-500 to-blue-600 border-white/20"
+                                        }`}>
                                             {msg.role === "user" ? <User className="w-4.5 h-4.5 text-white" /> : <Bot className="w-4.5 h-4.5 text-white" />}
                                         </div>
                                         <div 
-                                            className={`rounded-[1.25rem] p-4 text-[14px] leading-[1.6] shadow-xl backdrop-blur-md whitespace-pre-wrap ${
+                                            className={`rounded-[1.25rem] p-4 text-[14px] leading-[1.6] shadow-md backdrop-blur-md whitespace-pre-wrap transition-all ${
                                                 msg.role === "user" 
-                                                ? "bg-gradient-to-br from-neon-purple/50 to-indigo-600/30 text-white border border-neon-purple/40 rounded-tr-sm" 
-                                                : "bg-[#1e293b]/70 text-white/95 rounded-tl-sm border border-white/10"
+                                                ? "bg-gradient-to-br from-neon-purple/70 to-indigo-600/50 text-white border border-neon-purple/40 rounded-tr-sm" 
+                                                : isLight 
+                                                    ? "bg-white text-slate-800 rounded-tl-sm border border-black/5 shadow-slate-200/50" 
+                                                    : "bg-[#1e293b]/70 text-white/95 rounded-tl-sm border border-white/10"
                                             }`}
                                         >
                                             <ReactMarkdown
                                                 components={{
                                                     a: ({node, ...props}) => <a {...props} className="text-neon-cyan hover:text-white underline transition-colors" target="_blank" rel="noopener noreferrer" />,
-                                                    strong: ({node, ...props}) => <strong {...props} className="font-bold text-white" />,
+                                                    strong: ({node, ...props}) => <strong {...props} className={`font-bold ${isLight ? "text-slate-900" : "text-white"}`} />,
                                                     ul: ({node, ...props}) => <ul {...props} className="list-disc pl-4 space-y-1 my-2" />,
                                                     ol: ({node, ...props}) => <ol {...props} className="list-decimal pl-4 space-y-1 my-2" />,
-                                                    li: ({node, ...props}) => <li {...props} className="marker:text-white/50" />,
+                                                    li: ({node, ...props}) => <li {...props} className={`marker:text-neon-cyan ${isLight ? "text-slate-600" : "text-white/70"}`} />,
                                                     p: ({node, ...props}) => <p {...props} className="mb-2 last:mb-0" />,
                                                 }}
                                             >
@@ -211,20 +251,24 @@ export default function ChatWidget() {
                                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                                     className="flex justify-start"
                                 >
-                                    <div className="flex gap-4 items-center bg-[#1e293b]/70 border border-white/10 rounded-[1.25rem] rounded-tl-sm p-4 shadow-xl">
+                                    <div className={`flex gap-4 items-center border rounded-[1.25rem] rounded-tl-sm p-4 shadow-xl ${
+                                        isLight ? "bg-white border-black/5" : "bg-[#1e293b]/70 border-white/10"
+                                    }`}>
                                         <div className="flex gap-1.5">
                                             <span className="w-2.5 h-2.5 bg-neon-cyan rounded-full animate-bounce [animation-delay:-0.3s] shadow-[0_0_10px_rgba(0,255,255,0.8)]" />
                                             <span className="w-2.5 h-2.5 bg-neon-cyan rounded-full animate-bounce [animation-delay:-0.15s] shadow-[0_0_10px_rgba(0,255,255,0.8)]" />
                                             <span className="w-2.5 h-2.5 bg-neon-cyan rounded-full animate-bounce shadow-[0_0_10px_rgba(0,255,255,0.8)]" />
                                         </div>
-                                        <span className="text-xs text-white/50 tracking-widest uppercase font-semibold">Processing</span>
+                                        <span className={`text-xs tracking-widest uppercase font-semibold ${isLight ? "text-slate-400" : "text-white/50"}`}>Processing</span>
                                     </div>
                                 </motion.div>
                             )}
                         </div>
 
                         {/* Quick Actions & Input & Footer */}
-                        <div className="p-5 pt-3 bg-black/60 backdrop-blur-3xl space-y-4 z-20 border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                        <div className={`p-5 pt-3 backdrop-blur-3xl space-y-4 z-20 border-t shadow-[0_-10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 ${
+                            isLight ? "bg-white/90 border-black/5" : "bg-black/60 border-white/10"
+                        }`}>
                             {!isLoading && messages.length <= 2 && (
                                 <motion.div 
                                     initial={{ opacity: 0, y: 10 }}
@@ -233,11 +277,13 @@ export default function ChatWidget() {
                                 >
                                     {quickActions.map((action, idx) => (
                                         <motion.button
-                                            whileHover={{ scale: 1.05, backgroundColor: "rgba(0,255,255,0.15)", borderColor: "rgba(0,255,255,0.4)" }}
+                                            whileHover={{ scale: 1.05, backgroundColor: isLight ? "rgba(0,255,255,0.1)" : "rgba(0,255,255,0.15)", borderColor: "rgba(0,255,255,0.4)" }}
                                             whileTap={{ scale: 0.95 }}
                                             key={idx}
                                             onClick={() => handleQuickAction(action.query)}
-                                            className="text-xs px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:text-white transition-colors shadow-sm whitespace-nowrap flex items-center gap-1.5"
+                                            className={`text-xs px-4 py-2 rounded-full border transition-colors shadow-sm whitespace-nowrap flex items-center gap-1.5 ${
+                                                isLight ? "bg-slate-100 border-black/5 text-slate-600 hover:text-slate-900" : "bg-white/5 border-white/10 text-white/80 hover:text-white"
+                                            }`}
                                         >
                                             <Sparkles className="w-3 h-3 text-neon-cyan" />
                                             {action.label}
@@ -255,7 +301,11 @@ export default function ChatWidget() {
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     placeholder="Message Marwan-AI..."
-                                    className="w-full bg-[#0f172a]/80 border border-white/10 rounded-2xl px-5 py-4 text-[15px] text-white focus:outline-none focus:border-neon-cyan/60 focus:bg-[#0f172a] focus:ring-2 focus:ring-neon-cyan/20 placeholder:text-white/30 pr-14 transition-all shadow-inner group-hover:border-white/20"
+                                    className={`w-full border rounded-2xl px-5 py-4 text-[15px] focus:outline-none focus:ring-2 pr-14 transition-all shadow-inner group-hover:border-neon-cyan/30 ${
+                                        isLight 
+                                            ? "bg-slate-50 border-black/10 text-slate-900 placeholder:text-slate-400 focus:border-neon-cyan/60 focus:ring-neon-cyan/10" 
+                                            : "bg-[#0f172a]/80 border-white/10 text-white placeholder:text-white/30 focus:border-neon-cyan/60 focus:bg-[#0f172a] focus:ring-neon-cyan/20"
+                                    }`}
                                 />
                                 <button
                                     type="submit"
@@ -267,12 +317,14 @@ export default function ChatWidget() {
                                 </button>
                             </form>
                             
-                            {/* Footer */}
-                            <div className="flex justify-center items-center">
-                                <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-semibold flex items-center gap-1.5">
-                                    <Bot className="w-3 h-3" /> Powered by Gemini
-                                </span>
-                            </div>
+                             {/* Footer */}
+                             <div className="flex justify-center items-center">
+                                 <span className={`text-[10px] uppercase tracking-[0.2em] font-semibold flex items-center gap-1.5 ${
+                                     isLight ? "text-slate-400" : "text-white/30"
+                                 }`}>
+                                     <Bot className="w-3 h-3" /> Powered by Gemini
+                                 </span>
+                             </div>
                         </div>
                     </motion.div>
                 )}
@@ -290,14 +342,24 @@ export default function ChatWidget() {
                     }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
-                    className={`w-[68px] h-[68px] rounded-full bg-gradient-to-br from-neon-purple via-black to-neon-cyan p-[2px] shadow-[0_10px_40px_rgba(0,255,255,0.5)] transition-all z-50 group ${
+                    className={`w-[68px] h-[68px] rounded-full p-[2px] transition-all z-50 group ${
                         isOpen && !isMinimized ? "scale-0 opacity-0 pointer-events-none" : "scale-100 opacity-100"
+                    } ${
+                        isLight 
+                        ? "bg-gradient-to-br from-neon-purple via-neon-cyan to-indigo-500 shadow-[0_10px_30px_rgba(0,255,255,0.3)]" 
+                        : "bg-gradient-to-br from-neon-purple via-black to-neon-cyan shadow-[0_10px_40px_rgba(0,255,255,0.5)]"
                     }`}
                 >
-                    <div className="w-full h-full bg-[#0f172a] rounded-full flex items-center justify-center relative overflow-hidden group-hover:bg-opacity-80 transition-all">
-                        <div className="absolute inset-0 bg-gradient-to-tr from-neon-cyan/20 to-neon-purple/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <MessageSquare className="w-8 h-8 text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)] relative z-10" />
-                        <span className="absolute top-4 right-4 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0f172a] shadow-[0_0_15px_rgba(74,222,128,1)] z-20"></span>
+                    <div className={`w-full h-full rounded-full flex items-center justify-center relative overflow-hidden transition-all ${
+                        isLight ? "bg-white/90 group-hover:bg-white" : "bg-[#0f172a] group-hover:bg-opacity-80"
+                    }`}>
+                        <div className={`absolute inset-0 bg-gradient-to-tr from-neon-cyan/20 to-neon-purple/20 opacity-0 group-hover:opacity-100 transition-opacity`} />
+                        <MessageSquare className={`w-8 h-8 relative z-10 transition-colors ${
+                            isLight ? "text-slate-800 drop-shadow-[0_0_8px_rgba(0,255,255,0.3)]" : "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+                        }`} />
+                        <span className={`absolute top-4 right-4 w-3.5 h-3.5 bg-green-500 rounded-full border-2 shadow-[0_0_15px_rgba(74,222,128,1)] z-20 ${
+                            isLight ? "border-white" : "border-[#0f172a]"
+                        }`}></span>
                         <span className="absolute top-4 right-4 w-3.5 h-3.5 bg-green-400 rounded-full animate-ping opacity-75 z-20"></span>
                     </div>
                 </motion.button>

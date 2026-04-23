@@ -61,10 +61,16 @@ export const useTerminal = () => {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [toggle, isOpen]);
 
+    // Matrix mode state
+    const [isMatrix, setIsMatrix] = useState(false);
+
     // Command processing
     const processCommand = (cmd: string) => {
-        const cleanCmd = cmd.trim().toLowerCase();
-        if (!cleanCmd) return;
+        const parts = cmd.trim().split(" ");
+        const action = parts[0].toLowerCase();
+        const args = parts.slice(1);
+        
+        if (!action) return;
 
         // Add to history
         setHistory((prev) => [
@@ -74,18 +80,21 @@ export const useTerminal = () => {
         setCommandHistory((prev) => [cmd, ...prev]);
         setHistoryIndex(-1);
 
-        const args = cleanCmd.split(" ");
-        const action = args[0];
-
         switch (action) {
             case "help":
-                addOutput("Available commands: help, whoami, cd [sec], theme [t], clear, exit, status");
+                addOutput("COMMANDS:\n  ls            - List directories (sections)\n  cd [dir]      - Move to section\n  whoami        - Developer identity data\n  skills        - View tech stack\n  resume        - Download CV (PDF)\n  socials       - View links\n  theme [name]  - Change system colors\n  echo [text]   - Print text to console\n  status        - System diagnostics\n  clear         - Wipe console history\n  exit          - Close Terminal\n  matrix-rain   - Toggle visual breach");
+                break;
+            case "ls":
+                addOutput("about/  projects/  experience/  certificates/  contact/  hero/");
                 break;
             case "clear":
                 setHistory([]);
                 break;
             case "exit":
                 setIsOpen(false);
+                break;
+            case "echo":
+                addOutput(args.join(" ") || "...");
                 break;
             case "whoami":
                 addOutput("Name: Marwan FARIDI\nRole: Full Stack Developer\nStatus: MISSION_READY\nLocation: Morocco\nSpecialization: Next.js | TypeScript | Supabase | DevOps");
@@ -101,15 +110,32 @@ export const useTerminal = () => {
                 setTimeout(() => addOutput("Just kidding! Welcome to the source code."), 2000);
                 break;
             case "socials":
-                addOutput("GitHub: https://github.com/MarwanFo\nLinkedIn: https://linkedin.com/in/marwan-faridi\nEmail: marwanefaridi22@gmail.com");
+                addOutput("GITHUB:   https://github.com/MarwanFo\nLINKEDIN: https://linkedin.com/in/marwan-faridi\nEMAIL:    marwanefaridi22@gmail.com");
+                break;
+            case "skills":
+                addOutput("FRONTEND:  Next.js, React, Tailwind, Framer Motion, Three.js\nBACKEND:   Node.js, Supabase, PostgreSQL\nTOOLS:     Git, Docker, Vercel, Vitest");
+                break;
+            case "resume":
+                addOutput("Initiating secure download: Marwan_CV.pdf...");
+                const link = document.createElement("a");
+                link.href = "/CV_Marwane_FARIDI.pdf";
+                link.download = "CV_Marwane_FARIDI.pdf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                break;
+            case "matrix-rain":
+                setIsMatrix(!isMatrix);
+                addOutput(isMatrix ? "Visual breach stabilized." : "Visual matrix breach initiated...");
                 break;
             case "cd":
-                const target = args[1];
+                const target = args[0];
                 if (!target) {
                     addError("Usage: cd [projects|experience|certificates|contact|about|hero]");
                     return;
                 }
-                const elementId = target === "exp" ? "experience" : target === "cert" ? "certificates" : target;
+                const cleanTarget = target.replace("/", "");
+                const elementId = cleanTarget === "exp" ? "experience" : cleanTarget === "cert" ? "certificates" : cleanTarget;
                 const element = document.getElementById(elementId);
                 if (element) {
                     setIsOpen(false);
@@ -120,7 +146,7 @@ export const useTerminal = () => {
                 }
                 break;
             case "theme":
-                const themeName = args[1];
+                const themeName = args[0];
                 if (!themeName) {
                     addError("Usage: theme [dark|light|neon|matrix]");
                     return;
@@ -179,6 +205,7 @@ export const useTerminal = () => {
     return {
         isOpen,
         setIsOpen,
+        isMatrix,
         history,
         processCommand,
         inputRef,

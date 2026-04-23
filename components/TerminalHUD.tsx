@@ -10,6 +10,7 @@ export default function TerminalHUD() {
     const {
         isOpen,
         setIsOpen,
+        isMatrix,
         history,
         processCommand,
         inputRef,
@@ -70,12 +71,14 @@ export default function TerminalHUD() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="fixed inset-0 z-[9999] p-4 md:p-12 lg:p-24 flex items-center justify-center bg-background/80 backdrop-blur-2xl overflow-hidden"
+                    className={`fixed inset-0 z-[9999] p-4 md:p-12 lg:p-24 flex items-center justify-center bg-background/80 backdrop-blur-2xl overflow-hidden ${isMatrix ? "text-[#00ff41]" : ""}`}
+                    style={isMatrix ? { "--neon-cyan": "#00ff41", "--neon-purple": "#008f11" } as any : {}}
                 >
                     {/* CRT Scanline Overlay */}
                     <div className="absolute inset-0 pointer-events-none terminal-scanline opacity-20 z-10" />
+                    {isMatrix && <div className="absolute inset-0 pointer-events-none matrix-bg z-0" />}
 
-                    <div className="relative w-full max-w-5xl h-full flex flex-col glass-strong rounded-2xl border border-neon-cyan/30 shadow-2xl overflow-hidden terminal-hud terminal-flicker">
+                    <div className={`relative w-full max-w-5xl h-full flex flex-col glass-strong rounded-2xl border ${isMatrix ? "border-[#00ff41]/50" : "border-neon-cyan/30"} shadow-2xl overflow-hidden terminal-hud terminal-flicker`}>
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
                             <div className="flex items-center gap-3">
@@ -99,7 +102,7 @@ export default function TerminalHUD() {
                         >
                             {history.map((entry, i) => (
                                 <div key={i} className="animate-in fade-in slide-in-from-left-2 duration-300">
-                                    <EntryComponent entry={entry} />
+                                    <EntryComponent entry={entry} isMatrix={isMatrix} />
                                 </div>
                             ))}
                         </div>
@@ -107,14 +110,14 @@ export default function TerminalHUD() {
                         {/* Input Area */}
                         <div className="p-6 border-t border-white/10 bg-white/5">
                             <form onSubmit={handleSubmit} className="flex items-center gap-3">
-                                <ChevronRight className="w-5 h-5 text-neon-cyan animate-pulse" />
+                                <ChevronRight className={`w-5 h-5 ${isMatrix ? "text-[#00ff41]" : "text-neon-cyan"} animate-pulse`} />
                                 <input
                                     ref={inputRef}
                                     type="text"
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyDown={handleKeyDown}
-                                    className="flex-1 bg-transparent border-none outline-none text-white font-mono placeholder:text-white/20"
+                                    className={`flex-1 bg-transparent border-none outline-none font-mono placeholder:text-white/20 ${isMatrix ? "text-[#00ff41]" : "text-white"}`}
                                     placeholder="Execute command..."
                                     spellCheck={false}
                                     autoComplete="off"
@@ -123,7 +126,7 @@ export default function TerminalHUD() {
                         </div>
 
                         {/* Footer / Status */}
-                        <div className="px-6 py-2 bg-neon-cyan/5 border-t border-white/5 flex items-center justify-between text-[10px] uppercase tracking-widest text-neon-cyan/40">
+                        <div className={`px-6 py-2 border-t border-white/5 flex items-center justify-between text-[10px] uppercase tracking-widest ${isMatrix ? "bg-[#00ff41]/5 text-[#00ff41]/60" : "bg-neon-cyan/5 text-neon-cyan/40"}`}>
                             <span>Connection: SECURE_ENCRYPTED</span>
                             <span>System: OPERATIONAL</span>
                         </div>
@@ -135,20 +138,20 @@ export default function TerminalHUD() {
     );
 }
 
-function EntryComponent({ entry }: { entry: TerminalEntry }) {
+function EntryComponent({ entry, isMatrix }: { entry: TerminalEntry; isMatrix: boolean }) {
     switch (entry.type) {
         case "input":
             return (
                 <div className="flex items-center gap-2">
-                    <span className="text-neon-purple font-bold">visitor@marwan:~$</span>
-                    <span className="text-white">{entry.content}</span>
+                    <span className={`${isMatrix ? "text-[#008f11]" : "text-neon-purple"} font-bold`}>visitor@marwan:~$</span>
+                    <span className={isMatrix ? "text-[#00ff41]" : "text-white"}>{entry.content}</span>
                 </div>
             );
         case "output":
             return (
                 <div className="flex items-start gap-4">
                     <CornerDownRight className="w-4 h-4 text-white/20 mt-1 shrink-0" />
-                    <pre className="text-white/80 whitespace-pre-wrap leading-relaxed">
+                    <pre className={`whitespace-pre-wrap leading-relaxed ${isMatrix ? "text-[#00ff41]/90" : "text-white/80"}`}>
                         {entry.content}
                     </pre>
                 </div>
@@ -163,7 +166,7 @@ function EntryComponent({ entry }: { entry: TerminalEntry }) {
         case "system":
             return (
                 <div className="py-1 border-y border-white/5 bg-white/5 -mx-8 px-8 mb-2">
-                    <span className="text-neon-cyan font-bold text-xs">{entry.content}</span>
+                    <span className={`${isMatrix ? "text-[#00ff41]" : "text-neon-cyan"} font-bold text-xs`}>{entry.content}</span>
                 </div>
             );
         default:

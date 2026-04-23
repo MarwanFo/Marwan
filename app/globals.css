@@ -325,4 +325,19 @@ body {
 @keyframes blink {
   from, to { opacity: 1; }
   50% { opacity: 0; }
-}
+}
+
+.matrix-bg {
+  mask-image: linear-gradient(to bottom, transparent, black, transparent);
+  background: linear-gradient(
+    rgba(0, 255, 65, 0.1) 1px, 
+    transparent 1px
+  );
+  background-size: 100% 20px;
+  animation: matrix-scroll 20s linear infinite;
+}
+
+@keyframes matrix-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 1000px; }
+}

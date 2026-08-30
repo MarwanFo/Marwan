@@ -4,14 +4,9 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { Menu, X, Download } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import LanguageSwitcher from "./LanguageSwitcher";
 import Logo from "./Logo";
-
-const navLinks = [
-    { name: "About", href: "#about" },
-    { name: "Certificates", href: "#certificates" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
-];
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 interface HeaderClientProps {
     resumeUrl: string | null;
@@ -21,6 +16,15 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { scrollY } = useScroll();
+    const { t } = useTranslation();
+
+    const navLinks = [
+        { name: t("nav.about"), href: "#about" },
+        { name: t("nav.experience"), href: "#experience" },
+        { name: t("nav.certificates"), href: "#certificates" },
+        { name: t("nav.projects"), href: "#projects" },
+        { name: t("nav.contact"), href: "#contact" },
+    ];
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setIsScrolled(latest > 50);
@@ -74,7 +78,7 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                                     key={link.name}
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: index * 0.1 }}
+                                    transition={{ delay: index * 0.05 }}
                                 >
                                     <a
                                         href={link.href}
@@ -82,7 +86,7 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                                             e.preventDefault();
                                             handleNavClick(link.href);
                                         }}
-                                        className="relative px-4 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors group"
+                                        className="relative px-3.5 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors group"
                                     >
                                         {link.name}
                                         <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-neon-gradient group-hover:w-3/4 transition-all duration-300" />
@@ -91,33 +95,38 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                             ))}
                         </ul>
 
-                        {/* CTA Button */}
+                        {/* CTA Button & Controls */}
                         <div className="hidden md:flex items-center gap-3">
+                            <LanguageSwitcher />
                             <ThemeToggle />
                             <motion.button
                                 onClick={handleResumeClick}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-full glass border border-neon-cyan/30 text-neon-cyan text-sm font-medium hover:bg-neon-cyan/10 transition-all duration-300"
+                                className="flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 text-neon-cyan text-sm font-medium hover:bg-neon-cyan/10 transition-all duration-300"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Download className="w-4 h-4" />
-                                <span>Resume</span>
+                                <span>{t("nav.resume")}</span>
                             </motion.button>
                         </div>
 
                         {/* Mobile Menu Button */}
-                        <motion.button
-                            className="md:hidden p-2 rounded-xl glass"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="w-5 h-5 text-white" />
-                            ) : (
-                                <Menu className="w-5 h-5 text-white" />
-                            )}
-                        </motion.button>
+                        <div className="flex md:hidden items-center gap-2">
+                            <LanguageSwitcher variant="pill" />
+                            <motion.button
+                                className="p-2 rounded-xl glass"
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                aria-label="Toggle menu"
+                            >
+                                {isMobileMenuOpen ? (
+                                    <X className="w-5 h-5 text-white" />
+                                ) : (
+                                    <Menu className="w-5 h-5 text-white" />
+                                )}
+                            </motion.button>
+                        </div>
                     </nav>
                 </div>
             </motion.header>
@@ -173,13 +182,19 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                         ))}
                     </ul>
 
-                    <div className="mt-6 pt-6 border-t border-white/10">
+                    <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm text-white/60">Theme & Language</span>
+                            <div className="flex items-center gap-2">
+                                <ThemeToggle />
+                            </div>
+                        </div>
                         <button
                             onClick={handleResumeClick}
                             className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-neon-gradient text-background font-semibold"
                         >
                             <Download className="w-5 h-5" />
-                            <span>Download Resume</span>
+                            <span>{t("nav.downloadResume")}</span>
                         </button>
                     </div>
                 </motion.div>

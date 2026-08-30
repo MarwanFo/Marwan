@@ -196,8 +196,11 @@ function ExperienceCard({ experience, index, isEducation }: { experience: Experi
     );
 }
 
+import { useTranslation } from "@/lib/i18n/LanguageContext";
+
 export default function ExperienceSectionClient({ initialExperiences }: { initialExperiences: Experience[] }) {
     const [activeTab, setActiveTab] = useState<"work" | "education">("work");
+    const { t } = useTranslation();
 
     // Filter by type
     const filteredExperiences = initialExperiences.filter((exp: any) => {
@@ -271,21 +274,17 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                             <BookOpen className="w-4 h-4 text-neon-purple" />
                         )}
                         <span className="text-sm text-white/60">
-                            {activeTab === "work" ? "Career Journey" : "Academic Background"}
+                            {activeTab === "work" ? t("experience.workTab") : t("experience.educationTab")}
                         </span>
                     </motion.div>
                     <h2 className="text-heading font-bold mb-4">
-                        {activeTab === "work" ? (
-                            <>Professional <span className="neon-text">Experience</span></>
-                        ) : (
-                            <>My <span className="text-neon-purple">Education</span></>
-                        )}
+                        {t("experience.title")}{" "}
+                        <span className={activeTab === "work" ? "neon-text" : "text-neon-purple"}>
+                            {t("experience.highlight")}
+                        </span>
                     </h2>
                     <p className="text-white/60 max-w-xl mx-auto mb-8">
-                        {activeTab === "work"
-                            ? "My professional journey building digital products and growing as a developer"
-                            : "My academic path and educational achievements"
-                        }
+                        {t("experience.subtitle")}
                     </p>
 
                     {/* Tab Toggle with animation */}
@@ -293,7 +292,7 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                         <motion.button
                             onClick={() => setActiveTab("work")}
                             className={`relative flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${activeTab === "work"
-                                ? "text-background"
+                                ? "text-background font-bold"
                                 : "text-white/60 hover:text-white"
                                 }`}
                             whileHover={{ scale: activeTab === "work" ? 1 : 1.05 }}
@@ -307,12 +306,12 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                                 />
                             )}
                             <Briefcase className="w-4 h-4 relative z-10" />
-                            <span className="relative z-10">Experience</span>
+                            <span className="relative z-10">{t("experience.workTab")}</span>
                         </motion.button>
                         <motion.button
                             onClick={() => setActiveTab("education")}
                             className={`relative flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${activeTab === "education"
-                                ? "text-background"
+                                ? "text-background font-bold"
                                 : "text-white/60 hover:text-white"
                                 }`}
                             whileHover={{ scale: activeTab === "education" ? 1 : 1.05 }}
@@ -326,7 +325,7 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                                 />
                             )}
                             <GraduationCap className="w-4 h-4 relative z-10" />
-                            <span className="relative z-10">Education</span>
+                            <span className="relative z-10">{t("experience.educationTab")}</span>
                         </motion.button>
                     </div>
                 </motion.div>
@@ -361,7 +360,9 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                                         <Briefcase className="w-10 h-10 text-neon-cyan/50" />
                                     )}
                                 </motion.div>
-                                <p className="text-white/40">No {activeTab === "work" ? "work experience" : "education"} entries yet</p>
+                                <p className="text-white/40">
+                                    {activeTab === "work" ? "No work experience entries yet" : "No education entries yet"}
+                                </p>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -383,7 +384,7 @@ export default function ExperienceSectionClient({ initialExperiences }: { initia
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <span>View Full History</span>
+                            <span>{t("experience.allExperiences")}</span>
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </motion.a>
                     </motion.div>

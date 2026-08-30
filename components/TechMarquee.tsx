@@ -65,9 +65,12 @@ function MarqueeRow({ items, reverse = false }: { items: Skill[]; reverse?: bool
     );
 }
 
+import { useTranslation } from "@/lib/i18n/LanguageContext";
+
 export default function TechMarquee() {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchSkills = async () => {
@@ -130,10 +133,10 @@ export default function TechMarquee() {
                     className="text-center mb-8 md:mb-12"
                 >
                     <h2 className="text-2xl md:text-heading font-bold mb-3 md:mb-4">
-                        Tech <span className="neon-text">Stack</span>
+                        {t("skills.title")} <span className="neon-text">{t("skills.highlight")}</span>
                     </h2>
                     <p className="text-white/60 max-w-xl mx-auto text-sm md:text-base px-4">
-                        Technologies and tools I use to bring ideas to life
+                        {t("skills.subtitle")}
                     </p>
                 </motion.div>
 

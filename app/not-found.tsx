@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Home, ArrowLeft, Search } from "lucide-react";
 
+import { useTranslation } from "@/lib/i18n/LanguageContext";
+
 export default function NotFound() {
+    const { t } = useTranslation();
     return (
         <div className="min-h-screen flex items-center justify-center px-6 bg-background relative overflow-hidden">
             {/* Background Effects */}
@@ -95,11 +98,10 @@ export default function NotFound() {
                     transition={{ delay: 0.2, duration: 0.5 }}
                 >
                     <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                        Page Not Found
+                        {t("notFound.title")}
                     </h2>
                     <p className="text-white/60 mb-8 max-w-md mx-auto">
-                        Oops! The page you're looking for seems to have vanished into the digital void.
-                        Let's get you back on track.
+                        {t("notFound.subtitle")}
                     </p>
                 </motion.div>
 
@@ -117,7 +119,7 @@ export default function NotFound() {
                             whileTap={{ scale: 0.95 }}
                         >
                             <Home className="w-5 h-5" />
-                            Go Home
+                            {t("notFound.backHome")}
                         </motion.button>
                     </Link>
                     <button
@@ -125,7 +127,7 @@ export default function NotFound() {
                         className="flex items-center gap-2 px-6 py-3 rounded-xl glass border border-white/10 text-white hover:bg-white/10 transition-colors"
                     >
                         <ArrowLeft className="w-5 h-5" />
-                        Go Back
+                        {t("notFound.backHome")}
                     </button>
                 </motion.div>
 
@@ -137,7 +139,7 @@ export default function NotFound() {
                     className="mt-16 flex items-center justify-center gap-2 text-white/40"
                 >
                     <Search className="w-4 h-4" />
-                    <span className="text-sm">Lost in cyberspace</span>
+                    <span className="text-sm">404</span>
                 </motion.div>
             </div>
 

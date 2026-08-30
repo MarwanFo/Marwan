@@ -5,6 +5,7 @@ import { Award, ExternalLink, Calendar, CheckCircle, ArrowLeft, Trophy, Sparkles
 import Link from "next/link";
 import { Certificate } from "@/lib/types";
 import { useState, useRef } from "react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 interface SiteSettings {
     total_certifications?: number;
@@ -17,6 +18,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const imageUrl = (certificate as any).image_url;
+    const { t } = useTranslation();
 
     // 3D tilt effect
     const x = useMotionValue(0);
@@ -89,7 +91,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
                     >
                         <Trophy className="w-3 h-3" />
-                        Featured
+                        {t("certificates.featured")}
                     </motion.div>
                 )}
 
@@ -139,7 +141,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         {certificate.date && (
                             <div className="flex items-center gap-2 text-sm text-white/50 mb-4">
                                 <Calendar className="w-4 h-4" />
-                                <span>Earned {certificate.date}</span>
+                                <span>{certificate.date}</span>
                             </div>
                         )}
 
@@ -158,7 +160,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                                 </motion.div>
                             ))}
                             {certificate.skills.length > 3 && (
-                                <span className="px-3 py-1 text-xs rounded-full bg-white/5 text-white/40">
+                                <span className="px-2 py-1 text-xs rounded-full bg-white/5 text-white/40">
                                     +{certificate.skills.length - 3}
                                 </span>
                             )}
@@ -186,11 +188,12 @@ export default function CertificatesPageClient({
     certificates: Certificate[];
     settings?: SiteSettings | null;
 }) {
+    const { t } = useTranslation();
     const stats = [
-        { value: `${settings?.total_certifications || certificates.length}+`, label: "Certifications" },
-        { value: `${settings?.learning_hours || 500}+`, label: "Learning Hours" },
-        { value: `${settings?.skills_acquired || 15}+`, label: "Skills Acquired" },
-        { value: `${settings?.years_learning || 4}`, label: "Years Learning" },
+        { value: `${settings?.total_certifications || certificates.length}+`, label: t("certificates.title") },
+        { value: `${settings?.learning_hours || 500}+`, label: "Hours" },
+        { value: `${settings?.skills_acquired || 15}+`, label: "Skills" },
+        { value: `${settings?.years_learning || 4}`, label: t("about.years") },
     ];
 
     return (
@@ -244,7 +247,7 @@ export default function CertificatesPageClient({
                         className="inline-flex items-center gap-2 text-white/60 hover:text-neon-cyan transition-colors group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        <span>Back to Home</span>
+                        <span>{t("projects.backHome")}</span>
                     </Link>
                 </motion.div>
 
@@ -261,13 +264,13 @@ export default function CertificatesPageClient({
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 mb-4"
                     >
                         <Sparkles className="w-4 h-4 text-neon-cyan" />
-                        <span className="text-sm text-white/60">Continuous Learning</span>
+                        <span className="text-sm text-white/60">{t("certificates.highlight")}</span>
                     </motion.div>
                     <h1 className="text-heading font-bold mb-4">
-                        All <span className="neon-text">Certificates</span>
+                        {t("certificates.title")} <span className="neon-text">{t("certificates.highlight")}</span>
                     </h1>
                     <p className="text-white/60 max-w-xl mx-auto">
-                        My complete collection of certifications and credentials
+                        {t("certificates.subtitle")}
                     </p>
                 </motion.div>
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ArrowDown, Sparkles } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 export default function HeroSection() {
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isLoaded, setIsLoaded] = useState(false);
+    const { t } = useTranslation();
 
     // Mouse position tracking for gradient blob
     const mouseX = useMotionValue(0);
@@ -22,7 +23,6 @@ export default function HeroSection() {
         const handleMouseMove = (e: MouseEvent) => {
             mouseX.set(e.clientX);
             mouseY.set(e.clientY);
-            setMousePosition({ x: e.clientX, y: e.clientY });
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -35,8 +35,8 @@ export default function HeroSection() {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.3,
+                staggerChildren: 0.08,
+                delayChildren: 0.2,
             },
         },
     };
@@ -72,7 +72,7 @@ export default function HeroSection() {
     };
 
     const name = "MARWAN";
-    const title = "FULL STACK DEVELOPER";
+    const roleTitle = t("hero.role");
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
@@ -167,7 +167,7 @@ export default function HeroSection() {
                 >
                     <Sparkles className="w-4 h-4 text-neon-cyan" />
                     <span className="text-sm md:text-base uppercase tracking-[0.3em] text-white/60">
-                        Welcome to my portfolio
+                        {t("hero.welcome")}
                     </span>
                     <Sparkles className="w-4 h-4 text-neon-magenta" />
                 </motion.div>
@@ -195,13 +195,14 @@ export default function HeroSection() {
 
                 {/* Title */}
                 <motion.div
+                    key={roleTitle}
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
                     className="overflow-hidden mb-8"
                 >
                     <div className="text-display font-bold flex justify-center flex-wrap gap-x-4 text-white/90" style={{ perspective: "1000px" }}>
-                        {title.split(" ").map((word, wordIndex) => (
+                        {roleTitle.split(" ").map((word, wordIndex) => (
                             <motion.span
                                 key={wordIndex}
                                 variants={letterVariants}
@@ -220,10 +221,10 @@ export default function HeroSection() {
                     animate="visible"
                     className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
                 >
-                    Crafting{" "}
-                    <span className="text-neon-cyan">beautiful</span>,{" "}
-                    <span className="text-neon-purple">high-performance</span> web experiences
-                    with modern technologies and creative design.
+                    {t("hero.description.part1")}{" "}
+                    <span className="text-neon-cyan">{t("hero.description.part2")}</span>,{" "}
+                    <span className="text-neon-purple">{t("hero.description.part3")}</span>{" "}
+                    {t("hero.description.part4")}
                 </motion.p>
 
                 {/* CTA Buttons */}
@@ -239,7 +240,7 @@ export default function HeroSection() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <span className="relative z-10 font-semibold tracking-wide">View Projects</span>
+                        <span className="relative z-10 font-semibold tracking-wide">{t("hero.viewProjects")}</span>
                         <motion.div
                             className="absolute inset-0 bg-neon-gradient opacity-0 group-hover:opacity-20 transition-opacity duration-300"
                         />
@@ -252,7 +253,7 @@ export default function HeroSection() {
                         whileTap={{ scale: 0.95 }}
                     >
                         <span className="font-semibold tracking-wide text-white/80 group-hover:text-neon-cyan transition-colors duration-300">
-                            Get in Touch
+                            {t("hero.getInTouch")}
                         </span>
                     </motion.a>
                 </motion.div>
@@ -270,7 +271,7 @@ export default function HeroSection() {
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     className="flex flex-col items-center gap-2 text-white/40"
                 >
-                    <span className="text-[10px] md:text-xs uppercase tracking-widest">Scroll</span>
+                    <span className="text-[10px] md:text-xs uppercase tracking-widest">{t("hero.scroll")}</span>
                     <ArrowDown className="w-3 h-3 md:w-4 md:h-4" />
                 </motion.div>
             </motion.div>

@@ -2,11 +2,12 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
-import { ExternalLink, Github, ArrowUpRight, Sparkles, Star, Code2, Rocket } from "lucide-react";
+import { ExternalLink, Github, ArrowUpRight, Sparkles, Star } from "lucide-react";
 import { Project } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
-// Fallback projects for when database is empty
-const fallbackProjects: Project[] = [
+// Fallback projects for English
+const fallbackProjectsEn: Project[] = [
     {
         id: "1",
         title: "E-Commerce Platform",
@@ -61,9 +62,66 @@ const fallbackProjects: Project[] = [
     },
 ];
 
+// Fallback projects for French
+const fallbackProjectsFr: Project[] = [
+    {
+        id: "1",
+        title: "Plateforme E-Commerce",
+        description: "Solution e-commerce full-stack avec gestion des stocks en temps réel, recommandations IA et paiement sécurisé.",
+        tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
+        image_url: "https://images.unsplash.com/photo-1661956602116-aa6865609028?w=800&h=600&fit=crop",
+        live_url: "#",
+        github_url: "#",
+        size: "large",
+        featured: true,
+        display_order: 0,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "2",
+        title: "Tableau de bord IA",
+        description: "Dashboard analytique intégrant des insights basés sur le Machine Learning et visualisation de données temps réel.",
+        tags: ["React", "Python", "TensorFlow"],
+        image_url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
+        live_url: "#",
+        github_url: "#",
+        size: "medium",
+        featured: false,
+        display_order: 1,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "3",
+        title: "Application Sociale",
+        description: "Plateforme sociale interactive avec messagerie instantanée, stories et gestion de communauté.",
+        tags: ["React Native", "Firebase"],
+        image_url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop",
+        live_url: "#",
+        github_url: "#",
+        size: "small",
+        featured: false,
+        display_order: 2,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "4",
+        title: "Système de Design",
+        description: "Bibliothèque UI de plus de 50 composants accessibles avec support multi-thèmes.",
+        tags: ["Storybook", "Figma", "CSS"],
+        image_url: "https://images.unsplash.com/photo-1545235617-9465d2a55698?w=800&h=600&fit=crop",
+        live_url: "#",
+        github_url: "#",
+        size: "small",
+        featured: false,
+        display_order: 3,
+        created_at: new Date().toISOString(),
+    },
+];
+
 function ProjectCard({ project, index }: { project: Project; index: number }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const { t } = useTranslation();
 
     // 3D tilt effect
     const x = useMotionValue(0);
@@ -117,139 +175,97 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                     transformStyle: "preserve-3d",
                 }}
             >
-                {/* Image with Overlay */}
-                <div className="relative overflow-hidden h-48">
-                    {project.image_url ? (
-                        <motion.img
-                            src={project.image_url}
-                            alt={project.title}
-                            className="w-full h-full object-cover"
-                            animate={{ scale: isHovered ? 1.1 : 1 }}
-                            transition={{ duration: 0.7, ease: "easeOut" }}
-                        />
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30 flex items-center justify-center">
-                            <Code2 className="w-20 h-20 text-white/20" />
-                        </div>
-                    )}
+                {/* Background Glow */}
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-neon-cyan/10 via-transparent to-neon-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ transform: "translateZ(10px)" }}
+                />
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
-
-                    {/* Shine effect on hover */}
-                    <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full"
-                        animate={{ x: isHovered ? "200%" : "-100%" }}
-                        transition={{ duration: 0.7, ease: "easeInOut" }}
+                {/* Project Image */}
+                <div className="relative h-48 overflow-hidden">
+                    <motion.img
+                        src={project.image_url || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop"}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        animate={{
+                            scale: isHovered ? 1.05 : 1,
+                        }}
+                        transition={{ duration: 0.4 }}
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
                     {/* Featured Badge */}
                     {project.featured && (
-                        <motion.div
-                            className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neon-gradient text-background text-xs font-semibold z-10"
-                            initial={{ scale: 0, rotate: -10 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
-                        >
-                            <Star className="w-3 h-3" />
-                            Featured
-                        </motion.div>
+                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan text-xs font-semibold flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-neon-cyan" />
+                            <span>{t("projects.featured")}</span>
+                        </div>
                     )}
-
-                    {/* Quick Actions - Floating */}
-                    <motion.div
-                        className="absolute top-4 right-4 flex gap-2 z-10"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : -10 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        {project.live_url && (
-                            <motion.a
-                                href={project.live_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <ExternalLink className="w-4 h-4" />
-                            </motion.a>
-                        )}
-                        {project.github_url && (
-                            <motion.a
-                                href={project.github_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                            >
-                                <Github className="w-4 h-4" />
-                            </motion.a>
-                        )}
-                    </motion.div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 relative">
-                    {/* Floating glow */}
-                    <motion.div
-                        className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-neon-cyan/30 blur-3xl"
-                        animate={{ opacity: isHovered ? 0.8 : 0 }}
-                        transition={{ duration: 0.5 }}
-                    />
+                <div className="p-6 relative z-10" style={{ transform: "translateZ(20px)" }}>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">
+                        {project.title}
+                    </h3>
+                    <p className="text-white/60 text-sm mb-4 line-clamp-2">
+                        {project.description}
+                    </p>
 
-                    <div className="relative z-10">
-                        <motion.h3
-                            className="font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 text-xl"
-                            style={{ transform: "translateZ(30px)" }}
-                        >
-                            {project.title}
-                        </motion.h3>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tags.map((tag) => (
+                            <span
+                                key={tag}
+                                className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/5 text-white/70 border border-white/10"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
 
-                        <p className="text-white/60 mb-4 group-hover:text-white/70 transition-colors line-clamp-2 text-sm">
-                            {project.description}
-                        </p>
-
-                        {/* Tech Stack */}
-                        <div className="flex flex-wrap gap-2">
-                            {project.tags.slice(0, 3).map((tag, tagIndex) => (
-                                <motion.span
-                                    key={tag}
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: index * 0.1 + tagIndex * 0.05 + 0.3 }}
-                                    className="px-3 py-1 text-xs font-medium rounded-full bg-white/5 text-white/60 border border-white/10 group-hover:border-neon-cyan/30 group-hover:text-neon-cyan/80 transition-all duration-300"
-                                >
-                                    {tag}
-                                </motion.span>
-                            ))}
-                            {project.tags.length > 3 && (
-                                <span className="px-3 py-1 text-xs font-medium rounded-full bg-white/5 text-white/40">
-                                    +{project.tags.length - 3}
-                                </span>
-                            )}
-                        </div>
+                    {/* Links */}
+                    <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                        {project.live_url && (
+                            <a
+                                href={project.live_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-neon-cyan transition-colors"
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                <span>{t("projects.viewProject")}</span>
+                            </a>
+                        )}
+                        {project.github_url && (
+                            <a
+                                href={project.github_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-neon-purple transition-colors ml-auto"
+                            >
+                                <Github className="w-4 h-4" />
+                                <span>{t("projects.sourceCode")}</span>
+                            </a>
+                        )}
                     </div>
                 </div>
-
-                {/* Bottom accent line */}
-                <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-neon-gradient"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: isHovered ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ originX: 0 }}
-                />
             </motion.div>
         </motion.div>
     );
 }
 
-export default function BentoGridClient({ initialProjects }: { initialProjects: Project[] }) {
+export default function BentoGridClient({
+    initialProjects = [],
+}: {
+    initialProjects: Project[];
+}) {
+    const { t, language } = useTranslation();
+    const fallbackProjects = language === "fr" ? fallbackProjectsFr : fallbackProjectsEn;
+
     const allProjects = initialProjects.length > 0 ? initialProjects : fallbackProjects;
-    const projects = allProjects.slice(0, 4);
-    const hasMore = allProjects.length > 4;
+    const projects = allProjects.slice(0, 6);
+    const hasMore = allProjects.length > 6 || initialProjects.length > 0;
 
     return (
         <section id="projects" className="relative py-24 px-6 overflow-hidden">
@@ -306,18 +322,17 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 mb-4"
                     >
                         <Sparkles className="w-4 h-4 text-neon-cyan" />
-                        <span className="text-sm text-white/60">My Work</span>
+                        <span className="text-sm text-white/60">{t("projects.highlight")}</span>
                     </motion.div>
                     <h2 className="text-heading font-bold mb-4">
-                        Featured <span className="neon-text">Projects</span>
+                        {t("projects.title")} <span className="neon-text">{t("projects.highlight")}</span>
                     </h2>
                     <p className="text-white/60 max-w-2xl mx-auto">
-                        A collection of projects that showcase my skills in building modern,
-                        performant, and user-centric applications.
+                        {t("projects.subtitle")}
                     </p>
                 </motion.div>
 
-                {/* Projects Grid - Same style as /projects page */}
+                {/* Projects Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {projects.map((project, index) => (
                         <ProjectCard key={project.id} project={project} index={index} />
@@ -338,7 +353,7 @@ export default function BentoGridClient({ initialProjects }: { initialProjects: 
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <span>View All Projects</span>
+                            <span>{t("projects.allProjects")}</span>
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </motion.a>
                     </motion.div>

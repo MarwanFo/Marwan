@@ -5,6 +5,7 @@ import { ExternalLink, Github, ArrowLeft, Sparkles, Folder, Eye, Star, Code2, Ro
 import Link from "next/link";
 import { Project } from "@/lib/types";
 import { useState, useRef } from "react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 interface ProjectCardProps {
     project: Project;
@@ -15,6 +16,7 @@ interface ProjectCardProps {
 function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
+    const { t } = useTranslation();
 
     // 3D tilt effect
     const x = useMotionValue(0);
@@ -108,7 +110,7 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                             transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
                         >
                             <Star className="w-3 h-3" />
-                            Featured
+                            {t("projects.featured")}
                         </motion.div>
                     )}
 
@@ -124,9 +126,10 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                                 href={project.live_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg hover:bg-neon-cyan transition-colors"
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
+                                title={t("projects.viewProject")}
                             >
                                 <ExternalLink className="w-4 h-4" />
                             </motion.a>
@@ -136,9 +139,10 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                                 href={project.github_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg"
+                                className="p-2.5 rounded-xl bg-white/90 text-background backdrop-blur-sm shadow-lg hover:bg-neon-purple hover:text-white transition-colors"
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
+                                title={t("projects.sourceCode")}
                             >
                                 <Github className="w-4 h-4" />
                             </motion.a>
@@ -199,10 +203,10 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                                         href={project.live_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-neon-gradient text-background font-medium text-sm"
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan text-sm font-medium hover:bg-neon-cyan hover:text-background transition-all"
                                     >
-                                        <Rocket className="w-4 h-4" />
-                                        View Live
+                                        <Eye className="w-4 h-4" />
+                                        <span>{t("projects.viewProject")}</span>
                                     </a>
                                 )}
                                 {project.github_url && (
@@ -210,10 +214,10 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                                         href={project.github_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl glass border border-white/20 text-white font-medium text-sm hover:border-neon-cyan/50 transition-colors"
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/70 text-sm font-medium hover:bg-white/10 hover:text-white transition-all"
                                     >
                                         <Github className="w-4 h-4" />
-                                        Source Code
+                                        <span>{t("projects.sourceCode")}</span>
                                     </a>
                                 )}
                             </motion.div>
@@ -244,6 +248,7 @@ function FilterTabs({
     activeTag: string | null;
     onTagChange: (tag: string | null) => void;
 }) {
+    const { t } = useTranslation();
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -254,20 +259,20 @@ function FilterTabs({
             <motion.button
                 onClick={() => onTagChange(null)}
                 className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeTag === null
-                    ? "bg-neon-gradient text-background shadow-lg shadow-neon-cyan/30"
+                    ? "bg-neon-gradient text-background shadow-lg shadow-neon-cyan/30 font-bold"
                     : "glass text-white/70 hover:text-white hover:bg-white/10"
                     }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                All Projects
+                {t("projects.allProjects")}
             </motion.button>
             {tags.map((tag) => (
                 <motion.button
                     key={tag}
                     onClick={() => onTagChange(tag)}
                     className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeTag === tag
-                        ? "bg-neon-gradient text-background shadow-lg shadow-neon-cyan/30"
+                        ? "bg-neon-gradient text-background shadow-lg shadow-neon-cyan/30 font-bold"
                         : "glass text-white/70 hover:text-white hover:bg-white/10"
                         }`}
                     whileHover={{ scale: 1.05 }}
@@ -282,6 +287,7 @@ function FilterTabs({
 
 export default function ProjectsPageClient({ projects }: { projects: Project[] }) {
     const [activeTag, setActiveTag] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     // Get unique tags from all projects
     const allTags = Array.from(new Set(projects.flatMap((p) => p.tags))).slice(0, 6);
@@ -349,7 +355,7 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                         className="inline-flex items-center gap-2 text-white/60 hover:text-neon-cyan transition-colors group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        <span>Back to Home</span>
+                        <span>{t("projects.backHome")}</span>
                     </Link>
                 </motion.div>
 
@@ -366,14 +372,13 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 text-neon-cyan text-sm mb-6"
                     >
                         <Sparkles className="w-4 h-4" />
-                        <span>{projects.length} Projects</span>
+                        <span>{projects.length} {t("projects.highlight")}</span>
                     </motion.div>
                     <h1 className="text-heading font-bold mb-4">
-                        My <span className="neon-text">Creative Work</span>
+                        {t("projects.title")} <span className="neon-text">{t("projects.highlight")}</span>
                     </h1>
                     <p className="text-white/60 max-w-2xl mx-auto">
-                        Explore my portfolio of web applications, open source contributions, and experiments
-                        that showcase my passion for building exceptional digital experiences.
+                        {t("projects.subtitle")}
                     </p>
                 </motion.div>
 
@@ -390,12 +395,12 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                         className="glass rounded-2xl p-12 text-center"
                     >
                         <Folder className="w-16 h-16 text-white/20 mx-auto mb-4" />
-                        <p className="text-white/60">No projects found for this category</p>
+                        <p className="text-white/60">{t("projects.noProjects")}</p>
                         <button
                             onClick={() => setActiveTag(null)}
                             className="mt-4 text-neon-cyan hover:underline"
                         >
-                            View all projects
+                            {t("projects.allProjects")}
                         </button>
                     </motion.div>
                 ) : (
@@ -423,10 +428,10 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                 >
                     <div className="glass rounded-2xl p-8 md:p-12 border border-white/10">
                         <h3 className="text-2xl font-bold text-white mb-3">
-                            Interested in working together?
+                            {t("contact.title")} {t("contact.highlight")}?
                         </h3>
                         <p className="text-white/60 mb-6 max-w-lg mx-auto">
-                            I'm always excited to collaborate on new projects and ideas. Let's create something amazing!
+                            {t("contact.subtitle")}
                         </p>
                         <Link href="/#contact">
                             <motion.button
@@ -435,7 +440,7 @@ export default function ProjectsPageClient({ projects }: { projects: Project[] }
                                 whileTap={{ scale: 0.95 }}
                             >
                                 <Rocket className="w-5 h-5" />
-                                Get In Touch
+                                {t("hero.getInTouch")}
                             </motion.button>
                         </Link>
                     </div>

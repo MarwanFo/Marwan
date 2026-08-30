@@ -209,8 +209,11 @@ function ExperienceCard({ experience, index, isEducation }: { experience: Experi
     );
 }
 
+import { useTranslation } from "@/lib/i18n/LanguageContext";
+
 export default function ExperiencesPageClient({ experiences }: { experiences: Experience[] }) {
     const [activeTab, setActiveTab] = useState<"work" | "education">("work");
+    const { t } = useTranslation();
 
     // Filter by type
     const filteredExperiences = experiences.filter((exp: any) => {
@@ -273,7 +276,7 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                         className="inline-flex items-center gap-2 text-white/60 hover:text-neon-cyan transition-colors group"
                     >
                         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                        <span>Back to Home</span>
+                        <span>{t("projects.backHome")}</span>
                     </Link>
                 </motion.div>
 
@@ -295,21 +298,17 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                             <BookOpen className="w-4 h-4 text-neon-purple" />
                         )}
                         <span className="text-sm text-white/60">
-                            {activeTab === "work" ? "Career Journey" : "Academic Background"}
+                            {activeTab === "work" ? t("experience.workTab") : t("experience.educationTab")}
                         </span>
                     </motion.div>
                     <h1 className="text-heading font-bold mb-4">
-                        {activeTab === "work" ? (
-                            <>All <span className="neon-text">Experience</span></>
-                        ) : (
-                            <>My <span className="text-neon-purple">Education</span></>
-                        )}
+                        {t("experience.title")}{" "}
+                        <span className={activeTab === "work" ? "neon-text" : "text-neon-purple"}>
+                            {t("experience.highlight")}
+                        </span>
                     </h1>
                     <p className="text-white/60 max-w-xl mx-auto mb-8">
-                        {activeTab === "work"
-                            ? "My complete professional journey and work history"
-                            : "My academic path and educational achievements"
-                        }
+                        {t("experience.subtitle")}
                     </p>
 
                     {/* Tab Toggle with animation */}
@@ -317,7 +316,7 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                         <motion.button
                             onClick={() => setActiveTab("work")}
                             className={`relative flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${activeTab === "work"
-                                ? "text-background"
+                                ? "text-background font-bold"
                                 : "text-white/60 hover:text-white"
                                 }`}
                             whileHover={{ scale: activeTab === "work" ? 1 : 1.05 }}
@@ -331,12 +330,12 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                                 />
                             )}
                             <Briefcase className="w-4 h-4 relative z-10" />
-                            <span className="relative z-10">Experience</span>
+                            <span className="relative z-10">{t("experience.workTab")}</span>
                         </motion.button>
                         <motion.button
                             onClick={() => setActiveTab("education")}
                             className={`relative flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${activeTab === "education"
-                                ? "text-background"
+                                ? "text-background font-bold"
                                 : "text-white/60 hover:text-white"
                                 }`}
                             whileHover={{ scale: activeTab === "education" ? 1 : 1.05 }}
@@ -350,7 +349,7 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                                 />
                             )}
                             <GraduationCap className="w-4 h-4 relative z-10" />
-                            <span className="relative z-10">Education</span>
+                            <span className="relative z-10">{t("experience.educationTab")}</span>
                         </motion.button>
                     </div>
                 </motion.div>
@@ -386,7 +385,9 @@ export default function ExperiencesPageClient({ experiences }: { experiences: Ex
                                         <Briefcase className="w-10 h-10 text-neon-cyan/50" />
                                     )}
                                 </motion.div>
-                                <p className="text-white/40">No {activeTab === "work" ? "work experience" : "education"} entries yet</p>
+                                <p className="text-white/40">
+                                    {activeTab === "work" ? "No work experience entries yet" : "No education entries yet"}
+                                </p>
                             </motion.div>
                         )}
                     </AnimatePresence>

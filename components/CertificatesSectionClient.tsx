@@ -4,9 +4,10 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Award, ExternalLink, Calendar, CheckCircle, ArrowUpRight, Sparkles, Trophy } from "lucide-react";
 import { Certificate } from "@/lib/types";
 import { useState, useRef } from "react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
-// Fallback certificates for when database is empty
-const fallbackCertificates: Certificate[] = [
+// Fallback certificates for English
+const fallbackCertificatesEn: Certificate[] = [
     {
         id: "1",
         title: "AWS Certified Solutions Architect",
@@ -53,10 +54,59 @@ const fallbackCertificates: Certificate[] = [
     },
 ];
 
+// Fallback certificates for French
+const fallbackCertificatesFr: Certificate[] = [
+    {
+        id: "1",
+        title: "Architecte Solutions Certifié AWS",
+        issuer: "Amazon Web Services",
+        date: "2024",
+        credential_url: "#",
+        skills: ["Architecture Cloud", "Services AWS", "Sécurité"],
+        featured: true,
+        display_order: 0,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "2",
+        title: "Développeur Frontend Professionnel",
+        issuer: "Meta",
+        date: "2023",
+        credential_url: "#",
+        skills: ["React", "JavaScript", "Performance Web"],
+        featured: true,
+        display_order: 1,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "3",
+        title: "Développement Web Full Stack",
+        issuer: "freeCodeCamp",
+        date: "2023",
+        credential_url: "#",
+        skills: ["Node.js", "MongoDB", "APIs REST"],
+        featured: false,
+        display_order: 2,
+        created_at: new Date().toISOString(),
+    },
+    {
+        id: "4",
+        title: "TypeScript Professionnel",
+        issuer: "Udemy",
+        date: "2022",
+        credential_url: "#",
+        skills: ["TypeScript", "Sécurité des types", "POO"],
+        featured: false,
+        display_order: 3,
+        created_at: new Date().toISOString(),
+    },
+];
+
 function CertificateCard({ certificate, index }: { certificate: Certificate; index: number }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isHovered, setIsHovered] = useState(false);
     const imageUrl = (certificate as any).image_url;
+    const { t } = useTranslation();
 
     // 3D tilt effect
     const x = useMotionValue(0);
@@ -130,7 +180,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
                     >
                         <Trophy className="w-3 h-3" />
-                        Featured
+                        {t("certificates.featured")}
                     </motion.div>
                 )}
 
@@ -180,7 +230,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                         {certificate.date && (
                             <div className="flex items-center gap-2 text-sm text-white/50 mb-4">
                                 <Calendar className="w-4 h-4" />
-                                <span>Earned {certificate.date}</span>
+                                <span>{certificate.date}</span>
                             </div>
                         )}
 
@@ -199,7 +249,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
                                 </motion.div>
                             ))}
                             {certificate.skills.length > 3 && (
-                                <span className="px-3 py-1 text-xs rounded-full bg-white/5 text-white/40">
+                                <span className="px-2 py-1 text-xs rounded-full bg-white/5 text-white/40">
                                     +{certificate.skills.length - 3}
                                 </span>
                             )}
@@ -209,7 +259,7 @@ function CertificateCard({ certificate, index }: { certificate: Certificate; ind
 
                 {/* Bottom accent line */}
                 <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-neon-gradient"
+                    className="h-1 bg-neon-gradient"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: isHovered ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -229,20 +279,23 @@ interface SiteSettings {
 
 export default function CertificatesSectionClient({
     initialCertificates,
-    settings
+    settings,
 }: {
     initialCertificates: Certificate[];
     settings?: SiteSettings | null;
 }) {
+    const { t, language } = useTranslation();
+    const fallbackCertificates = language === "fr" ? fallbackCertificatesFr : fallbackCertificatesEn;
+
     const allCertificates = initialCertificates.length > 0 ? initialCertificates : fallbackCertificates;
     const certificates = allCertificates.slice(0, 4);
     const hasMore = allCertificates.length > 4;
 
     const stats = [
-        { value: `${settings?.total_certifications || allCertificates.length}+`, label: "Certifications" },
-        { value: `${settings?.learning_hours || 500}+`, label: "Learning Hours" },
-        { value: `${settings?.skills_acquired || 15}+`, label: "Skills Acquired" },
-        { value: `${settings?.years_learning || 4}`, label: "Years Learning" },
+        { value: `${settings?.total_certifications || allCertificates.length}+`, label: t("certificates.title") },
+        { value: `${settings?.learning_hours || 500}+`, label: "Hours" },
+        { value: `${settings?.skills_acquired || 15}+`, label: "Skills" },
+        { value: `${settings?.years_learning || 4}`, label: t("about.years") },
     ];
 
     return (
@@ -250,9 +303,9 @@ export default function CertificatesSectionClient({
             {/* Animated Background */}
             <div className="absolute inset-0 pointer-events-none">
                 <motion.div
-                    className="absolute bottom-1/4 left-0 w-[600px] h-[600px] rounded-full"
+                    className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full"
                     style={{
-                        background: "radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 60%)",
+                        background: "radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 60%)",
                         filter: "blur(100px)",
                     }}
                     animate={{
@@ -260,15 +313,15 @@ export default function CertificatesSectionClient({
                         y: [0, -20, 0],
                     }}
                     transition={{
-                        duration: 15,
+                        duration: 14,
                         repeat: Infinity,
                         ease: "easeInOut",
                     }}
                 />
                 <motion.div
-                    className="absolute top-1/4 right-0 w-[400px] h-[400px] rounded-full"
+                    className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full"
                     style={{
-                        background: "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%)",
+                        background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%)",
                         filter: "blur(100px)",
                     }}
                     animate={{
@@ -276,7 +329,7 @@ export default function CertificatesSectionClient({
                         y: [0, 30, 0],
                     }}
                     transition={{
-                        duration: 12,
+                        duration: 16,
                         repeat: Infinity,
                         ease: "easeInOut",
                         delay: 2,
@@ -299,13 +352,13 @@ export default function CertificatesSectionClient({
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-neon-cyan/30 mb-4"
                     >
                         <Sparkles className="w-4 h-4 text-neon-cyan" />
-                        <span className="text-sm text-white/60">Continuous Learning</span>
+                        <span className="text-sm text-white/60">{t("certificates.highlight")}</span>
                     </motion.div>
                     <h2 className="text-heading font-bold mb-4">
-                        Certificates & <span className="neon-text">Credentials</span>
+                        {t("certificates.title")} <span className="neon-text">{t("certificates.highlight")}</span>
                     </h2>
                     <p className="text-white/60 max-w-xl mx-auto">
-                        Verified certifications that demonstrate my commitment to professional growth
+                        {t("certificates.subtitle")}
                     </p>
                 </motion.div>
 
@@ -314,35 +367,6 @@ export default function CertificatesSectionClient({
                         <CertificateCard key={certificate.id} certificate={certificate} index={index} />
                     ))}
                 </div>
-
-                {/* Stats with hover effects */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4"
-                >
-                    {stats.map((stat, index) => (
-                        <motion.div
-                            key={index}
-                            className="text-center glass rounded-xl p-6 group hover:bg-white/10 transition-colors cursor-default"
-                            whileHover={{ y: -5, scale: 1.02 }}
-                        >
-                            <motion.div
-                                className="text-3xl font-bold neon-text mb-1"
-                                initial={{ opacity: 0, scale: 0 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.4 + index * 0.1 }}
-                            >
-                                {stat.value}
-                            </motion.div>
-                            <div className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
-                                {stat.label}
-                            </div>
-                        </motion.div>
-                    ))}
-                </motion.div>
 
                 {hasMore && (
                     <motion.div
@@ -357,7 +381,7 @@ export default function CertificatesSectionClient({
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <span>View All Certificates</span>
+                            <span>{t("certificates.allCertificates")}</span>
                             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </motion.a>
                     </motion.div>

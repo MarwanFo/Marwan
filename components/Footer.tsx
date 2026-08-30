@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin, User, Briefcase, FolderKanban, Award, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 export default function Footer() {
+    const { t } = useTranslation();
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -12,11 +15,11 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     const navLinks = [
-        { name: "About", href: "#about", icon: User },
-        { name: "Experience", href: "#experience", icon: Briefcase },
-        { name: "Projects", href: "/projects", icon: FolderKanban },
-        { name: "Certificates", href: "/certificates", icon: Award },
-        { name: "Contact", href: "#contact", icon: MessageCircle },
+        { name: t("nav.about"), href: "#about", icon: User },
+        { name: t("nav.experience"), href: "#experience", icon: Briefcase },
+        { name: t("nav.projects"), href: "/projects", icon: FolderKanban },
+        { name: t("nav.certificates"), href: "/certificates", icon: Award },
+        { name: t("nav.contact"), href: "#contact", icon: MessageCircle },
     ];
 
     const socialLinks = [
@@ -50,12 +53,11 @@ export default function Footer() {
                     >
                         <Logo size="sm" showText />
                         <p className="text-white/60 text-sm leading-relaxed max-w-xs">
-                            Full-stack developer passionate about building modern web experiences
-                            with clean code and stunning design.
+                            {t("footer.bio")}
                         </p>
                         <div className="flex items-center gap-2 text-white/50 text-sm">
                             <MapPin className="w-4 h-4" />
-                            <span>Morocco · Available Worldwide</span>
+                            <span>{t("footer.location")}</span>
                         </div>
                     </motion.div>
 
@@ -67,7 +69,7 @@ export default function Footer() {
                         transition={{ delay: 0.1 }}
                         className="space-y-4"
                     >
-                        <h3 className="text-white font-semibold">Quick Links</h3>
+                        <h3 className="text-white font-semibold">{t("footer.quickLinks")}</h3>
                         <ul className="space-y-2">
                             {navLinks.map((link) => (
                                 <li key={link.name}>
@@ -91,7 +93,7 @@ export default function Footer() {
                         transition={{ delay: 0.2 }}
                         className="space-y-4"
                     >
-                        <h3 className="text-white font-semibold">Connect</h3>
+                        <h3 className="text-white font-semibold">{t("footer.connect")}</h3>
                         <div className="flex gap-3">
                             {socialLinks.map((social) => (
                                 <motion.a
@@ -108,7 +110,7 @@ export default function Footer() {
                             ))}
                         </div>
                         <p className="text-white/50 text-sm">
-                            Let&apos;s build something amazing together!
+                            {t("footer.connectSubtitle")}
                         </p>
                     </motion.div>
                 </div>
@@ -125,22 +127,26 @@ export default function Footer() {
                         viewport={{ once: true }}
                         className="flex items-center gap-2 text-white/50 text-sm"
                     >
-                        <span>© {currentYear} FARIDI Marwan · Built with</span>
+                        <span>© {currentYear} FARIDI Marwan · {t("footer.copyright")}</span>
                         <Heart className="w-4 h-4 text-neon-magenta fill-neon-magenta animate-pulse" />
                     </motion.p>
 
-                    {/* Back to Top */}
-                    <motion.button
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        onClick={scrollToTop}
-                        className="group flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 text-white/60 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all"
-                        whileHover={{ y: -2 }}
-                    >
-                        <span className="text-sm">Back to top</span>
-                        <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
-                    </motion.button>
+                    <div className="flex items-center gap-4">
+                        <LanguageSwitcher variant="pill" />
+
+                        {/* Back to Top */}
+                        <motion.button
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            viewport={{ once: true }}
+                            onClick={scrollToTop}
+                            className="group flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 text-white/60 hover:text-neon-cyan hover:border-neon-cyan/30 transition-all"
+                            whileHover={{ y: -2 }}
+                        >
+                            <span className="text-sm">{t("footer.backToTop")}</span>
+                            <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+                        </motion.button>
+                    </div>
                 </div>
             </div>
         </footer>

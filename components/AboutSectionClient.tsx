@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, MapPin, Sparkles, Code2, Rocket } from "lucide-react";
+import { Github, Linkedin, MapPin, Sparkles, Code2, Rocket, Coffee } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/LanguageContext";
 
 interface ProfileData {
     name: string;
@@ -21,28 +22,43 @@ interface ProfileData {
     status_badge?: string | null;
 }
 
-const defaultProfile: ProfileData = {
+const defaultProfileEn = {
     name: "FARIDI Marwan",
     role: "Full Stack Developer",
     bio: "Full-stack developer and Computer Engineering student, passionate about building modern web applications with React, Node.js, and DevOps practices.",
     location: "Morocco",
-    email: "marwanefaridi22@gmail.com",
-    avatar_url: null,
-    years_experience: 3,
-    projects_completed: 20,
-    happy_clients: 15,
-    cups_of_coffee: 500,
-    interests: ["Coding", "Learning", "Building"],
-    status_badge: "Open to work",
+};
+
+const defaultProfileFr = {
+    name: "FARIDI Marwan",
+    role: "Développeur Full Stack",
+    bio: "Développeur full-stack et étudiant en génie informatique, passionné par la création d'applications web modernes avec React, Node.js et les pratiques DevOps.",
+    location: "Maroc",
 };
 
 export default function AboutSectionClient({ profile }: { profile: ProfileData | null }) {
-    const data = profile || defaultProfile;
+    const { t, language } = useTranslation();
+    const defaultProfile = language === "fr" ? defaultProfileFr : defaultProfileEn;
+
+    const data = {
+        name: profile?.name || defaultProfile.name,
+        role: profile?.role || defaultProfile.role,
+        bio: profile?.bio || defaultProfile.bio,
+        location: profile?.location || defaultProfile.location,
+        avatar_url: profile?.avatar_url || null,
+        years_experience: profile?.years_experience || 3,
+        projects_completed: profile?.projects_completed || 20,
+        happy_clients: profile?.happy_clients || 15,
+        cups_of_coffee: profile?.cups_of_coffee || 500,
+        github_url: profile?.github_url || null,
+        linkedin_url: profile?.linkedin_url || null,
+        status_badge: profile?.status_badge || t("about.statusBadge"),
+    };
 
     const stats = [
-        { value: data.years_experience || 3, label: "Years", icon: Sparkles },
-        { value: data.projects_completed || 20, label: "Projects", icon: Code2 },
-        { value: data.happy_clients || 15, label: "Clients", icon: Rocket },
+        { value: data.years_experience, label: t("about.years"), icon: Sparkles },
+        { value: data.projects_completed, label: t("about.projects"), icon: Code2 },
+        { value: data.happy_clients, label: t("about.clients"), icon: Rocket },
     ];
 
     return (
@@ -110,13 +126,13 @@ export default function AboutSectionClient({ profile }: { profile: ProfileData |
                                 </div>
                                 {/* Status Badge */}
                                 <motion.span
-                                    className="absolute -bottom-2 -right-2 px-3 py-1 text-xs font-bold rounded-lg bg-green-500 text-white shadow-lg"
+                                    className="absolute -bottom-2 -right-2 px-3 py-1 text-xs font-bold rounded-lg bg-green-500 text-white shadow-lg whitespace-nowrap"
                                     initial={{ scale: 0 }}
                                     whileInView={{ scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: 0.5, type: "spring" }}
                                 >
-                                    {data.status_badge || "Available"}
+                                    {data.status_badge}
                                 </motion.span>
                             </motion.div>
 

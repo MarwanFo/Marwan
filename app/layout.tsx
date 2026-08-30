@@ -7,6 +7,7 @@ import "./3d-effects.css";
 import Header from "@/components/Header";
 import HeaderWrapper from "@/components/HeaderWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import LoadingScreen from "@/components/LoadingScreen";
 
 const inter = Inter({
@@ -35,14 +36,16 @@ export default function RootLayout({
     return (
         <html lang="en" className="dark" suppressHydrationWarning>
             <body className={`${inter.variable} font-sans antialiased`}>
-                <ThemeProvider>
-                    <LoadingScreen />
-                    <div className="fixed inset-0 grid-pattern pointer-events-none" />
-                    <HeaderWrapper>
-                        <Header />
-                    </HeaderWrapper>
-                    {children}
-                </ThemeProvider>
+                <LanguageProvider>
+                    <ThemeProvider>
+                        <LoadingScreen />
+                        <div className="fixed inset-0 grid-pattern pointer-events-none" />
+                        <HeaderWrapper>
+                            <Header />
+                        </HeaderWrapper>
+                        {children}
+                    </ThemeProvider>
+                </LanguageProvider>
             </body>
         </html>
     );

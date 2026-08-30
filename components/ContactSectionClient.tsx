@@ -13,6 +13,8 @@ import {
     Twitter,
 } from "lucide-react";
 
+import { useTranslation } from "@/lib/i18n/LanguageContext";
+
 interface ProfileData {
     email?: string | null;
     location?: string | null;
@@ -27,15 +29,10 @@ interface SettingsData {
 }
 
 const defaultProfile = {
-    email: "hello@marwan.dev",
-    location: "Available Worldwide · Remote",
+    email: "marwanefaridi22@gmail.com",
     github_url: "https://github.com",
     linkedin_url: "https://linkedin.com",
     twitter_url: "https://twitter.com",
-};
-
-const defaultSettings = {
-    contact_message: "Have a project in mind or just want to chat? I'd love to hear from you.",
 };
 
 export default function ContactSectionClient({
@@ -45,6 +42,7 @@ export default function ContactSectionClient({
     profile?: ProfileData | null;
     settings?: SettingsData | null;
 }) {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -55,8 +53,8 @@ export default function ContactSectionClient({
     const [sent, setSent] = useState(false);
 
     const contactEmail = settings?.contact_email || profile?.email || defaultProfile.email;
-    const location = profile?.location || defaultProfile.location;
-    const message = settings?.contact_message || defaultSettings.contact_message;
+    const location = profile?.location || t("contact.locationText");
+    const message = settings?.contact_message || t("contact.subtitle");
     const githubUrl = profile?.github_url || defaultProfile.github_url;
     const linkedinUrl = profile?.linkedin_url || defaultProfile.linkedin_url;
     const twitterUrl = profile?.twitter_url || defaultProfile.twitter_url;
@@ -92,7 +90,7 @@ export default function ContactSectionClient({
             setTimeout(() => setSent(false), 3000);
         } catch (error) {
             console.error('Error sending message:', error);
-            alert('Failed to send message. Please try again.');
+            alert(t("contact.error"));
         } finally {
             setSending(false);
         }
@@ -131,7 +129,7 @@ export default function ContactSectionClient({
                     className="text-center mb-16"
                 >
                     <h2 className="text-heading font-bold mb-4">
-                        Let&apos;s <span className="neon-text">Connect</span>
+                        {t("contact.title")} <span className="neon-text">{t("contact.highlight")}</span>
                     </h2>
                     <p className="text-white/60 max-w-xl mx-auto">
                         {message}
@@ -155,10 +153,10 @@ export default function ContactSectionClient({
                                 </div>
                                 <div className="flex-1">
                                     <h3 className="text-lg font-semibold text-white mb-1">
-                                        Email me
+                                        Email
                                     </h3>
                                     <p className="text-white/60 text-sm mb-3">
-                                        Get in touch directly
+                                        {t("contact.connectPrompt")}
                                     </p>
                                     <div className="flex items-center gap-3">
                                         <code className="text-neon-cyan">{contactEmail}</code>
@@ -167,6 +165,7 @@ export default function ContactSectionClient({
                                             className="p-2 rounded-lg glass hover:bg-white/10 transition-colors"
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
+                                            title={copied ? t("contact.copied") : t("contact.copyEmail")}
                                         >
                                             {copied ? (
                                                 <Check className="w-4 h-4 text-green-400" />
@@ -197,7 +196,7 @@ export default function ContactSectionClient({
                         {/* Social Links */}
                         <div className="glass rounded-2xl p-6">
                             <h3 className="text-lg font-semibold text-white mb-4">
-                                Find me online
+                                {t("footer.connect")}
                             </h3>
                             <div className="flex gap-4">
                                 {socialLinks.map((link) => (
@@ -227,7 +226,7 @@ export default function ContactSectionClient({
                         <form onSubmit={handleSubmit} className="space-y-5">
                             <div>
                                 <label className="block text-white/80 text-sm font-medium mb-2">
-                                    Name
+                                    {t("contact.nameLabel")}
                                 </label>
                                 <input
                                     type="text"
@@ -235,7 +234,7 @@ export default function ContactSectionClient({
                                     onChange={(e) =>
                                         setFormData({ ...formData, name: e.target.value })
                                     }
-                                    placeholder="Your name"
+                                    placeholder={t("contact.namePlaceholder")}
                                     required
                                     className={inputClass}
                                 />
@@ -243,7 +242,7 @@ export default function ContactSectionClient({
 
                             <div>
                                 <label className="block text-white/80 text-sm font-medium mb-2">
-                                    Email
+                                    {t("contact.emailLabel")}
                                 </label>
                                 <input
                                     type="email"
@@ -251,7 +250,7 @@ export default function ContactSectionClient({
                                     onChange={(e) =>
                                         setFormData({ ...formData, email: e.target.value })
                                     }
-                                    placeholder="your@email.com"
+                                    placeholder={t("contact.emailPlaceholder")}
                                     required
                                     className={inputClass}
                                 />
@@ -259,14 +258,14 @@ export default function ContactSectionClient({
 
                             <div>
                                 <label className="block text-white/80 text-sm font-medium mb-2">
-                                    Message
+                                    {t("contact.messageLabel")}
                                 </label>
                                 <textarea
                                     value={formData.message}
                                     onChange={(e) =>
                                         setFormData({ ...formData, message: e.target.value })
                                     }
-                                    placeholder="Tell me about your project..."
+                                    placeholder={t("contact.messagePlaceholder")}
                                     rows={5}
                                     required
                                     className={`${inputClass} resize-none`}
@@ -285,12 +284,12 @@ export default function ContactSectionClient({
                                 ) : sent ? (
                                     <>
                                         <Check className="w-5 h-5" />
-                                        <span>Message Sent!</span>
+                                        <span>{t("contact.sentSuccess")}</span>
                                     </>
                                 ) : (
                                     <>
                                         <Send className="w-5 h-5" />
-                                        <span>Send Message</span>
+                                        <span>{t("contact.sendButton")}</span>
                                     </>
                                 )}
                             </motion.button>

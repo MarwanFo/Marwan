@@ -10,7 +10,22 @@ export interface Profile {
     github_url: string | null;
     linkedin_url: string | null;
     twitter_url: string | null;
+    // Stats
+    years_experience: number;
+    projects_completed: number;
+    happy_clients: number;
+    cups_of_coffee: number;
+    // About section
+    philosophy_title: string | null;
+    philosophy_items: PhilosophyItem[];
+    interests: string[];
     updated_at: string;
+}
+
+export interface PhilosophyItem {
+    icon?: string;
+    title: string;
+    description: string;
 }
 
 export interface Project {
@@ -37,6 +52,8 @@ export interface Experience {
     description: string | null;
     achievements: string[];
     technologies: string[];
+    type: 'work' | 'education' | string;
+    image_url: string | null;
     display_order: number;
     created_at: string;
 }
@@ -47,6 +64,7 @@ export interface Certificate {
     issuer: string;
     date: string | null;
     credential_url: string | null;
+    image_url: string | null;
     skills: string[];
     featured: boolean;
     display_order: number;
@@ -75,6 +93,8 @@ export type ExperienceInsert = {
     description?: string | null;
     achievements?: string[];
     technologies?: string[];
+    type?: 'work' | 'education' | string;
+    image_url?: string | null;
     display_order?: number;
 };
 
@@ -83,6 +103,7 @@ export type CertificateInsert = {
     issuer: string;
     date?: string | null;
     credential_url?: string | null;
+    image_url?: string | null;
     skills?: string[];
     featured?: boolean;
     display_order?: number;
@@ -99,6 +120,15 @@ export type ProfileInsert = {
     github_url?: string | null;
     linkedin_url?: string | null;
     twitter_url?: string | null;
+    // Stats
+    years_experience?: number;
+    projects_completed?: number;
+    happy_clients?: number;
+    cups_of_coffee?: number;
+    // About section
+    philosophy_title?: string | null;
+    philosophy_items?: PhilosophyItem[];
+    interests?: string[];
 };
 
 export type Database = {

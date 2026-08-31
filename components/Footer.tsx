@@ -5,9 +5,28 @@ import { Heart, ArrowUp, Github, Linkedin, Mail, MapPin, User, Briefcase, Folder
 import Logo from "./Logo";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "@/lib/i18n/LanguageContext";
+import { useEffect, useState } from "react";
+
+interface SiteSettings {
+    github_url?: string | null;
+    linkedin_url?: string | null;
+    social_email?: string | null;
+    location?: string | null;
+    footer_tagline?: string | null;
+    footer_text?: string | null;
+}
 
 export default function Footer() {
     const { t } = useTranslation();
+    const [settings, setSettings] = useState<SiteSettings>({});
+
+    useEffect(() => {
+        fetch("/api/public/settings")
+            .then((r) => r.json())
+            .then((d) => setSettings(d || {}))
+            .catch(() => {});
+    }, []);
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -22,10 +41,18 @@ export default function Footer() {
         { name: t("nav.contact"), href: "#contact", icon: MessageCircle },
     ];
 
+    // Use DB values with hardcoded fallbacks
+    const githubUrl = settings.github_url || "https://github.com";
+    const linkedinUrl = settings.linkedin_url || "https://linkedin.com";
+    const emailAddress = settings.social_email || "marwanefaridi22@gmail.com";
+    const location = settings.location || t("footer.location");
+    const footerTagline = settings.footer_tagline || t("footer.bio");
+    const footerText = settings.footer_text || `© ${currentYear} FARIDI Marwan · ${t("footer.copyright")}`;
+
     const socialLinks = [
-        { name: "GitHub", icon: Github, href: "https://github.com" },
-        { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-        { name: "Email", icon: Mail, href: "mailto:marwanefaridi22@gmail.com" },
+        { name: "GitHub", icon: Github, href: githubUrl },
+        { name: "LinkedIn", icon: Linkedin, href: linkedinUrl },
+        { name: "Email", icon: Mail, href: `mailto:${emailAddress}` },
     ];
 
     return (
@@ -36,7 +63,6 @@ export default function Footer() {
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full"
                     style={{
                         background: "radial-gradient(ellipse, rgba(0, 255, 255, 0.08) 0%, transparent 70%)",
-                        filter: "blur(80px)",
                     }}
                 />
             </div>
@@ -53,11 +79,11 @@ export default function Footer() {
                     >
                         <Logo size="sm" showText />
                         <p className="text-white/60 text-sm leading-relaxed max-w-xs">
-                            {t("footer.bio")}
+                            {footerTagline}
                         </p>
                         <div className="flex items-center gap-2 text-white/50 text-sm">
                             <MapPin className="w-4 h-4" />
-                            <span>{t("footer.location")}</span>
+                            <span>{location}</span>
                         </div>
                     </motion.div>
 
@@ -127,7 +153,7 @@ export default function Footer() {
                         viewport={{ once: true }}
                         className="flex items-center gap-2 text-white/50 text-sm"
                     >
-                        <span>© {currentYear} FARIDI Marwan · {t("footer.copyright")}</span>
+                        <span>{footerText}</span>
                         <Heart className="w-4 h-4 text-neon-magenta fill-neon-magenta animate-pulse" />
                     </motion.p>
 

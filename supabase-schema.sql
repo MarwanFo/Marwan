@@ -157,6 +157,21 @@ BEGIN
     CREATE POLICY "Allow authenticated users to update profile" ON profile FOR UPDATE TO authenticated USING (true);
   END IF;
   
+  -- Projects policies (public can read, authenticated can manage)
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage projects') THEN
+    CREATE POLICY "Allow authenticated users to manage projects" ON projects FOR ALL TO authenticated USING (true) WITH CHECK (true);
+  END IF;
+
+  -- Experiences policies (public can read, authenticated can manage)
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage experiences') THEN
+    CREATE POLICY "Allow authenticated users to manage experiences" ON experiences FOR ALL TO authenticated USING (true) WITH CHECK (true);
+  END IF;
+
+  -- Certificates policies (public can read, authenticated can manage)
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage certificates') THEN
+    CREATE POLICY "Allow authenticated users to manage certificates" ON certificates FOR ALL TO authenticated USING (true) WITH CHECK (true);
+  END IF;
+
   -- Site settings policies
   IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage site_settings') THEN
     CREATE POLICY "Allow authenticated users to manage site_settings" ON site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);

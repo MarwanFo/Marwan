@@ -35,13 +35,14 @@ const defaultSkills = [
     { name: "AWS", icon_url: "https://cdn.simpleicons.org/amazonaws/FF9900", website_url: "https://aws.amazon.com" },
 ];
 
+const supabase = createClient();
+
 export default function SkillsPage() {
     const [skills, setSkills] = useState<Skill[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [newSkill, setNewSkill] = useState({ name: "", icon_url: "", website_url: "" });
-    const supabase = createClient();
 
     useEffect(() => {
         fetchSkills();
@@ -51,7 +52,7 @@ export default function SkillsPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("skills")
-            .select("*")
+            .select("id, name, icon_url, website_url, created_at")
             .order("created_at", { ascending: true });
 
         if (error) {
@@ -81,8 +82,8 @@ export default function SkillsPage() {
             .single();
 
         if (error) {
-            console.error("Error adding skill:", error);
-            alert(`Error adding skill: ${error.message}`);
+            console.error("[Skills] Add skill error");
+            alert("Failed to add skill. Please try again.");
         } else {
             setSkills([...skills, data]);
             setNewSkill({ name: "", icon_url: "", website_url: "" });
@@ -97,8 +98,8 @@ export default function SkillsPage() {
         const { error } = await supabase.from("skills").delete().eq("id", id);
 
         if (error) {
-            console.error("Error deleting skill:", error);
-            alert(`Error deleting skill: ${error.message}`);
+            console.error("[Skills] Delete skill error");
+            alert("Failed to delete skill. Please try again.");
         } else {
             setSkills(skills.filter((s) => s.id !== id));
         }
@@ -107,7 +108,6 @@ export default function SkillsPage() {
     const addDefaultSkills = async () => {
         setSaving(true);
         for (const skill of defaultSkills) {
-            // Check if skill already exists
             const exists = skills.some((s) => s.name.toLowerCase() === skill.name.toLowerCase());
             if (!exists) {
                 const { data, error } = await supabase
@@ -201,7 +201,7 @@ export default function SkillsPage() {
                                 type="url"
                                 value={newSkill.icon_url}
                                 onChange={(e) => setNewSkill({ ...newSkill, icon_url: e.target.value })}
-                                placeholder="https://cdn.simpleicons.org/react/61DAFB"
+                                placeholder="https://cdn.simpleicons.org/nestjs/E0234E"
                                 className={inputClass}
                             />
                         </div>
@@ -269,7 +269,9 @@ export default function SkillsPage() {
                             >
                                 simpleicons.org
                             </a>
-                            . Use format: <code className="bg-white/10 px-1 rounded">https://cdn.simpleicons.org/[name]/[color]</code>
+                            . Use format: <code className="bg-white/10 px-1 rounded font-mono">https://cdn.simpleicons.org/name/color</code>
+                            <br />
+                            <span className="text-[10px] opacity-60">Example for NestJS: https://cdn.simpleicons.org/nestjs/E0234E</span>
                         </p>
                     </div>
                 </motion.div>

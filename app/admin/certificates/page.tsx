@@ -17,13 +17,14 @@ import {
     Calendar,
 } from "lucide-react";
 
+const supabase = createClient();
+
 export default function CertificatesPage() {
     const [certificates, setCertificates] = useState<Certificate[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCertificate, setEditingCertificate] = useState<Certificate | null>(null);
     const [saving, setSaving] = useState(false);
-    const supabase = createClient();
 
     const [formData, setFormData] = useState({
         title: "",
@@ -43,7 +44,7 @@ export default function CertificatesPage() {
         setLoading(true);
         const { data, error } = await supabase
             .from("certificates")
-            .select("*")
+            .select("id, title, issuer, date, credential_url, image_url, skills, featured, display_order, created_at")
             .order("display_order", { ascending: true });
 
         if (!error && data) {

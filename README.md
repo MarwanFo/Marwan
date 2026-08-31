@@ -1,82 +1,90 @@
-# 🚀 Modern Developer Portfolio
+# 🚀 Next-Gen Interactive Portfolio & AI Agent
 
-A high-performance, dynamic portfolio website built with **Next.js 14**, **TypeScript**, **Tailwind CSS**, and **Supabase**.
+A state-of-the-art, high-performance developer portfolio built with **Next.js 14**, **Three.js**, and **Google Gemini AI**. This project isn't just a resume; it's a full-stack platform featuring an autonomous AI assistant and a headless CMS via Supabase.
 
-This project features a fully functional **Admin Dashboard** that serves as a CMS, allowing you to manage projects, experiences, certificates, and profile information in real-time without touching the code.
+---
 
-![Portfolio Preview](https://via.placeholder.com/1200x600?text=Portfolio+Preview)
+## 🌟 Highlights
 
-## ✨ Key Features
+- **🧠 Marwan-AI Assistant**: An integrated RAG (Retrieval-Augmented Generation) chatbot powered by Google Gemini, capable of answering questions about my career, skills, and projects with persistent memory.
+- **🌀 3D Orbital Tech Stack**: An immersive, interactive tech sphere built with **React Three Fiber (Three.js)** that handles 50+ technologies with high-performance rendering.
+- **⚡ Performance First**: 100/100 Lighthouse focus. Fully optimized using `next/image`, dynamic imports, and intersection observers for buttery-smooth 60FPS animations.
+- **🛡️ Security Hardened**: Enterprise-grade security with strict CSP headers, IP-based rate limiting, magic-byte file validation, and Supabase Row Level Security (RLS).
+- **💼 Headless CMS Dashboard**: A private administrative suite to manage projects, experiences, and certificates in real-time.
 
--   **⚡ Modern Tech Stack**: Built with Next.js 14 (App Router), React, and TypeScript.
--   **🎨 Dynamic UI**: Stunning neon/dark theme with **Framer Motion** animations and **Tailwind CSS**.
--   **🛡️ Admin Dashboard**: Secure admin panel to manage all content (CMS).
-    -   **Projects**: Add, edit, delete, and upload project images.
-    -   **Experience**: Manage work history.
-    -   **Certificates**: Showcase certifications with image uploads.
-    -   **Profile**: Update bio, stats, social links, and resume.
--   **🔐 Authentication**: Secure login for admin access using **Supabase Auth**.
--   **☁️ Cloud Storage**: Image and document uploads powered by **Supabase Storage**.
--   **📱 Fully Responsive**: Optimized for all devices from mobile to desktop.
+---
 
-## 🛠️ Tech Stack
+## 🛠️ Technical Architecture
 
--   **Framework**: [Next.js 14](https://nextjs.org/)
--   **Language**: [TypeScript](https://www.typescriptlang.org/)
--   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
--   **Animations**: [Framer Motion](https://www.framer.com/motion/)
--   **Backend & Auth**: [Supabase](https://supabase.com/)
--   **Icons**: [Lucide React](https://lucide.dev/)
+### Frontend
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS (Mobile-first, Glassmorphism design)
+- **Animations**: Framer Motion & Three.js (3D Scenes)
+- **State Management**: React Hooks + LocalStorage Persistence
+
+### Backend & AI
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Storage**: Supabase Storage (Optimized for WebP & PDF)
+- **AI Engine**: Google Gemini Pro API (with context-caching layer)
+
+### Security & DevOps
+- **Security**: Content Security Policy (CSP), Rate Limiting (LRU), Input Sanitization
+- **Deployment**: Vercel (CI/CD)
+
+---
+
+## 🏗️ Project Structure
+
+```bash
+├── app/                    # Next.js App Router (Admin & Public)
+│   ├── api/                # Edge & Serverless API Routes (AI, Upload, Chat)
+├── components/             # React Component Library
+│   ├── three/              # 3D Scenes & Three.js Components
+│   ├── cards/              # Optimized UI Cards
+│   └── ChatWidget.tsx      # Advanced AI Chat Interface
+├── lib/                    # Core Logic & Utilities
+│   ├── ai-context.ts       # AI RAG & Context Management
+│   ├── supabase/           # Client/Server Database Config
+│   └── rate-limit.ts       # IP-based Rate Limiter
+├── middleware.ts            # Security Headers & Auth Guard
+└── supabase-schema.sql      # Database DDL & RLS Policies
+```
+
+---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
-
+### 1. Installation
 ```bash
-git clone https://github.com/yourusername/portfolio.git
-cd portfolio
-```
-
-### 2. Install dependencies
-
-```bash
+git clone https://github.com/MarwanFo/Marwan.git
+cd Marwan
 npm install
 ```
 
-### 3. Environment Setup
-
-Create a `.env.local` file in the root directory and add your Supabase credentials:
-
+### 2. Environment Setup
+Create a `.env.local` file:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+GEMINI_API_KEY=your_gemini_key
 ```
 
-### 4. Run the development server
+### 3. Database
+Execute the `supabase-schema.sql` in your Supabase SQL Editor to initialize tables and RLS policies.
 
+### 4. Run
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-## 🗄️ Database Schema
-
-The project uses the following Supabase tables:
--   `profile`: Stores user bio, stats, and links.
--   `projects`: Portfolio projects with images and tags.
--   `experiences`: Work history and achievements.
--   `certificates`: Certifications and awards.
-
-## 📦 Deployment
-
-This project is optimized for deployment on **Vercel**.
-
-1.  Push your code to GitHub.
-2.  Import the project in Vercel.
-3.  Add the `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` environment variables.
-4.  Deploy!
+## 🔒 Security Best Practices
+- **Rate Limiting**: Protects AI routes from abuse using IP tracking.
+- **File Validation**: Only allows verified image and PDF formats via magic byte signatures.
+- **Sanitization**: All user-provided inputs are sanitized before processing to prevent XSS.
 
 ---
 
-Built with ❤️ by [Marwan](https://github.com/yourusername)
+[FARIDI Marwan](https://github.com/MarwanFo/Marwan)

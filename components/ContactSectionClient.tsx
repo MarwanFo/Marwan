@@ -114,7 +114,7 @@ export default function ContactSectionClient({
                     style={{
                         background:
                             "radial-gradient(circle, rgba(255, 0, 255, 0.08) 0%, transparent 70%)",
-                        filter: "blur(80px)",
+                        
                     }}
                 />
             </div>

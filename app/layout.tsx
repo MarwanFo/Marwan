@@ -9,6 +9,9 @@ import HeaderWrapper from "@/components/HeaderWrapper";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import LoadingScreen from "@/components/LoadingScreen";
+import Scene3DProvider from "@/components/three/Scene3DProvider";
+import ChatWidget from "@/components/ChatWidget";
+import TerminalHUD from "@/components/TerminalHUD";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -39,11 +42,14 @@ export default function RootLayout({
                 <LanguageProvider>
                     <ThemeProvider>
                         <LoadingScreen />
-                        <div className="fixed inset-0 grid-pattern pointer-events-none" />
+                        <Scene3DProvider />
+                        <div className="fixed inset-0 grid-pattern pointer-events-none opacity-30" />
                         <HeaderWrapper>
                             <Header />
                         </HeaderWrapper>
                         {children}
+                        <ChatWidget />
+                        <TerminalHUD />
                     </ThemeProvider>
                 </LanguageProvider>
             </body>

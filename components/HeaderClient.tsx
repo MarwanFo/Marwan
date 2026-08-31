@@ -110,9 +110,10 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                             </motion.button>
                         </div>
 
-                        {/* Mobile Menu Button */}
+                        {/* Mobile Controls */}
                         <div className="flex md:hidden items-center gap-2">
                             <LanguageSwitcher variant="pill" />
+                            <ThemeToggle />
                             <motion.button
                                 className="p-2 rounded-xl glass"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -121,9 +122,9 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
                                 aria-label="Toggle menu"
                             >
                                 {isMobileMenuOpen ? (
-                                    <X className="w-5 h-5 text-white" />
+                                    <X className="w-5 h-5 text-white dark:text-white" />
                                 ) : (
-                                    <Menu className="w-5 h-5 text-white" />
+                                    <Menu className="w-5 h-5 text-white dark:text-white" />
                                 )}
                             </motion.button>
                         </div>

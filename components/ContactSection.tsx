@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+﻿import { createClient } from "@/lib/supabase/server";
 import ContactSectionClient from "./ContactSectionClient";
 
 export default async function ContactSection() {

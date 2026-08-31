@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Award, ExternalLink, Calendar, CheckCircle, ArrowUpRight, Sparkles, Trophy } from "lucide-react";
+import { Award, Calendar, CheckCircle, ExternalLink, Sparkles, Trophy, ArrowUpRight } from "lucide-react";
 import { Certificate } from "@/lib/types";
 import { useState, useRef } from "react";
 import { useTranslation } from "@/lib/i18n/LanguageContext";
@@ -14,6 +14,7 @@ const fallbackCertificatesEn: Certificate[] = [
         issuer: "Amazon Web Services",
         date: "2024",
         credential_url: "#",
+        image_url: null,
         skills: ["Cloud Architecture", "AWS Services", "Security"],
         featured: true,
         display_order: 0,
@@ -25,6 +26,7 @@ const fallbackCertificatesEn: Certificate[] = [
         issuer: "Meta",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["React", "JavaScript", "Web Performance"],
         featured: true,
         display_order: 1,
@@ -36,6 +38,7 @@ const fallbackCertificatesEn: Certificate[] = [
         issuer: "freeCodeCamp",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["Node.js", "MongoDB", "REST APIs"],
         featured: false,
         display_order: 2,
@@ -47,6 +50,7 @@ const fallbackCertificatesEn: Certificate[] = [
         issuer: "Udemy",
         date: "2022",
         credential_url: "#",
+        image_url: null,
         skills: ["TypeScript", "Type Safety", "OOP"],
         featured: false,
         display_order: 3,
@@ -62,6 +66,7 @@ const fallbackCertificatesFr: Certificate[] = [
         issuer: "Amazon Web Services",
         date: "2024",
         credential_url: "#",
+        image_url: null,
         skills: ["Architecture Cloud", "Services AWS", "Sécurité"],
         featured: true,
         display_order: 0,
@@ -73,6 +78,7 @@ const fallbackCertificatesFr: Certificate[] = [
         issuer: "Meta",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["React", "JavaScript", "Performance Web"],
         featured: true,
         display_order: 1,
@@ -84,6 +90,7 @@ const fallbackCertificatesFr: Certificate[] = [
         issuer: "freeCodeCamp",
         date: "2023",
         credential_url: "#",
+        image_url: null,
         skills: ["Node.js", "MongoDB", "APIs REST"],
         featured: false,
         display_order: 2,
@@ -95,6 +102,7 @@ const fallbackCertificatesFr: Certificate[] = [
         issuer: "Udemy",
         date: "2022",
         credential_url: "#",
+        image_url: null,
         skills: ["TypeScript", "Sécurité des types", "POO"],
         featured: false,
         display_order: 3,
@@ -306,7 +314,6 @@ export default function CertificatesSectionClient({
                     className="absolute top-1/2 left-0 w-[500px] h-[500px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 60%)",
-                        filter: "blur(100px)",
                     }}
                     animate={{
                         x: [0, 30, 0],
@@ -322,7 +329,6 @@ export default function CertificatesSectionClient({
                     className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full"
                     style={{
                         background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 60%)",
-                        filter: "blur(100px)",
                     }}
                     animate={{
                         x: [0, -20, 0],

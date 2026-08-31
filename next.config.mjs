@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig = {
     images: {
+        dangerouslyAllowSVG: true,
+        contentDispositionType: 'attachment',
+        contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
         domains: ['images.unsplash.com', 'cdn.simpleicons.org'],
         remotePatterns: [
             {
@@ -16,47 +21,68 @@ const nextConfig = {
             {
                 source: '/:path*',
                 headers: [
-                    // Prevent XSS attacks
-                    {
-                        key: 'X-XSS-Protection',
-                        value: '1; mode=block',
-                    },
-                    // Prevent clickjacking
-                    {
-                        key: 'X-Frame-Options',
-                        value: 'SAMEORIGIN',
-                    },
                     // Prevent MIME type sniffing
                     {
                         key: 'X-Content-Type-Options',
                         value: 'nosniff',
                     },
-                    // Control referrer information
+                    // Clickjacking — covered by frame-ancestors CSP too, kept for legacy browsers
+                    {
+                        key: 'X-Frame-Options',
+                        value: 'DENY',
+                    },
+                    // XSS filter (legacy, CSP is the real shield)
+                    {
+                        key: 'X-XSS-Protection',
+                        value: '1; mode=block',
+                    },
+                    // Referrer
                     {
                         key: 'Referrer-Policy',
                         value: 'strict-origin-when-cross-origin',
                     },
-                    // Permissions Policy (restrict features)
+                    // Permissions Policy — restrict browser feature access
                     {
                         key: 'Permissions-Policy',
-                        value: 'camera=(), microphone=(), geolocation=()',
+                        value: 'camera=(), microphone=(), geolocation=(), payment=()',
                     },
-                    // Strict Transport Security (HTTPS only)
+                    // HSTS — 2 years, preload-eligible
                     {
                         key: 'Strict-Transport-Security',
-                        value: 'max-age=31536000; includeSubDomains',
+                        value: 'max-age=63072000; includeSubDomains; preload',
                     },
                     // Content Security Policy
                     {
                         key: 'Content-Security-Policy',
                         value: [
                             "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+                            // blob: needed for Three.js Web Workers
+                            isProd
+                                ? "script-src 'self' 'unsafe-inline' blob:"
+                                : "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com",
-                            "img-src 'self' data: blob: https: http:",
-                            "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+                            // Three.js workers
+                            "worker-src 'self' blob:",
+                            // HARDENED: no wildcard https: — explicit trusted origins only
+                            [
+                                "img-src 'self' data: blob:",
+                                "https://*.supabase.co",
+                                "https://cdn.simpleicons.org",
+                                "https://images.unsplash.com",
+                                "https://avatars.githubusercontent.com",
+                                "https://lh3.googleusercontent.com",
+                            ].join(" "),
+                            // Allow connections to Supabase + Google Analytics
+                            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://www.google-analytics.com https://analytics.google.com",
+                            // Block all framing
                             "frame-ancestors 'none'",
+                            // Block object/embed (Flash, plugins)
+                            "object-src 'none'",
+                            // Prevent base-tag hijacking
+                            "base-uri 'self'",
+                            // Forms only submit to same origin
+                            "form-action 'self'",
                         ].join('; '),
                     },
                 ],
@@ -64,12 +90,11 @@ const nextConfig = {
         ];
     },
 
-    // Redirect HTTP to HTTPS in production
     async redirects() {
         return [];
     },
 
-    // Add powered by header removal
+    // Remove X-Powered-By (don't advertise Next.js version to attackers)
     poweredByHeader: false,
 };
 

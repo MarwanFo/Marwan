@@ -118,6 +118,23 @@ body {
   .glow-effect:hover::before {
     opacity: 0.6;
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
 }
 
 /* Grid Background Pattern */
@@ -253,4 +270,74 @@ body {
     -webkit-text-fill-color: #333 !important;
     color: #333 !important;
   }
+}
+
+/* ==========================================
+   TERMINAL HUD STYLES
+   ========================================== */
+.terminal-hud {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.terminal-scanline {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(18, 16, 16, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 100% 4px;
+  animation: scanline 6s linear infinite;
+}
+
+.terminal-flicker {
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes flicker {
+  0% { opacity: 0.97; }
+  5% { opacity: 0.95; }
+  10% { opacity: 0.9; }
+  15% { opacity: 0.99; }
+  30% { opacity: 0.93; }
+  50% { opacity: 0.96; }
+  80% { opacity: 0.92; }
+  90% { opacity: 0.98; }
+  100% { opacity: 0.97; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.2em;
+  background-color: var(--neon-cyan);
+  vertical-align: middle;
+  margin-left: 4px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.matrix-bg {
+  mask-image: linear-gradient(to bottom, transparent, black, transparent);
+  background: linear-gradient(
+    rgba(0, 255, 65, 0.1) 1px, 
+    transparent 1px
+  );
+  background-size: 100% 20px;
+  animation: matrix-scroll 20s linear infinite;
+}
+
+@keyframes matrix-scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 1000px; }
 }

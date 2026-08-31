@@ -25,12 +25,13 @@ interface Message {
     created_at: string;
 }
 
+const supabase = createClient();
+
 export default function MessagesPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
     const [deleting, setDeleting] = useState<string | null>(null);
-    const supabase = createClient();
 
     useEffect(() => {
         fetchMessages();
@@ -41,11 +42,11 @@ export default function MessagesPage() {
         try {
             const { data, error } = await supabase
                 .from("messages")
-                .select("*")
+                .select("id, name, email, message, read, created_at")
                 .order("created_at", { ascending: false });
 
             if (error) {
-                console.error("Error fetching messages:", error.message);
+                console.error("[Messages] Fetch error");
             }
 
             if (data) {

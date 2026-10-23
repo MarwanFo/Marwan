@@ -48,6 +48,7 @@ export default function ContactSectionClient({
         email: "",
         message: "",
     });
+    const [formMountedAt] = useState(() => Date.now());
     const [copied, setCopied] = useState(false);
     const [sending, setSending] = useState(false);
     const [sent, setSent] = useState(false);
@@ -78,6 +79,7 @@ export default function ContactSectionClient({
                     name: formData.name,
                     email: formData.email,
                     message: formData.message,
+                    _timestamp: formMountedAt,
                 }),
             });
 

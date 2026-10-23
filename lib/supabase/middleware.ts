@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { isAdminEmail } from '@/lib/security';
 
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
@@ -40,18 +41,20 @@ export async function updateSession(request: NextRequest) {
         data: { user },
     } = await supabase.auth.getUser();
 
+    const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
+
     if (request.nextUrl.pathname.startsWith('/admin')) {
         // Let the login page through always
         if (request.nextUrl.pathname === '/admin/login') {
-            // If already logged in, redirect to dashboard
-            if (user) {
+            // If already logged in as authorized admin, redirect to dashboard
+            if (isAuthorizedAdmin) {
                 return NextResponse.redirect(new URL('/admin', request.url));
             }
             return supabaseResponse;
         }
 
-        // Protect all other /admin/* routes
-        if (!user) {
+        // Protect all other /admin/* routes — strictly require authorized admin email
+        if (!isAuthorizedAdmin) {
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }
     }

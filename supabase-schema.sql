@@ -146,50 +146,50 @@ BEGIN
   END IF;
 END $$;
 
--- Authenticated user policies
+-- 1. Helper Function: Check if the requesting JWT belongs to the verified admin
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (
+    auth.role() = 'authenticated' AND (
+      lower(auth.jwt() ->> 'email') IN (
+        'marwanefaridi22@gmail.com',
+        'itsmemarwanefo@gmail.com'
+      )
+    )
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 2. Authenticated Admin Policies (Strictly restricted to admin email)
 DO $$
 BEGIN
   -- Profile policies
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to insert profile') THEN
-    CREATE POLICY "Allow authenticated users to insert profile" ON profile FOR INSERT TO authenticated WITH CHECK (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to update profile') THEN
-    CREATE POLICY "Allow authenticated users to update profile" ON profile FOR UPDATE TO authenticated USING (true);
-  END IF;
+  DROP POLICY IF EXISTS "Allow authenticated users to insert profile" ON profile;
+  DROP POLICY IF EXISTS "Allow authenticated users to update profile" ON profile;
+  CREATE POLICY "Only admin can manage profile" ON profile FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
   
-  -- Projects policies (public can read, authenticated can manage)
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage projects') THEN
-    CREATE POLICY "Allow authenticated users to manage projects" ON projects FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  -- Projects policies
+  DROP POLICY IF EXISTS "Allow authenticated users to manage projects" ON projects;
+  CREATE POLICY "Only admin can manage projects" ON projects FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 
-  -- Experiences policies (public can read, authenticated can manage)
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage experiences') THEN
-    CREATE POLICY "Allow authenticated users to manage experiences" ON experiences FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  -- Experiences policies
+  DROP POLICY IF EXISTS "Allow authenticated users to manage experiences" ON experiences;
+  CREATE POLICY "Only admin can manage experiences" ON experiences FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 
-  -- Certificates policies (public can read, authenticated can manage)
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage certificates') THEN
-    CREATE POLICY "Allow authenticated users to manage certificates" ON certificates FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  -- Certificates policies
+  DROP POLICY IF EXISTS "Allow authenticated users to manage certificates" ON certificates;
+  CREATE POLICY "Only admin can manage certificates" ON certificates FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 
   -- Site settings policies
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage site_settings') THEN
-    CREATE POLICY "Allow authenticated users to manage site_settings" ON site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  DROP POLICY IF EXISTS "Allow authenticated users to manage site_settings" ON site_settings;
+  CREATE POLICY "Only admin can manage site_settings" ON site_settings FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
   
-  -- Skills policies (public can read, authenticated can manage)
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow public read access on skills') THEN
-    CREATE POLICY "Allow public read access on skills" ON skills FOR SELECT USING (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage skills') THEN
-    CREATE POLICY "Allow authenticated users to manage skills" ON skills FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  -- Skills policies
+  DROP POLICY IF EXISTS "Allow authenticated users to manage skills" ON skills;
+  CREATE POLICY "Only admin can manage skills" ON skills FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
   
-  -- Messages policies (public can insert via contact form, authenticated can read/manage)
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow public to insert messages') THEN
-    CREATE POLICY "Allow public to insert messages" ON messages FOR INSERT WITH CHECK (true);
-  END IF;
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Allow authenticated users to manage messages') THEN
-    CREATE POLICY "Allow authenticated users to manage messages" ON messages FOR ALL TO authenticated USING (true) WITH CHECK (true);
-  END IF;
+  -- Messages policies (Public can insert, ONLY admin can read/delete)
+  DROP POLICY IF EXISTS "Allow authenticated users to manage messages" ON messages;
+  CREATE POLICY "Only admin can read and manage messages" ON messages FOR ALL TO authenticated USING (is_admin()) WITH CHECK (is_admin());
 END $$;

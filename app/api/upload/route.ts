@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { verifyOrigin, isAdminEmail } from "@/lib/security";
 
 // ── Server-side allowlists ────────────────────────────────────────────────────
 // SVG intentionally excluded — can contain <script> tags (Stored XSS)
@@ -25,10 +26,19 @@ async function verifyMagicBytes(buffer: Uint8Array, mimeType: string): Promise<b
 
 export async function POST(request: NextRequest) {
     try {
-        // ── Auth check ────────────────────────────────────────────────────────
+        // ── Anti-CSRF Origin Verification ─────────────────────────────────────
+        const originCheck = verifyOrigin(request);
+        if (!originCheck.valid) {
+            return NextResponse.json(
+                { error: originCheck.reason || "Cross-origin request forbidden" },
+                { status: 403 }
+            );
+        }
+
+        // ── Auth check — strictly require authorized admin email ──────────────
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
+        if (!user || !isAdminEmail(user.email)) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 

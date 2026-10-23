@@ -1,12 +1,22 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
+import { verifyOrigin, isAdminEmail } from "@/lib/security";
 
 // Generic message — never reveal WHY login failed (prevents user enumeration)
 const GENERIC_ERROR = "Invalid credentials. Please try again.";
 
 export async function POST(request: NextRequest) {
     try {
+        // ── Anti-CSRF Origin Verification ─────────────────────────────────────
+        const originCheck = verifyOrigin(request);
+        if (!originCheck.valid) {
+            return NextResponse.json(
+                { error: originCheck.reason || "Cross-origin request forbidden" },
+                { status: 403 }
+            );
+        }
+
         // ── Rate limiting: 5 attempts per 15 minutes per IP ──────────────────
         const clientIP = getClientIP(request);
         const rateLimit = checkRateLimit(`login:${clientIP}`, {
@@ -43,6 +53,12 @@ export async function POST(request: NextRequest) {
 
         if (!email || !password) {
             return NextResponse.json({ error: GENERIC_ERROR }, { status: 400 });
+        }
+
+        // ── Admin Whitelist Check ─────────────────────────────────────────────
+        // Even if an unauthorized account exists in auth.users, refuse authentication.
+        if (!isAdminEmail(email)) {
+            return NextResponse.json({ error: GENERIC_ERROR }, { status: 401 });
         }
 
         // ── Sign in via Supabase SSR — cookies are set automatically ─────────

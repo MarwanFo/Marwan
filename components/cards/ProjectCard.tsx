@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github, Star, Code2 } from "lucide-react";

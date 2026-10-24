@@ -29,21 +29,21 @@ const navGroups = [
     {
         label: "Content",
         items: [
-            { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-            { name: "Projects", href: "/admin/projects", icon: FolderOpen },
-            { name: "Experience", href: "/admin/experiences", icon: Briefcase },
-            { name: "Certificates", href: "/admin/certificates", icon: Award },
-            { name: "Skills", href: "/admin/skills", icon: Sparkles },
-            { name: "Messages", href: "/admin/messages", icon: MessageSquare, badge: true },
+            { name: "Dashboard", href: "/private/core-vault", icon: LayoutDashboard },
+            { name: "Projects", href: "/private/core-vault/projects", icon: FolderOpen },
+            { name: "Experience", href: "/private/core-vault/experiences", icon: Briefcase },
+            { name: "Certificates", href: "/private/core-vault/certificates", icon: Award },
+            { name: "Skills", href: "/private/core-vault/skills", icon: Sparkles },
+            { name: "Messages", href: "/private/core-vault/messages", icon: MessageSquare, badge: true },
         ],
     },
     {
         label: "Customise",
         items: [
-            { name: "Hero Section", href: "/admin/hero", icon: Zap },
-            { name: "Profile & About", href: "/admin/profile", icon: User },
-            { name: "Appearance", href: "/admin/appearance", icon: Palette },
-            { name: "Site Settings", href: "/admin/settings", icon: Settings },
+            { name: "Hero Section", href: "/private/core-vault/hero", icon: Zap },
+            { name: "Profile & About", href: "/private/core-vault/profile", icon: User },
+            { name: "Appearance", href: "/private/core-vault/appearance", icon: Palette },
+            { name: "Site Settings", href: "/private/core-vault/settings", icon: Settings },
         ],
     },
 ];
@@ -85,10 +85,10 @@ export default function AdminLayout({
                 window.sessionStorage.clear();
                 window.localStorage.clear();
             }
-            window.location.href = '/admin/login';
+            window.location.href = '/private/core-vault/login';
         } catch (error) {
             console.error('Logout error:', error);
-            window.location.href = '/admin/login';
+            window.location.href = '/private/core-vault/login';
         }
     };
 
@@ -96,7 +96,7 @@ export default function AdminLayout({
         .flatMap(g => g.items)
         .find((item) => item.href === pathname)?.name || "Dashboard";
 
-    if (pathname === '/admin/login') {
+    if (pathname === '/private/core-vault/login') {
         return <>{children}</>;
     }
 
@@ -116,7 +116,7 @@ export default function AdminLayout({
                     }`}
                 >
                     <div className="p-6 border-b border-white/10">
-                        <Link href="/admin">
+                        <Link href="/private/core-vault">
                             <Logo size="sm" showText animated />
                         </Link>
                     </div>

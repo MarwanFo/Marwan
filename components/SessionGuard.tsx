@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -31,7 +31,7 @@ export default function SessionGuard({
 
     const handleLogout = useCallback(async () => {
         await supabase.auth.signOut();
-        router.push("/admin/login");
+        router.push("/private/core-vault/login");
         router.refresh();
     }, [supabase, router]);
 

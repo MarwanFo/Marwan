@@ -1,12 +1,12 @@
-﻿"use client";
+"use client";
 
 import { usePathname } from "next/navigation";
 
 export default function HeaderWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
-    // Don't show header on admin pages
-    if (pathname?.startsWith('/admin')) {
+    // Don't show header on admin/vault pages
+    if (pathname?.startsWith('/private/core-vault')) {
         return null;
     }
 

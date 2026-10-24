@@ -71,15 +71,15 @@ export default async function AdminDashboard() {
     }
 
     const statCards = [
-        { name: "Projects", count: counts.projects, icon: FolderOpen, href: "/admin/projects", color: "text-neon-cyan", bg: "bg-neon-cyan/10", border: "border-neon-cyan/30" },
-        { name: "Experiences", count: counts.experiences, icon: Briefcase, href: "/admin/experiences", color: "text-neon-purple", bg: "bg-neon-purple/10", border: "border-neon-purple/30" },
-        { name: "Certificates", count: counts.certificates, icon: Award, href: "/admin/certificates", color: "text-neon-magenta", bg: "bg-neon-magenta/10", border: "border-neon-magenta/30" },
-        { name: "Skills", count: counts.skills, icon: Sparkles, href: "/admin/skills", color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/30" },
+        { name: "Projects", count: counts.projects, icon: FolderOpen, href: "/private/core-vault/projects", color: "text-neon-cyan", bg: "bg-neon-cyan/10", border: "border-neon-cyan/30" },
+        { name: "Experiences", count: counts.experiences, icon: Briefcase, href: "/private/core-vault/experiences", color: "text-neon-purple", bg: "bg-neon-purple/10", border: "border-neon-purple/30" },
+        { name: "Certificates", count: counts.certificates, icon: Award, href: "/private/core-vault/certificates", color: "text-neon-magenta", bg: "bg-neon-magenta/10", border: "border-neon-magenta/30" },
+        { name: "Skills", count: counts.skills, icon: Sparkles, href: "/private/core-vault/skills", color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/30" },
         {
             name: "Messages",
             count: counts.messages,
             icon: MessageSquare,
-            href: "/admin/messages",
+            href: "/private/core-vault/messages",
             color: "text-green-400",
             bg: "bg-green-400/10",
             border: "border-green-400/30",
@@ -88,17 +88,17 @@ export default async function AdminDashboard() {
     ];
 
     const contentActions = [
-        { name: "Add Project", href: "/admin/projects", icon: FolderOpen, color: "text-neon-cyan" },
-        { name: "Add Experience", href: "/admin/experiences", icon: Briefcase, color: "text-neon-purple" },
-        { name: "Add Certificate", href: "/admin/certificates", icon: Award, color: "text-neon-magenta" },
-        { name: "Add Skill", href: "/admin/skills", icon: Sparkles, color: "text-yellow-400" },
+        { name: "Add Project", href: "/private/core-vault/projects", icon: FolderOpen, color: "text-neon-cyan" },
+        { name: "Add Experience", href: "/private/core-vault/experiences", icon: Briefcase, color: "text-neon-purple" },
+        { name: "Add Certificate", href: "/private/core-vault/certificates", icon: Award, color: "text-neon-magenta" },
+        { name: "Add Skill", href: "/private/core-vault/skills", icon: Sparkles, color: "text-yellow-400" },
     ];
 
     const customiseActions = [
-        { name: "Edit Hero", href: "/admin/hero", icon: Zap, color: "text-neon-cyan" },
-        { name: "Edit Profile", href: "/admin/profile", icon: User, color: "text-neon-purple" },
-        { name: "Social Links", href: "/admin/appearance", icon: Palette, color: "text-neon-magenta" },
-        { name: "Site Settings", href: "/admin/settings", icon: Settings, color: "text-white/60" },
+        { name: "Edit Hero", href: "/private/core-vault/hero", icon: Zap, color: "text-neon-cyan" },
+        { name: "Edit Profile", href: "/private/core-vault/profile", icon: User, color: "text-neon-purple" },
+        { name: "Social Links", href: "/private/core-vault/appearance", icon: Palette, color: "text-neon-magenta" },
+        { name: "Site Settings", href: "/private/core-vault/settings", icon: Settings, color: "text-white/60" },
     ];
 
     return (
@@ -215,7 +215,7 @@ export default async function AdminDashboard() {
                             </span>
                         )}
                     </h2>
-                    <Link href="/admin/messages" className="text-sm text-neon-cyan hover:text-white transition-colors flex items-center gap-1">
+                    <Link href="/private/core-vault/messages" className="text-sm text-neon-cyan hover:text-white transition-colors flex items-center gap-1">
                         View all <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
@@ -230,7 +230,7 @@ export default async function AdminDashboard() {
                         {recentMessages.map((msg) => (
                             <Link
                                 key={msg.id}
-                                href="/admin/messages"
+                                href="/private/core-vault/messages"
                                 className={`flex items-start gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border ${
                                     !msg.read ? "border-neon-cyan/30 border-l-2 border-l-neon-cyan" : "border-white/10"
                                 }`}
@@ -262,14 +262,14 @@ export default async function AdminDashboard() {
                 <h2 className="text-lg font-semibold text-white mb-4">✅ Portfolio Completion Checklist</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     {[
-                        { label: "Hero name & title set", done: true, href: "/admin/hero" },
-                        { label: "Profile photo uploaded", done: true, href: "/admin/profile" },
-                        { label: "Social links added", done: false, href: "/admin/appearance" },
-                        { label: "At least 1 project", done: counts.projects > 0, href: "/admin/projects" },
-                        { label: "At least 1 experience", done: counts.experiences > 0, href: "/admin/experiences" },
-                        { label: "At least 1 certificate", done: counts.certificates > 0, href: "/admin/certificates" },
-                        { label: "Skills added", done: counts.skills > 0, href: "/admin/skills" },
-                        { label: "Contact email set", done: false, href: "/admin/settings" },
+                        { label: "Hero name & title set", done: true, href: "/private/core-vault/hero" },
+                        { label: "Profile photo uploaded", done: true, href: "/private/core-vault/profile" },
+                        { label: "Social links added", done: false, href: "/private/core-vault/appearance" },
+                        { label: "At least 1 project", done: counts.projects > 0, href: "/private/core-vault/projects" },
+                        { label: "At least 1 experience", done: counts.experiences > 0, href: "/private/core-vault/experiences" },
+                        { label: "At least 1 certificate", done: counts.certificates > 0, href: "/private/core-vault/certificates" },
+                        { label: "Skills added", done: counts.skills > 0, href: "/private/core-vault/skills" },
+                        { label: "Contact email set", done: false, href: "/private/core-vault/settings" },
                     ].map((item) => (
                         <Link
                             key={item.label}

@@ -66,7 +66,7 @@ export default function AdminLogin() {
 
             // Success — middleware will validate the session on redirect
             setAttempts(0);
-            router.push("/admin");
+            router.push("/private/core-vault");
             router.refresh();
         } catch {
             setError("Connection error. Please try again.");

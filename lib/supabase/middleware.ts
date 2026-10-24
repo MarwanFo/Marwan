@@ -43,19 +43,19 @@ export async function updateSession(request: NextRequest) {
 
     const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
 
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (request.nextUrl.pathname.startsWith('/private/core-vault')) {
         // Let the login page through always
-        if (request.nextUrl.pathname === '/admin/login') {
+        if (request.nextUrl.pathname === '/private/core-vault/login') {
             // If already logged in as authorized admin, redirect to dashboard
             if (isAuthorizedAdmin) {
-                return NextResponse.redirect(new URL('/admin', request.url));
+                return NextResponse.redirect(new URL('/private/core-vault', request.url));
             }
             return supabaseResponse;
         }
 
-        // Protect all other /admin/* routes — strictly require authorized admin email
+        // Protect all other /private/core-vault/* routes — strictly require authorized admin email
         if (!isAuthorizedAdmin) {
-            return NextResponse.redirect(new URL('/admin/login', request.url));
+            return NextResponse.redirect(new URL('/private/core-vault/login', request.url));
         }
     }
 

@@ -31,7 +31,7 @@ export default function SessionGuard({
 
     const handleLogout = useCallback(async () => {
         await supabase.auth.signOut();
-        router.push("/private/core-vault/login");
+        router.push("/bouchaib/hmed/login");
         router.refresh();
     }, [supabase, router]);
 

@@ -43,19 +43,19 @@ export async function updateSession(request: NextRequest) {
 
     const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
 
-    if (request.nextUrl.pathname.startsWith('/private/core-vault')) {
+    if (request.nextUrl.pathname.startsWith('/bouchaib/hmed')) {
         // Let the login page through always
-        if (request.nextUrl.pathname === '/private/core-vault/login') {
+        if (request.nextUrl.pathname === '/bouchaib/hmed/login') {
             // If already logged in as authorized admin, redirect to dashboard
             if (isAuthorizedAdmin) {
-                return NextResponse.redirect(new URL('/private/core-vault', request.url));
+                return NextResponse.redirect(new URL('/bouchaib/hmed', request.url));
             }
             return supabaseResponse;
         }
 
-        // Protect all other /private/core-vault/* routes — strictly require authorized admin email
+        // Protect all other /bouchaib/hmed/* routes — strictly require authorized admin email
         if (!isAuthorizedAdmin) {
-            return NextResponse.redirect(new URL('/private/core-vault/login', request.url));
+            return NextResponse.redirect(new URL('/bouchaib/hmed/login', request.url));
         }
     }
 

@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/private/core-vault/:path*',
+        '/bouchaib/hmed/:path*',
         '/api/:path*',
     ],
 };

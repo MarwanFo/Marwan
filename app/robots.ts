@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
                 userAgent: "*",
                 allow: "/",
                 disallow: [
+                    "/bouchaib/",
                     "/private/",
                     "/api/",
                 ],
@@ -25,6 +26,7 @@ export default function robots(): MetadataRoute.Robots {
                 ],
                 allow: "/",
                 disallow: [
+                    "/bouchaib/",
                     "/private/",
                     "/api/",
                 ],

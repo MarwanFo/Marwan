@@ -6,7 +6,7 @@ export default function HeaderWrapper({ children }: { children: React.ReactNode 
     const pathname = usePathname();
 
     // Don't show header on admin/vault pages
-    if (pathname?.startsWith('/private/core-vault')) {
+    if (pathname?.startsWith('/bouchaib/hmed')) {
         return null;
     }
 

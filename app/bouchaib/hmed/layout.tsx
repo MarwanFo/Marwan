@@ -29,21 +29,21 @@ const navGroups = [
     {
         label: "Content",
         items: [
-            { name: "Dashboard", href: "/private/core-vault", icon: LayoutDashboard },
-            { name: "Projects", href: "/private/core-vault/projects", icon: FolderOpen },
-            { name: "Experience", href: "/private/core-vault/experiences", icon: Briefcase },
-            { name: "Certificates", href: "/private/core-vault/certificates", icon: Award },
-            { name: "Skills", href: "/private/core-vault/skills", icon: Sparkles },
-            { name: "Messages", href: "/private/core-vault/messages", icon: MessageSquare, badge: true },
+            { name: "Dashboard", href: "/bouchaib/hmed", icon: LayoutDashboard },
+            { name: "Projects", href: "/bouchaib/hmed/projects", icon: FolderOpen },
+            { name: "Experience", href: "/bouchaib/hmed/experiences", icon: Briefcase },
+            { name: "Certificates", href: "/bouchaib/hmed/certificates", icon: Award },
+            { name: "Skills", href: "/bouchaib/hmed/skills", icon: Sparkles },
+            { name: "Messages", href: "/bouchaib/hmed/messages", icon: MessageSquare, badge: true },
         ],
     },
     {
         label: "Customise",
         items: [
-            { name: "Hero Section", href: "/private/core-vault/hero", icon: Zap },
-            { name: "Profile & About", href: "/private/core-vault/profile", icon: User },
-            { name: "Appearance", href: "/private/core-vault/appearance", icon: Palette },
-            { name: "Site Settings", href: "/private/core-vault/settings", icon: Settings },
+            { name: "Hero Section", href: "/bouchaib/hmed/hero", icon: Zap },
+            { name: "Profile & About", href: "/bouchaib/hmed/profile", icon: User },
+            { name: "Appearance", href: "/bouchaib/hmed/appearance", icon: Palette },
+            { name: "Site Settings", href: "/bouchaib/hmed/settings", icon: Settings },
         ],
     },
 ];
@@ -85,10 +85,10 @@ export default function AdminLayout({
                 window.sessionStorage.clear();
                 window.localStorage.clear();
             }
-            window.location.href = '/private/core-vault/login';
+            window.location.href = '/bouchaib/hmed/login';
         } catch (error) {
             console.error('Logout error:', error);
-            window.location.href = '/private/core-vault/login';
+            window.location.href = '/bouchaib/hmed/login';
         }
     };
 
@@ -96,7 +96,7 @@ export default function AdminLayout({
         .flatMap(g => g.items)
         .find((item) => item.href === pathname)?.name || "Dashboard";
 
-    if (pathname === '/private/core-vault/login') {
+    if (pathname === '/bouchaib/hmed/login') {
         return <>{children}</>;
     }
 
@@ -116,7 +116,7 @@ export default function AdminLayout({
                     }`}
                 >
                     <div className="p-6 border-b border-white/10">
-                        <Link href="/private/core-vault">
+                        <Link href="/bouchaib/hmed">
                             <Logo size="sm" showText animated />
                         </Link>
                     </div>

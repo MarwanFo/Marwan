@@ -1,7 +1,43 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
+import { checkRateLimit, getClientIP } from '@/lib/rate-limit';
+
+// Common paths scanned by automated tools like Gobuster, dirsearch, and scanners
+const SCANNER_HONEYPOTS = [
+    '/admin',
+    '/administrator',
+    '/wp-admin',
+    '/wp-login.php',
+    '/cpanel',
+    '/phpmyadmin',
+    '/backend',
+    '/controlpanel',
+    '/private',
+];
 
 export async function middleware(request: NextRequest) {
+    const pathname = request.nextUrl.pathname.toLowerCase();
+
+    // ── Anti-Gobuster / Directory Scanner Trap ──────────────────────────────
+    const isHoneypot = SCANNER_HONEYPOTS.some(
+        (hp) => pathname === hp || pathname.startsWith(`${hp}/`)
+    );
+
+    if (isHoneypot) {
+        const ip = getClientIP(request);
+        const rateCheck = checkRateLimit(`scanner:${ip}`, { limit: 3, windowSeconds: 60 });
+        if (!rateCheck.success) {
+            return new NextResponse('Access Denied', {
+                status: 429,
+                headers: {
+                    'Retry-After': '3600',
+                    'Content-Type': 'text/plain',
+                },
+            });
+        }
+        return NextResponse.rewrite(new URL('/not-found', request.url), { status: 404 });
+    }
+
     // Skip middleware for auth API routes to avoid interference
     if (request.nextUrl.pathname.startsWith('/api/auth')) {
         return NextResponse.next();
@@ -21,5 +57,12 @@ export const config = {
     matcher: [
         '/bouchaib/hmed/:path*',
         '/api/:path*',
+        '/admin/:path*',
+        '/administrator/:path*',
+        '/wp-admin/:path*',
+        '/cpanel/:path*',
+        '/phpmyadmin/:path*',
+        '/backend/:path*',
+        '/private/:path*',
     ],
 };

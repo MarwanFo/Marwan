@@ -127,8 +127,6 @@ export default function ProfilePage() {
         setSaving(true);
         setSaved(false);
 
-        console.log("Saving avatar_url:", formData.avatar_url);
-
         const profileData = {
             name: formData.name,
             role: formData.role,
@@ -149,8 +147,6 @@ export default function ProfilePage() {
             philosophy: formData.philosophy,
             updated_at: new Date().toISOString(),
         };
-
-        console.log("Profile data to save:", profileData);
 
         let error;
         if (formData.id) {

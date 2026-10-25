@@ -38,9 +38,6 @@ export const useTerminal = () => {
     // Listen for toggle keys (Ctrl+K or Backtick)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Debug log to help identify the key on the user's system
-            console.log(`[Terminal] Key pressed: ${e.key} (Code: ${e.code})`);
-
             const isToggleKey = 
                 (e.ctrlKey && e.key === "k") || 
                 e.key === "`" || 
@@ -49,7 +46,6 @@ export const useTerminal = () => {
 
             if (isToggleKey) {
                 e.preventDefault();
-                console.log("[Terminal] Toggling...");
                 toggle();
             }
             if (e.key === "Escape" && isOpen) {

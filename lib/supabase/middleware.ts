@@ -44,6 +44,8 @@ export async function updateSession(request: NextRequest) {
     const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
 
     if (request.nextUrl.pathname.startsWith('/bouchaib/hmed')) {
+        supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+
         // Let the login page through always
         if (request.nextUrl.pathname === '/bouchaib/hmed/login') {
             // If already logged in as authorized admin, redirect to dashboard
@@ -55,7 +57,12 @@ export async function updateSession(request: NextRequest) {
 
         // Protect all other /bouchaib/hmed/* routes — strictly require authorized admin email
         if (!isAuthorizedAdmin) {
-            return NextResponse.redirect(new URL('/bouchaib/hmed/login', request.url));
+            // Stealth Cloaking: Return 404 rewrite instead of 307 redirect
+            // Scanners (Gobuster/dirsearch) will see 404 Not Found and conclude the path does not exist
+            const notFoundUrl = new URL('/not-found', request.url);
+            const cloakedResponse = NextResponse.rewrite(notFoundUrl, { status: 404 });
+            cloakedResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+            return cloakedResponse;
         }
     }
 

@@ -94,6 +94,22 @@ const nextConfig = {
         return [];
     },
 
+    // Stealth Admin Rewrites — maps process.env.ADMIN_SECRET_PATH to internal-hub
+    async rewrites() {
+        const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '');
+        if (!secretPath) return [];
+        return [
+            {
+                source: `/${secretPath}`,
+                destination: '/internal-hub',
+            },
+            {
+                source: `/${secretPath}/:path*`,
+                destination: '/internal-hub/:path*',
+            },
+        ];
+    },
+
     // Remove X-Powered-By (don't advertise Next.js version to attackers)
     poweredByHeader: false,
 };

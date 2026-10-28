@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Mail, Lock, LogIn, AlertCircle, ShieldAlert } from "lucide-react";
 
 const MAX_ATTEMPTS = 5;
@@ -16,6 +16,7 @@ export default function AdminLogin() {
     const [attempts, setAttempts] = useState(0);
     const [lockoutSeconds, setLockoutSeconds] = useState(0);
     const router = useRouter();
+    const pathname = usePathname();
 
     // Countdown timer for client-side lockout display
     useEffect(() => {
@@ -66,7 +67,8 @@ export default function AdminLogin() {
 
             // Success — middleware will validate the session on redirect
             setAttempts(0);
-            router.push("/bouchaib/hmed");
+            const targetPath = pathname ? pathname.replace(/\/login\/?$/, "") : "/";
+            router.push(targetPath || "/");
             router.refresh();
         } catch {
             setError("Connection error. Please try again.");

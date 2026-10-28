@@ -55,14 +55,12 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/bouchaib/hmed/:path*',
-        '/api/:path*',
-        '/admin/:path*',
-        '/administrator/:path*',
-        '/wp-admin/:path*',
-        '/cpanel/:path*',
-        '/phpmyadmin/:path*',
-        '/backend/:path*',
-        '/private/:path*',
+        /*
+         * Match all request paths except:
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico, icon.svg, public assets
+         */
+        '/((?!_next/static|_next/image|favicon.ico|icon.svg|.*\\.(?:jpg|jpeg|gif|png|webp|svg|ico|pdf)$).*)',
     ],
 };

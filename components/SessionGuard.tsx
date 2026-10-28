@@ -2,7 +2,7 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface SessionGuardProps {
     children: React.ReactNode;
@@ -10,6 +10,8 @@ interface SessionGuardProps {
     inactivityTimeout?: number;
     /** Show warning before logout in seconds (default: 60) */
     warningBeforeSeconds?: number;
+    /** Dynamic login redirect path */
+    loginPath?: string;
 }
 
 /**
@@ -22,8 +24,10 @@ export default function SessionGuard({
     children,
     inactivityTimeout = 30,
     warningBeforeSeconds = 60,
+    loginPath,
 }: SessionGuardProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const supabase = createClient();
     const lastActivityRef = useRef(Date.now());
     const warningShownRef = useRef(false);
@@ -31,9 +35,10 @@ export default function SessionGuard({
 
     const handleLogout = useCallback(async () => {
         await supabase.auth.signOut();
-        router.push("/bouchaib/hmed/login");
+        const fallback = pathname ? `${pathname.replace(/\/[^/]+$/, "")}/login` : "/";
+        router.push(loginPath || fallback);
         router.refresh();
-    }, [supabase, router]);
+    }, [supabase, router, loginPath, pathname]);
 
     const resetActivity = useCallback(() => {
         lastActivityRef.current = Date.now();

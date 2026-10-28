@@ -21,6 +21,9 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
+    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '') || 'internal-hub';
+    const basePath = `/${secretPath}`;
+
     let counts = {
         projects: 0,
         experiences: 0,
@@ -71,15 +74,15 @@ export default async function AdminDashboard() {
     }
 
     const statCards = [
-        { name: "Projects", count: counts.projects, icon: FolderOpen, href: "/bouchaib/hmed/projects", color: "text-neon-cyan", bg: "bg-neon-cyan/10", border: "border-neon-cyan/30" },
-        { name: "Experiences", count: counts.experiences, icon: Briefcase, href: "/bouchaib/hmed/experiences", color: "text-neon-purple", bg: "bg-neon-purple/10", border: "border-neon-purple/30" },
-        { name: "Certificates", count: counts.certificates, icon: Award, href: "/bouchaib/hmed/certificates", color: "text-neon-magenta", bg: "bg-neon-magenta/10", border: "border-neon-magenta/30" },
-        { name: "Skills", count: counts.skills, icon: Sparkles, href: "/bouchaib/hmed/skills", color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/30" },
+        { name: "Projects", count: counts.projects, icon: FolderOpen, href: `${basePath}/projects`, color: "text-neon-cyan", bg: "bg-neon-cyan/10", border: "border-neon-cyan/30" },
+        { name: "Experiences", count: counts.experiences, icon: Briefcase, href: `${basePath}/experiences`, color: "text-neon-purple", bg: "bg-neon-purple/10", border: "border-neon-purple/30" },
+        { name: "Certificates", count: counts.certificates, icon: Award, href: `${basePath}/certificates`, color: "text-neon-magenta", bg: "bg-neon-magenta/10", border: "border-neon-magenta/30" },
+        { name: "Skills", count: counts.skills, icon: Sparkles, href: `${basePath}/skills`, color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/30" },
         {
             name: "Messages",
             count: counts.messages,
             icon: MessageSquare,
-            href: "/bouchaib/hmed/messages",
+            href: `${basePath}/messages`,
             color: "text-green-400",
             bg: "bg-green-400/10",
             border: "border-green-400/30",
@@ -88,17 +91,17 @@ export default async function AdminDashboard() {
     ];
 
     const contentActions = [
-        { name: "Add Project", href: "/bouchaib/hmed/projects", icon: FolderOpen, color: "text-neon-cyan" },
-        { name: "Add Experience", href: "/bouchaib/hmed/experiences", icon: Briefcase, color: "text-neon-purple" },
-        { name: "Add Certificate", href: "/bouchaib/hmed/certificates", icon: Award, color: "text-neon-magenta" },
-        { name: "Add Skill", href: "/bouchaib/hmed/skills", icon: Sparkles, color: "text-yellow-400" },
+        { name: "Add Project", href: `${basePath}/projects`, icon: FolderOpen, color: "text-neon-cyan" },
+        { name: "Add Experience", href: `${basePath}/experiences`, icon: Briefcase, color: "text-neon-purple" },
+        { name: "Add Certificate", href: `${basePath}/certificates`, icon: Award, color: "text-neon-magenta" },
+        { name: "Add Skill", href: `${basePath}/skills`, icon: Sparkles, color: "text-yellow-400" },
     ];
 
     const customiseActions = [
-        { name: "Edit Hero", href: "/bouchaib/hmed/hero", icon: Zap, color: "text-neon-cyan" },
-        { name: "Edit Profile", href: "/bouchaib/hmed/profile", icon: User, color: "text-neon-purple" },
-        { name: "Social Links", href: "/bouchaib/hmed/appearance", icon: Palette, color: "text-neon-magenta" },
-        { name: "Site Settings", href: "/bouchaib/hmed/settings", icon: Settings, color: "text-white/60" },
+        { name: "Edit Hero", href: `${basePath}/hero`, icon: Zap, color: "text-neon-cyan" },
+        { name: "Edit Profile", href: `${basePath}/profile`, icon: User, color: "text-neon-purple" },
+        { name: "Social Links", href: `${basePath}/appearance`, icon: Palette, color: "text-neon-magenta" },
+        { name: "Site Settings", href: `${basePath}/settings`, icon: Settings, color: "text-white/60" },
     ];
 
     return (
@@ -215,7 +218,7 @@ export default async function AdminDashboard() {
                             </span>
                         )}
                     </h2>
-                    <Link href="/bouchaib/hmed/messages" className="text-sm text-neon-cyan hover:text-white transition-colors flex items-center gap-1">
+                    <Link href={`${basePath}/messages`} className="text-sm text-neon-cyan hover:text-white transition-colors flex items-center gap-1">
                         View all <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
@@ -230,7 +233,7 @@ export default async function AdminDashboard() {
                         {recentMessages.map((msg) => (
                             <Link
                                 key={msg.id}
-                                href="/bouchaib/hmed/messages"
+                                href={`${basePath}/messages`}
                                 className={`flex items-start gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border ${
                                     !msg.read ? "border-neon-cyan/30 border-l-2 border-l-neon-cyan" : "border-white/10"
                                 }`}
@@ -262,14 +265,14 @@ export default async function AdminDashboard() {
                 <h2 className="text-lg font-semibold text-white mb-4">✅ Portfolio Completion Checklist</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     {[
-                        { label: "Hero name & title set", done: true, href: "/bouchaib/hmed/hero" },
-                        { label: "Profile photo uploaded", done: true, href: "/bouchaib/hmed/profile" },
-                        { label: "Social links added", done: false, href: "/bouchaib/hmed/appearance" },
-                        { label: "At least 1 project", done: counts.projects > 0, href: "/bouchaib/hmed/projects" },
-                        { label: "At least 1 experience", done: counts.experiences > 0, href: "/bouchaib/hmed/experiences" },
-                        { label: "At least 1 certificate", done: counts.certificates > 0, href: "/bouchaib/hmed/certificates" },
-                        { label: "Skills added", done: counts.skills > 0, href: "/bouchaib/hmed/skills" },
-                        { label: "Contact email set", done: false, href: "/bouchaib/hmed/settings" },
+                        { label: "Hero name & title set", done: true, href: `${basePath}/hero` },
+                        { label: "Profile photo uploaded", done: true, href: `${basePath}/profile` },
+                        { label: "Social links added", done: false, href: `${basePath}/appearance` },
+                        { label: "At least 1 project", done: counts.projects > 0, href: `${basePath}/projects` },
+                        { label: "At least 1 experience", done: counts.experiences > 0, href: `${basePath}/experiences` },
+                        { label: "At least 1 certificate", done: counts.certificates > 0, href: `${basePath}/certificates` },
+                        { label: "Skills added", done: counts.skills > 0, href: `${basePath}/skills` },
+                        { label: "Contact email set", done: false, href: `${basePath}/settings` },
                     ].map((item) => (
                         <Link
                             key={item.label}

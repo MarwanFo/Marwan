@@ -40,6 +40,11 @@ export interface Project {
     featured: boolean;
     display_order: number;
     created_at: string;
+    long_description?: string | null;
+    features?: string[] | null;
+    gallery?: string[] | null;
+    role?: string | null;
+    challenges?: string | null;
 }
 
 export interface Experience {

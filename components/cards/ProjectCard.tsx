@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { ExternalLink, Github, Star, Code2 } from "lucide-react";
 import { Project } from "@/lib/types";
 import { use3DTilt } from "@/lib/hooks/use3DTilt";
@@ -37,6 +39,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             >
                 {/* Image with Overlay */}
                 <div className="relative overflow-hidden h-48">
+                    <Link href={`/projects/${project.id}`} className="absolute inset-0 z-0 cursor-pointer" aria-label={project.title} />
                     {project.image_url ? (
                         <motion.img
                             src={project.image_url}
@@ -118,12 +121,14 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                     />
 
                     <div className="relative z-10">
-                        <motion.h3
-                            className="font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 text-xl"
-                            style={{ transform: "translateZ(30px)" }}
-                        >
-                            {project.title}
-                        </motion.h3>
+                        <Link href={`/projects/${project.id}`} className="block group/title">
+                            <motion.h3
+                                className="font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 hover:underline decoration-neon-cyan/50 underline-offset-4 text-xl"
+                                style={{ transform: "translateZ(30px)" }}
+                            >
+                                {project.title}
+                            </motion.h3>
+                        </Link>
 
                         <p className="text-white/60 mb-4 group-hover:text-white/70 transition-colors line-clamp-2 text-sm">
                             {project.description}

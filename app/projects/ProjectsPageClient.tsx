@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ExternalLink, Github, ArrowLeft, Sparkles, Folder, Eye, Star, Code2, Rocket } from "lucide-react";
+import { ExternalLink, Github, ArrowLeft, ArrowRight, Sparkles, Folder, Eye, Star, Code2, Rocket } from "lucide-react";
 import Link from "next/link";
 import { Project } from "@/lib/types";
 import { useState, useRef } from "react";
@@ -77,29 +77,31 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
             >
                 {/* Image with Overlay */}
                 <div className={`relative overflow-hidden ${size === "large" ? "h-64 md:h-80" : "h-48"}`}>
-                    {project.image_url ? (
-                        <motion.img
-                            src={project.image_url}
-                            alt={project.title}
-                            className="w-full h-full object-cover"
-                            animate={{ scale: isHovered ? 1.1 : 1 }}
-                            transition={{ duration: 0.7, ease: "easeOut" }}
+                    <Link href={`/projects/${project.id}`} className="absolute inset-0 z-0 cursor-pointer" aria-label={project.title}>
+                        {project.image_url ? (
+                            <motion.img
+                                src={project.image_url}
+                                alt={project.title}
+                                className="w-full h-full object-cover"
+                                animate={{ scale: isHovered ? 1.1 : 1 }}
+                                transition={{ duration: 0.7, ease: "easeOut" }}
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30 flex items-center justify-center">
+                                <Code2 className="w-20 h-20 text-white/20" />
+                            </div>
+                        )}
+
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
+
+                        {/* Shine effect on hover */}
+                        <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full"
+                            animate={{ x: isHovered ? "200%" : "-100%" }}
+                            transition={{ duration: 0.7, ease: "easeInOut" }}
                         />
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-neon-purple/30 to-neon-cyan/30 flex items-center justify-center">
-                            <Code2 className="w-20 h-20 text-white/20" />
-                        </div>
-                    )}
-
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
-
-                    {/* Shine effect on hover */}
-                    <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full"
-                        animate={{ x: isHovered ? "200%" : "-100%" }}
-                        transition={{ duration: 0.7, ease: "easeInOut" }}
-                    />
+                    </Link>
 
                     {/* Featured Badge */}
                     {project.featured && (
@@ -160,12 +162,14 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                     />
 
                     <div className="relative z-10">
-                        <motion.h3
-                            className={`font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 ${size === "large" ? "text-2xl" : "text-xl"}`}
-                            style={{ transform: "translateZ(30px)" }}
-                        >
-                            {project.title}
-                        </motion.h3>
+                        <Link href={`/projects/${project.id}`} className="block group/title">
+                            <motion.h3
+                                className={`font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors duration-300 hover:underline decoration-neon-cyan/50 underline-offset-4 ${size === "large" ? "text-2xl" : "text-xl"}`}
+                                style={{ transform: "translateZ(30px)" }}
+                            >
+                                {project.title}
+                            </motion.h3>
+                        </Link>
 
                         <p className={`text-white/60 mb-4 group-hover:text-white/70 transition-colors ${size === "large" ? "line-clamp-3" : "line-clamp-2"} text-sm`}>
                             {project.description}
@@ -191,22 +195,27 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                             )}
                         </div>
 
-                        {/* View Project Button for large cards */}
-                        {size === "large" && (project.live_url || project.github_url) && (
-                            <motion.div
-                                className="mt-6 flex gap-3"
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: isHovered ? 1 : 0.7, y: 0 }}
+                        {/* Card Footer with Details link */}
+                        <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-3">
+                            <Link
+                                href={`/projects/${project.id}`}
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-neon-cyan hover:text-white transition-colors group/link"
                             >
+                                <span>{t("projects.viewDetails") || "View Details"}</span>
+                                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-1" />
+                            </Link>
+
+                            <div className="flex items-center gap-2">
                                 {project.live_url && (
                                     <a
                                         href={project.live_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan text-sm font-medium hover:bg-neon-cyan hover:text-background transition-all"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-1.5 rounded-lg text-white/60 hover:text-neon-cyan hover:bg-white/5 transition-colors"
+                                        title={t("projects.viewProject")}
                                     >
-                                        <Eye className="w-4 h-4" />
-                                        <span>{t("projects.viewProject")}</span>
+                                        <ExternalLink className="w-4 h-4" />
                                     </a>
                                 )}
                                 {project.github_url && (
@@ -214,14 +223,15 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                                         href={project.github_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/70 text-sm font-medium hover:bg-white/10 hover:text-white transition-all"
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="p-1.5 rounded-lg text-white/60 hover:text-neon-purple hover:bg-white/5 transition-colors"
+                                        title={t("projects.sourceCode")}
                                     >
                                         <Github className="w-4 h-4" />
-                                        <span>{t("projects.sourceCode")}</span>
                                     </a>
                                 )}
-                            </motion.div>
-                        )}
+                            </div>
+                        </div>
                     </div>
                 </div>
 

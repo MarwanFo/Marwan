@@ -90,6 +90,7 @@ export interface TranslationDictionary {
         filterAll: string;
         noProjectsFound: string;
         showingProjects: string;
+        viewDetails?: string;
     };
     contact: {
         title: string;

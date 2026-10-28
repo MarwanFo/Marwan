@@ -38,4 +38,7 @@ next-env.d.ts
 *.sql
 
 .env
+.audit
 .audit/
+.audit/**
+test-*.ps1

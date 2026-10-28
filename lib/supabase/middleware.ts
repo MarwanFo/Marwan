@@ -43,19 +43,33 @@ export async function updateSession(request: NextRequest) {
 
     const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
 
-    if (request.nextUrl.pathname.startsWith('/bouchaib/hmed')) {
+    const pathname = request.nextUrl.pathname.toLowerCase();
+    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '').toLowerCase() || '';
+
+    // Block direct access to internal-hub
+    if (pathname === '/internal-hub' || pathname.startsWith('/internal-hub/')) {
+        const notFoundUrl = new URL('/not-found', request.url);
+        return NextResponse.rewrite(notFoundUrl, { status: 404 });
+    }
+
+    // Check if request matches the stealth admin path configured in .env
+    const isSecretAdminRoute = secretPath ? (pathname === `/${secretPath}` || pathname.startsWith(`/${secretPath}/`)) : false;
+
+    if (isSecretAdminRoute) {
         supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
 
+        const loginPath = `/${secretPath}/login`;
+
         // Let the login page through always
-        if (request.nextUrl.pathname === '/bouchaib/hmed/login') {
+        if (pathname === loginPath) {
             // If already logged in as authorized admin, redirect to dashboard
             if (isAuthorizedAdmin) {
-                return NextResponse.redirect(new URL('/bouchaib/hmed', request.url));
+                return NextResponse.redirect(new URL(`/${secretPath}`, request.url));
             }
             return supabaseResponse;
         }
 
-        // Protect all other /bouchaib/hmed/* routes — strictly require authorized admin email
+        // Protect all other admin routes — strictly require authorized admin email
         if (!isAuthorizedAdmin) {
             // Stealth Cloaking: Return 404 rewrite instead of 307 redirect
             // Scanners (Gobuster/dirsearch) will see 404 Not Found and conclude the path does not exist

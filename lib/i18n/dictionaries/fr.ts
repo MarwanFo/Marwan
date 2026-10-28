@@ -102,6 +102,7 @@ export const fr: TranslationDictionary = {
         filterAll: "Tous",
         noProjectsFound: "Aucun projet ne correspond à vos critères",
         showingProjects: "{count} projets affichés",
+        viewDetails: "Voir les détails",
     },
     contact: {
         title: "Travaillons",

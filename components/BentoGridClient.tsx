@@ -2,6 +2,7 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useState, useRef } from "react";
+import Link from "next/link";
 import { ExternalLink, Github, ArrowUpRight, Sparkles, Star } from "lucide-react";
 import { Project } from "@/lib/types";
 import { useTranslation } from "@/lib/i18n/LanguageContext";
@@ -182,7 +183,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 />
 
                 {/* Project Image */}
-                <div className="relative h-48 overflow-hidden">
+                <Link href={`/projects/${project.id}`} className="block relative h-48 overflow-hidden cursor-pointer group/img">
                     <motion.img
                         src={project.image_url || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop"}
                         alt={project.title}
@@ -196,18 +197,20 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
                     {/* Featured Badge */}
                     {project.featured && (
-                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan text-xs font-semibold flex items-center gap-1">
+                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-neon-cyan/20 border border-neon-cyan/40 text-neon-cyan text-xs font-semibold flex items-center gap-1 z-10">
                             <Star className="w-3 h-3 fill-neon-cyan" />
                             <span>{t("projects.featured")}</span>
                         </div>
                     )}
-                </div>
+                </Link>
 
                 {/* Content */}
                 <div className="p-6 relative z-10" style={{ transform: "translateZ(20px)" }}>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">
-                        {project.title}
-                    </h3>
+                    <Link href={`/projects/${project.id}`} className="block group/title">
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors hover:underline decoration-neon-cyan/50 underline-offset-4">
+                            {project.title}
+                        </h3>
+                    </Link>
                     <p className="text-white/60 text-sm mb-4 line-clamp-2">
                         {project.description}
                     </p>
@@ -225,29 +228,42 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                     </div>
 
                     {/* Links */}
-                    <div className="flex items-center gap-3 pt-4 border-t border-white/10">
-                        {project.live_url && (
-                            <a
-                                href={project.live_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-neon-cyan transition-colors"
-                            >
-                                <ExternalLink className="w-4 h-4" />
-                                <span>{t("projects.viewProject")}</span>
-                            </a>
-                        )}
-                        {project.github_url && (
-                            <a
-                                href={project.github_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-neon-purple transition-colors ml-auto"
-                            >
-                                <Github className="w-4 h-4" />
-                                <span>{t("projects.sourceCode")}</span>
-                            </a>
-                        )}
+                    <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
+                        <Link
+                            href={`/projects/${project.id}`}
+                            className="flex items-center gap-1.5 text-sm font-semibold text-neon-cyan hover:text-white transition-colors group/link"
+                        >
+                            <span>{t("projects.viewDetails") || "Details"}</span>
+                            <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                        </Link>
+                        <div className="flex items-center gap-2">
+                            {project.live_url && (
+                                <a
+                                    href={project.live_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="p-1.5 rounded-lg text-white/70 hover:text-neon-cyan hover:bg-white/5 transition-colors"
+                                    title={t("projects.viewProject")}
+                                    aria-label={t("projects.viewProject")}
+                                >
+                                    <ExternalLink className="w-4 h-4" />
+                                </a>
+                            )}
+                            {project.github_url && (
+                                <a
+                                    href={project.github_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="p-1.5 rounded-lg text-white/70 hover:text-neon-purple hover:bg-white/5 transition-colors"
+                                    title={t("projects.sourceCode")}
+                                    aria-label={t("projects.sourceCode")}
+                                >
+                                    <Github className="w-4 h-4" />
+                                </a>
+                            )}
+                        </div>
                     </div>
                 </div>
             </motion.div>

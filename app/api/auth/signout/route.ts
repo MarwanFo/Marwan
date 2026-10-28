@@ -9,7 +9,8 @@ export async function POST() {
 
     // Create response that redirects to login
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const response = NextResponse.redirect(new URL('/bouchaib/hmed/login', appUrl));
+    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '') || 'internal-hub';
+    const response = NextResponse.redirect(new URL(`/${secretPath}/login`, appUrl));
 
     // Clear all Supabase auth cookies
     const cookieNames = [

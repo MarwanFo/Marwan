@@ -29,21 +29,21 @@ const navGroups = [
     {
         label: "Content",
         items: [
-            { name: "Dashboard", href: "/bouchaib/hmed", icon: LayoutDashboard },
-            { name: "Projects", href: "/bouchaib/hmed/projects", icon: FolderOpen },
-            { name: "Experience", href: "/bouchaib/hmed/experiences", icon: Briefcase },
-            { name: "Certificates", href: "/bouchaib/hmed/certificates", icon: Award },
-            { name: "Skills", href: "/bouchaib/hmed/skills", icon: Sparkles },
-            { name: "Messages", href: "/bouchaib/hmed/messages", icon: MessageSquare, badge: true },
+            { name: "Dashboard", path: "", icon: LayoutDashboard },
+            { name: "Projects", path: "/projects", icon: FolderOpen },
+            { name: "Experience", path: "/experiences", icon: Briefcase },
+            { name: "Certificates", path: "/certificates", icon: Award },
+            { name: "Skills", path: "/skills", icon: Sparkles },
+            { name: "Messages", path: "/messages", icon: MessageSquare, badge: true },
         ],
     },
     {
         label: "Customise",
         items: [
-            { name: "Hero Section", href: "/bouchaib/hmed/hero", icon: Zap },
-            { name: "Profile & About", href: "/bouchaib/hmed/profile", icon: User },
-            { name: "Appearance", href: "/bouchaib/hmed/appearance", icon: Palette },
-            { name: "Site Settings", href: "/bouchaib/hmed/settings", icon: Settings },
+            { name: "Hero Section", path: "/hero", icon: Zap },
+            { name: "Profile & About", path: "/profile", icon: User },
+            { name: "Appearance", path: "/appearance", icon: Palette },
+            { name: "Site Settings", path: "/settings", icon: Settings },
         ],
     },
 ];
@@ -57,8 +57,12 @@ export default function AdminLayout({
     const [user, setUser] = useState<{ email?: string } | null>(null);
     const [unreadCount, setUnreadCount] = useState(0);
     const router = useRouter();
-    const pathname = usePathname();
+    const pathname = usePathname() || "";
     const supabase = createClient();
+
+    // Dynamically derive the base path from whatever URL the browser accessed
+    const subrouteRegex = /\/(projects|experiences|certificates|skills|messages|hero|profile|appearance|settings|login)(\/.*)?$/;
+    const basePath = pathname.replace(subrouteRegex, "") || pathname;
 
     useEffect(() => {
         const getUser = async () => {
@@ -85,23 +89,24 @@ export default function AdminLayout({
                 window.sessionStorage.clear();
                 window.localStorage.clear();
             }
-            window.location.href = '/bouchaib/hmed/login';
+            window.location.href = `${basePath}/login`;
         } catch (error) {
             console.error('Logout error:', error);
-            window.location.href = '/bouchaib/hmed/login';
+            window.location.href = `${basePath}/login`;
         }
     };
 
-    const currentPage = navGroups
+    const currentItem = navGroups
         .flatMap(g => g.items)
-        .find((item) => item.href === pathname)?.name || "Dashboard";
+        .find((item) => (item.path === "" && pathname === basePath) || (item.path !== "" && pathname.startsWith(`${basePath}${item.path}`)));
+    const currentPage = currentItem?.name || "Dashboard";
 
-    if (pathname === '/bouchaib/hmed/login') {
+    if (pathname === `${basePath}/login` || pathname.endsWith("/login")) {
         return <>{children}</>;
     }
 
     return (
-        <SessionGuard inactivityTimeout={30} warningBeforeSeconds={60}>
+        <SessionGuard inactivityTimeout={30} warningBeforeSeconds={60} loginPath={`${basePath}/login`}>
             <div className="min-h-screen bg-background flex relative z-10">
                 {sidebarOpen && (
                     <div
@@ -116,7 +121,7 @@ export default function AdminLayout({
                     }`}
                 >
                     <div className="p-6 border-b border-white/10">
-                        <Link href="/bouchaib/hmed">
+                        <Link href={basePath || "/"}>
                             <Logo size="sm" showText animated />
                         </Link>
                     </div>
@@ -129,12 +134,13 @@ export default function AdminLayout({
                                 </p>
                                 <div className="space-y-1">
                                     {group.items.map((item) => {
-                                        const isActive = pathname === item.href;
+                                        const itemHref = `${basePath}${item.path}`;
+                                        const isActive = (item.path === "" && pathname === basePath) || (item.path !== "" && pathname.startsWith(`${basePath}${item.path}`));
                                         const showBadge = item.badge && unreadCount > 0;
                                         return (
                                             <Link
                                                 key={item.name}
-                                                href={item.href}
+                                                href={itemHref}
                                                 onClick={() => setSidebarOpen(false)}
                                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                                                     isActive

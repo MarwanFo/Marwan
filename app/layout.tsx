@@ -11,7 +11,6 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import LoadingScreen from "@/components/LoadingScreen";
 import Scene3DProvider from "@/components/three/Scene3DProvider";
 import ChatWidget from "@/components/ChatWidget";
-import TerminalHUD from "@/components/TerminalHUD";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -177,7 +176,6 @@ export default function RootLayout({
                         </HeaderWrapper>
                         {children}
                         <ChatWidget />
-                        <TerminalHUD />
                     </ThemeProvider>
                 </LanguageProvider>
             </body>

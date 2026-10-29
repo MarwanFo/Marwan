@@ -44,7 +44,11 @@ export async function updateSession(request: NextRequest) {
     const isAuthorizedAdmin = user ? isAdminEmail(user.email) : false;
 
     const pathname = request.nextUrl.pathname.toLowerCase();
-    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '').toLowerCase() || '';
+    const configuredSecret = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|^\/+$/g, '').toLowerCase();
+    const allowedSecrets = ['bouchaib/hmed'];
+    if (configuredSecret && !allowedSecrets.includes(configuredSecret)) {
+        allowedSecrets.push(configuredSecret);
+    }
 
     // Block direct access to internal-hub
     if (pathname === '/internal-hub' || pathname.startsWith('/internal-hub/')) {
@@ -52,19 +56,26 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.rewrite(notFoundUrl, { status: 404 });
     }
 
-    // Check if request matches the stealth admin path configured in .env
-    const isSecretAdminRoute = secretPath ? (pathname === `/${secretPath}` || pathname.startsWith(`/${secretPath}/`)) : false;
+    // Check if request matches any authorized stealth admin path
+    let activeSecret = '';
+    for (const s of allowedSecrets) {
+        if (pathname === `/${s}` || pathname.startsWith(`/${s}/`)) {
+            activeSecret = s;
+            break;
+        }
+    }
+    const isSecretAdminRoute = !!activeSecret;
 
     if (isSecretAdminRoute) {
         supabaseResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
 
-        const loginPath = `/${secretPath}/login`;
+        const loginPath = `/${activeSecret}/login`;
 
         // Let the login page through always
         if (pathname === loginPath) {
             // If already logged in as authorized admin, redirect to dashboard
             if (isAuthorizedAdmin) {
-                return NextResponse.redirect(new URL(`/${secretPath}`, request.url));
+                return NextResponse.redirect(new URL(`/${activeSecret}`, request.url));
             }
             return supabaseResponse;
         }

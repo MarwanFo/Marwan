@@ -96,18 +96,26 @@ const nextConfig = {
 
     // Stealth Admin Rewrites — maps process.env.ADMIN_SECRET_PATH to internal-hub
     async rewrites() {
-        const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '');
-        if (!secretPath) return [];
-        return [
-            {
-                source: `/${secretPath}`,
-                destination: '/internal-hub',
-            },
-            {
-                source: `/${secretPath}/:path*`,
-                destination: '/internal-hub/:path*',
-            },
-        ];
+        const configuredPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|^\/+$/g, '');
+        const secretPaths = ['bouchaib/hmed'];
+        if (configuredPath && !secretPaths.includes(configuredPath)) {
+            secretPaths.push(configuredPath);
+        }
+
+        const rewrites = [];
+        for (const sp of secretPaths) {
+            rewrites.push(
+                {
+                    source: `/${sp}`,
+                    destination: '/internal-hub',
+                },
+                {
+                    source: `/${sp}/:path*`,
+                    destination: '/internal-hub/:path*',
+                }
+            );
+        }
+        return rewrites;
     },
 
     // Remove X-Powered-By (don't advertise Next.js version to attackers)

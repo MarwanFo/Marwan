@@ -21,7 +21,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '') || 'internal-hub';
+    const secretPath = process.env.ADMIN_SECRET_PATH?.replace(/^\/+|\/+$/g, '') || 'bouchaib/hmed';
     const basePath = `/${secretPath}`;
 
     let counts = {

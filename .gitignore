@@ -42,3 +42,9 @@ next-env.d.ts
 .audit/
 .audit/**
 test-*.ps1
+*.ps1
+test-hacker.ps1
+.agents/
+.agents/**
+
+

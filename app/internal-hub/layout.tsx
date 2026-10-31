@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
     LayoutDashboard,
+    BookOpen,
     FolderOpen,
     Briefcase,
     Award,
@@ -34,6 +35,7 @@ const navGroups = [
             { name: "Experience", path: "/experiences", icon: Briefcase },
             { name: "Certificates", path: "/certificates", icon: Award },
             { name: "Skills", path: "/skills", icon: Sparkles },
+            { name: "Blog Posts", path: "/blog", icon: BookOpen },
             { name: "Messages", path: "/messages", icon: MessageSquare, badge: true },
         ],
     },
@@ -61,7 +63,7 @@ export default function AdminLayout({
     const supabase = createClient();
 
     // Dynamically derive the base path from whatever URL the browser accessed
-    const subrouteRegex = /\/(projects|experiences|certificates|skills|messages|hero|profile|appearance|settings|login)(\/.*)?$/;
+    const subrouteRegex = /\/(projects|experiences|certificates|skills|blog|messages|hero|profile|appearance|settings|login)(\/.*)?$/;
     const basePath = pathname.replace(subrouteRegex, "") || pathname;
 
     useEffect(() => {

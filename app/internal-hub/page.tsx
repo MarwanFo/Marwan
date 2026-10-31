@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import {
     FolderOpen,
+    BookOpen,
     Briefcase,
     Award,
     TrendingUp,
@@ -31,6 +32,7 @@ export default async function AdminDashboard() {
         skills: 0,
         messages: 0,
         unread: 0,
+        posts: 0,
     };
     let recentMessages: { id: string; name: string; email: string; message: string; created_at: string; read: boolean }[] = [];
     let error: string | null = null;
@@ -45,6 +47,7 @@ export default async function AdminDashboard() {
             skillsRes,
             messagesRes,
             unreadRes,
+            postsRes,
             recentRes,
         ] = await Promise.all([
             supabase.from("projects").select("id", { count: "exact", head: true }),
@@ -53,6 +56,7 @@ export default async function AdminDashboard() {
             supabase.from("skills").select("id", { count: "exact", head: true }),
             supabase.from("messages").select("id", { count: "exact", head: true }),
             supabase.from("messages").select("id", { count: "exact", head: true }).eq("read", false),
+            supabase.from("posts").select("id", { count: "exact", head: true }),
             supabase.from("messages")
                 .select("id, name, email, message, created_at, read")
                 .order("created_at", { ascending: false })
@@ -66,6 +70,7 @@ export default async function AdminDashboard() {
             skills: skillsRes.count || 0,
             messages: messagesRes.count || 0,
             unread: unreadRes.count || 0,
+            posts: postsRes?.count || 0,
         };
         recentMessages = recentRes.data || [];
     } catch (e) {
@@ -78,6 +83,7 @@ export default async function AdminDashboard() {
         { name: "Experiences", count: counts.experiences, icon: Briefcase, href: `${basePath}/experiences`, color: "text-neon-purple", bg: "bg-neon-purple/10", border: "border-neon-purple/30" },
         { name: "Certificates", count: counts.certificates, icon: Award, href: `${basePath}/certificates`, color: "text-neon-magenta", bg: "bg-neon-magenta/10", border: "border-neon-magenta/30" },
         { name: "Skills", count: counts.skills, icon: Sparkles, href: `${basePath}/skills`, color: "text-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/30" },
+        { name: "Blog Posts", count: counts.posts, icon: BookOpen, href: `${basePath}/blog`, color: "text-sky-400", bg: "bg-sky-400/10", border: "border-sky-400/30" },
         {
             name: "Messages",
             count: counts.messages,
@@ -95,6 +101,7 @@ export default async function AdminDashboard() {
         { name: "Add Experience", href: `${basePath}/experiences`, icon: Briefcase, color: "text-neon-purple" },
         { name: "Add Certificate", href: `${basePath}/certificates`, icon: Award, color: "text-neon-magenta" },
         { name: "Add Skill", href: `${basePath}/skills`, icon: Sparkles, color: "text-yellow-400" },
+        { name: "Write Article", href: `${basePath}/blog`, icon: BookOpen, color: "text-sky-400" },
     ];
 
     const customiseActions = [

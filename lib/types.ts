@@ -76,6 +76,24 @@ export interface Certificate {
     created_at: string;
 }
 
+export interface Post {
+    id: string;
+    slug: string;
+    title: string;
+    excerpt: string | null;
+    content: string;
+    cover_image: string | null;
+    category: string;
+    tags: string[];
+    published: boolean;
+    featured: boolean;
+    read_time: string | null;
+    views_count?: number;
+    published_at: string | null;
+    created_at: string;
+    updated_at?: string;
+}
+
 // Insert types (without id and created_at)
 export type ProjectInsert = {
     title: string;
@@ -136,6 +154,20 @@ export type ProfileInsert = {
     interests?: string[];
 };
 
+export type PostInsert = {
+    slug: string;
+    title: string;
+    excerpt?: string | null;
+    content: string;
+    cover_image?: string | null;
+    category?: string;
+    tags?: string[];
+    published?: boolean;
+    featured?: boolean;
+    read_time?: string | null;
+    published_at?: string | null;
+};
+
 export type Database = {
     public: {
         Tables: {
@@ -158,6 +190,11 @@ export type Database = {
                 Row: Certificate;
                 Insert: CertificateInsert;
                 Update: Partial<CertificateInsert>;
+            };
+            posts: {
+                Row: Post;
+                Insert: PostInsert;
+                Update: Partial<PostInsert>;
             };
         };
     };

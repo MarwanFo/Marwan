@@ -6,6 +6,7 @@ export const en: TranslationDictionary = {
         experience: "Experience",
         certificates: "Certificates",
         projects: "Projects",
+        blog: "Blog",
         contact: "Contact",
         resume: "Resume",
         downloadResume: "Download Resume",

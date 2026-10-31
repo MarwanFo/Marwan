@@ -199,7 +199,7 @@ function ProjectCard({ project, index, size = "medium" }: ProjectCardProps) {
                         <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-3">
                             <Link
                                 href={`/projects/${project.id}`}
-                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-neon-cyan hover:text-white transition-colors group/link"
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-600 dark:text-neon-cyan hover:text-cyan-900 dark:hover:text-white transition-colors group/link"
                             >
                                 <span>{t("projects.viewDetails") || "View Details"}</span>
                                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-1" />

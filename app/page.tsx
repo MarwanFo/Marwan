@@ -4,6 +4,7 @@ import TechMarquee from "@/components/TechMarquee";
 import ExperienceSection from "@/components/ExperienceSection";
 import CertificatesSection from "@/components/CertificatesSection";
 import BentoGrid from "@/components/BentoGrid";
+import BlogSection from "@/components/BlogSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
@@ -27,6 +28,9 @@ export default function Home() {
 
             {/* Projects Bento Grid */}
             <BentoGrid />
+
+            {/* Engineering Blog Section */}
+            <BlogSection />
 
             {/* Contact Section */}
             <ContactSection />

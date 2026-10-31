@@ -6,6 +6,7 @@ export interface TranslationDictionary {
         experience: string;
         certificates: string;
         projects: string;
+        blog: string;
         contact: string;
         resume: string;
         downloadResume: string;

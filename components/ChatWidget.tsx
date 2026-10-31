@@ -232,7 +232,7 @@ export default function ChatWidget() {
                                         >
                                             <ReactMarkdown
                                                 components={{
-                                                    a: ({node, ...props}) => <a {...props} className="text-neon-cyan hover:text-white underline transition-colors" target="_blank" rel="noopener noreferrer" />,
+                                                    a: ({node, ...props}) => <a {...props} className={`${isLight ? "text-cyan-700 hover:text-cyan-900" : "text-neon-cyan hover:text-white"} underline transition-colors`} target="_blank" rel="noopener noreferrer" />,
                                                     strong: ({node, ...props}) => <strong {...props} className={`font-bold ${isLight ? "text-slate-900" : "text-white"}`} />,
                                                     ul: ({node, ...props}) => <ul {...props} className="list-disc pl-4 space-y-1 my-2" />,
                                                     ol: ({node, ...props}) => <ol {...props} className="list-decimal pl-4 space-y-1 my-2" />,

@@ -10,7 +10,8 @@ const isPublicRoute = (path: string): boolean => {
         path === "/" ||
         path === "/experience" ||
         path === "/certificates" ||
-        path.startsWith("/projects")
+        path.startsWith("/projects") ||
+        path.startsWith("/blog")
     );
 };
 

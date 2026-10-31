@@ -51,6 +51,56 @@
     color: rgba(30, 41, 59, 0.35) !important;
   }
 
+  /* ── Hover states for text — prevent invisible text on light backgrounds ── */
+  .hover\:text-white:hover {
+    color: #0f172a !important;
+  }
+
+  .hover\:text-white\/80:hover,
+  .hover\:text-white\/70:hover {
+    color: #1e293b !important;
+  }
+
+  .group:hover .group-hover\:text-white,
+  .group\/link:hover .group-hover\/link\:text-white,
+  .group\/btn:hover .group-hover\/btn\:text-white {
+    color: #0f172a !important;
+  }
+
+  /* ── Neon text colors adapted for light backgrounds ─────────────────────── */
+  /* Pure neon #00ffff is illegible on light backgrounds. Use high-contrast cyan-700 */
+  .text-neon-cyan {
+    color: #0e7490 !important;
+  }
+
+  .text-neon-cyan:hover,
+  .hover\:text-neon-cyan:hover,
+  .group:hover .group-hover\:text-neon-cyan,
+  .group\/link:hover .group-hover\/link\:text-neon-cyan,
+  .group\/btn:hover .group-hover\/btn\:text-neon-cyan {
+    color: #164e63 !important;
+  }
+
+  .text-neon-purple {
+    color: #7c3aed !important;
+  }
+
+  .text-neon-purple:hover,
+  .hover\:text-neon-purple:hover,
+  .group:hover .group-hover\:text-neon-purple {
+    color: #5b21b6 !important;
+  }
+
+  .text-neon-magenta {
+    color: #c026d3 !important;
+  }
+
+  .text-neon-magenta:hover,
+  .hover\:text-neon-magenta:hover,
+  .group:hover .group-hover\:text-neon-magenta {
+    color: #9d174d !important;
+  }
+
   /* ── Icon container backgrounds ─────────────────────────────────────────── */
   /* In dark mode these are subtle white overlays.
        In light mode they become nearly invisible — fix with soft grey tints. */
@@ -114,7 +164,8 @@
   }
 
   /* Neon gradient button text stays white */
-  .bg-neon-gradient {
+  .bg-neon-gradient,
+  .bg-neon-gradient:hover {
     color: white !important;
   }
 

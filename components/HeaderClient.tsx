@@ -23,6 +23,7 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
         { name: t("nav.experience"), href: "#experience" },
         { name: t("nav.certificates"), href: "#certificates" },
         { name: t("nav.projects"), href: "#projects" },
+        { name: t("nav.blog") || "Blog", href: "#blog" },
         { name: t("nav.contact"), href: "#contact" },
     ];
 
@@ -35,6 +36,8 @@ export default function HeaderClient({ resumeUrl }: HeaderClientProps) {
         const element = document.querySelector(href);
         if (element) {
             element.scrollIntoView({ behavior: "smooth" });
+        } else {
+            window.location.href = `/${href}`;
         }
     };
 

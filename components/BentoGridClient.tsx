@@ -231,7 +231,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                     <div className="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
                         <Link
                             href={`/projects/${project.id}`}
-                            className="flex items-center gap-1.5 text-sm font-semibold text-neon-cyan hover:text-white transition-colors group/link"
+                            className="flex items-center gap-1.5 text-sm font-semibold text-cyan-600 dark:text-neon-cyan hover:text-cyan-900 dark:hover:text-white transition-colors group/link"
                         >
                             <span>{t("projects.viewDetails") || "Details"}</span>
                             <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
